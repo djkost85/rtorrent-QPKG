@@ -1,0 +1,59 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+_QLIBNAME="globals" ; _QLIB_version="0.1.2"
+_QLIBDESC="QPX Framework Environment Globals"
+
+[ "$DEBUG" != "0" ] && echo "[ $QPROJECT $_QLIBNAME ] Version ${_QLIB_version} is loading right now..."
+
+
+# globals
+#
+# Global variables
+#
+NOW_LOG="date +%Y%m%d-%H%M%S.%N" # out:20130307-052210.417747339
+
+if [ "$DEBUG" != "0" ]; then
+	GLOBALS_DEBUGMODE=true
+else
+	GLOBALS_DEBUGMODE=false
+fi
+
+GLOBALS_VERBOSEMODE=false
+GLOBALS_MODE=normal
+GLOBALS_USEESCAPECODES=true
+GLOBALS_USECOLORS=true
+
+: begininstalldepvarsblock
+
+GLOBALS_PKGDIR="${PROGDIR}"
+GLOBALS_CONFIGFILE=${PROGDIR}/basefiles/app.conf
+GLOBALS_DEBUGDIR=${PROGDIR}/var/log/debug
+GLOBALS_LOGDIR=${QPX_LOG_PATH}
+GLOBALS_VARDUMP="${GLOBALS_LOGDIR}/${QPX_LOG_NAME}.var.dump"
+GLOBALS_FUNCDUMP="${GLOBALS_LOGDIR}/${QPX_LOG_NAME}.func.dump.log"
+GLOBALS_LOGFILE="${GLOBALS_LOGDIR}/${QPX_LOG_NAME}.stdout.log"
+GLOBALS_STDERR="${GLOBALS_LOGDIR}/${QPX_LOG_NAME}.stderr.log"
+GLOBALS_TEMPDIR=${PROGDIR}/temp
+
+
+GLOBALS_DIRS=(
+	"./users|ROOT|SHARED|WRITEABLE"
+	#"$GLOBALS_CONFIGDIR|ROOT|SHARED"
+	#"$GLOBALS_DATADIR|ROOT|SHARED|WRITEABLE"
+	#"$GLOBALS_DEBUGDIR|ROOT|SHARED|WRITEABLE"
+	#"$GLOBALS_LOGDIR|ROOT|SHARED|WRITEABLE"
+	"$GLOBALS_SAMPLESDIR|ROOT|SHARED"
+	"$GLOBALS_TABLESDIR|ROOT|SHARED"
+	#"$GLOBALS_TEMPDIR|ROOT|SHARED|WRITEABLE"
+	"$GLOBALS_USERCONFIGDIR|USER"
+	"$GLOBALS_USERDATADIR|USER|WRITEABLE"
+	"$GLOBALS_USERDEBUGDIR|USER|WRITEABLE"
+	"$GLOBALS_USERLOGDIR|USER|WRITEABLE"
+	"$GLOBALS_USERTEMPDIR|USER|WRITEABLE"
+)
+
+: endinstalldepvarsblock

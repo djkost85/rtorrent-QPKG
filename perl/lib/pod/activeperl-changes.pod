@@ -1,0 +1,95 @@
+=head1 ActivePerl 5.14 Change Log
+
+For the latest information on ActivePerl, please see:
+
+    http://www.ActiveState.com/ActivePerl/
+
+=head2 Build 1401 June 21, 2011
+
+Build 1401 is based on Perl 5.14.1 plus additional selected changes.
+
+I<Bug Fixes and Changes since build 1400>
+
+=over 3
+
+=item *
+
+Significant changes that have occurred in the Perl 5.14.1 release are
+documented in L<perl5141delta>.
+
+=item *
+
+The PerlScript and Perl for ISAPI extension on Windows are working
+again in this release.
+
+=item *
+
+Most bundled modules have been updated to their latest released
+version from CPAN.  Use the C<ppm query> command to check the exact
+version included in this release.
+
+=back
+
+=head2 Build 1400 May 11, 2011
+
+I<What's new in the 1400 Series>
+
+=over 3
+
+=item *
+
+This build corresponds to the Perl 5.14.0 source code release.
+
+=item *
+
+The 1400 series builds of ActivePerl are not binary compatible with
+builds in the 600, 800, 1000 or 1200 series.  Any extensions built using binaries
+from the ActivePerl 600, 800, 1000 or 1200 series will need to be recompiled.
+Note especially that this applies to PPM packages that may have been
+built for 600, 800, 1000 or 1200 series builds.
+
+=item *
+
+Significant changes that have occurred in the 5.14.0 release
+are documented in L<perl5140delta>.
+
+=item *
+
+Compared to the latest ActivePerl in the 1200 series (ActivePerl 1204) the
+following additional non-core CPAN distributions are now bundled:
+
+    Encode-Locale
+    Eval-Closure
+    IO-Socket-SSL
+    Mozilla-CA
+    Net-SSLeay
+    Package-Stash-XS
+    PPIx-Regexp
+
+The libwww-perl distribution has been split into many smaller distributions
+that are all included separately.
+
+=item *
+
+The Crypt-SSLeay distribution is no longer bundled.
+
+=item *
+
+The ActivePerl 1400 series is built as 64-bit binaries on Mac OS X.
+Since the Carbon API for Mac does not support 64-bit binaries
+the distributions that depended on it are not longer bundled.
+These were:
+
+    Mac-AppleEvents-Simple
+    Mac-Apps-Launch
+    Mac-Carbon
+    Mac-Glue
+    Mac-OSA-Simple
+
+=item *
+
+Most bundled distributions have been updated to their latest released
+version from CPAN.  Use the C<ppm query> command to check the exact
+version included in this release.
+
+=back

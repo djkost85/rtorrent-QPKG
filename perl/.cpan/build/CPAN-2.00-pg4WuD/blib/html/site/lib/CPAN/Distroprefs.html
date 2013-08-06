@@ -1,0 +1,235 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../scineplex.css">
+<title>CPAN::Distroprefs -- read and match distroprefs</title>
+<link rel="stylesheet" href="../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',3);</script>
+<h1><a>CPAN::Distroprefs -- read and match distroprefs</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#interface">INTERFACE</a></li>
+	<li><a href="#results">RESULTS</a></li>
+	<ul>
+
+		<li><a href="#common">Common</a></li>
+		<ul>
+
+			<li><a href="#type">type</a></li>
+			<li><a href="#file">file</a></li>
+			<li><a href="#ext">ext</a></li>
+			<li><a href="#dir">dir</a></li>
+			<li><a href="#abs">abs</a></li>
+		</ul>
+
+		<li><a href="#errors">Errors</a></li>
+		<ul>
+
+			<li><a href="#msg">msg</a></li>
+		</ul>
+
+		<li><a href="#successes">Successes</a></li>
+		<ul>
+
+			<li><a href="#prefs">prefs</a></li>
+		</ul>
+
+	</ul>
+
+	<li><a href="#prefs">PREFS</a></li>
+	<ul>
+
+		<ul>
+
+			<li><a href="#data">data</a></li>
+			<li><a href="#match_attributes">match_attributes</a></li>
+			<li><a href="#has_any_match">has_any_match</a></li>
+			<li><a href="#has_valid_subkeys">has_valid_subkeys</a></li>
+			<li><a href="#matches">matches</a></li>
+		</ul>
+
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>CPAN::Distroprefs -- read and match distroprefs</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+    <span class="keyword">use</span> <span class="variable">CPAN::Distroprefs</span><span class="operator">;</span>
+</pre>
+<pre>
+    <span class="keyword">my</span> <span class="variable">%info</span> <span class="operator">=</span> <span class="operator">(...</span> <span class="variable">distribution</span><span class="operator">/</span><span class="variable">environment</span> <span class="variable">info</span> <span class="operator">...);</span>
+</pre>
+<pre>
+    <span class="keyword">my</span> <span class="variable">$finder</span> <span class="operator">=</span> <span class="variable">CPAN::Distroprefs</span><span class="operator">-&gt;</span><span class="variable">find</span><span class="operator">(</span><span class="variable">$prefs_dir</span><span class="operator">,</span> <span class="operator">\</span><span class="variable">%ext_map</span><span class="operator">);</span>
+</pre>
+<pre>
+    <span class="keyword">while</span> <span class="operator">(</span><span class="keyword">my</span> <span class="variable">$result</span> <span class="operator">=</span> <span class="variable">$finder</span><span class="operator">-&gt;</span><span class="variable">next</span><span class="operator">)</span> <span class="operator">{</span>
+</pre>
+<pre>
+        <span class="keyword">die</span> <span class="variable">$result</span><span class="operator">-&gt;</span><span class="variable">as_string</span> <span class="keyword">if</span> <span class="variable">$result</span><span class="operator">-&gt;</span><span class="variable">is_fatal</span><span class="operator">;</span>
+</pre>
+<pre>
+        <span class="keyword">warn</span><span class="operator">(</span><span class="variable">$result</span><span class="operator">-&gt;</span><span class="variable">as_string</span><span class="operator">),</span> <span class="keyword">next</span> <span class="keyword">if</span> <span class="variable">$result</span><span class="operator">-&gt;</span><span class="variable">is_warning</span><span class="operator">;</span>
+</pre>
+<pre>
+        <span class="keyword">for</span> <span class="keyword">my</span> <span class="variable">$pref</span> <span class="operator">(</span><span class="variable">@</span><span class="operator">{</span> <span class="variable">$result</span><span class="operator">-&gt;</span><span class="variable">prefs</span> <span class="operator">}</span><span class="operator">)</span> <span class="operator">{</span>
+            <span class="keyword">if</span> <span class="operator">(</span><span class="variable">$pref</span><span class="operator">-&gt;</span><span class="variable">matches</span><span class="operator">(\</span><span class="variable">%info</span><span class="operator">))</span> <span class="operator">{</span>
+                <span class="keyword">return</span> <span class="variable">$pref</span><span class="operator">;</span>
+            <span class="operator">}</span>
+        <span class="operator">}</span>
+            <span class="operator">}</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This module encapsulates reading <a href="../../../.cpan/build/CPAN-2.00-pg4WuD/blib/html/site/lib/CPAN.html">Distroprefs</a> and matching them against CPAN distributions.</p>
+<p>
+</p>
+<hr />
+<h1><a name="interface">INTERFACE</a></h1>
+<pre>
+    <span class="keyword">my</span> <span class="variable">$finder</span> <span class="operator">=</span> <span class="variable">CPAN::Distroprefs</span><span class="operator">-&gt;</span><span class="variable">find</span><span class="operator">(</span><span class="variable">$dir</span><span class="operator">,</span> <span class="operator">\</span><span class="variable">%ext_map</span><span class="operator">);</span>
+</pre>
+<pre>
+    <span class="keyword">while</span> <span class="operator">(</span><span class="keyword">my</span> <span class="variable">$result</span> <span class="operator">=</span> <span class="variable">$finder</span><span class="operator">-&gt;</span><span class="variable">next</span><span class="operator">)</span> <span class="operator">{</span> <span class="operator">...</span> <span class="operator">}</span>
+</pre>
+<p>Build an iterator which finds distroprefs files in the given directory.</p>
+<p><code>%ext_map</code> is a hashref whose keys are file extensions and whose values are
+modules used to load matching files:</p>
+<pre>
+    <span class="operator">{</span>
+        <span class="string">'yml'</span> <span class="operator">=&gt;</span> <span class="string">'YAML::Syck'</span><span class="operator">,</span>
+        <span class="string">'dd'</span>  <span class="operator">=&gt;</span> <span class="string">'Data::Dumper'</span><span class="operator">,</span>
+        <span class="operator">...</span>
+    <span class="operator">}</span>
+</pre>
+<p>Each time <a href="../../../lib/pod/perlfunc.html#next"><code>$finder-&gt;next</code></a> is called, the iterator returns one of two
+possible values:</p>
+<ul>
+<li><strong><a name="a_cpan_distroprefs_result_object" class="item">a CPAN::Distroprefs::Result object</a></strong>
+
+</li>
+<li><strong><a name="undef_indicating_that_no_prefs_files_remain_to_be_found" class="item"><a href="../../../lib/pod/perlfunc.html#undef"><code>undef</code></a>, indicating that no prefs files remain to be found</a></strong>
+
+</li>
+</ul>
+<p>
+</p>
+<hr />
+<h1><a name="results">RESULTS</a></h1>
+<p><a href="#interface"><code>find()</code></a> returns CPAN::Distroprefs::Result objects to
+indicate success or failure when reading a prefs file.</p>
+<p>
+</p>
+<h2><a name="common">Common</a></h2>
+<p>All results share some common attributes:</p>
+<p>
+</p>
+<h3><a name="type">type</a></h3>
+<p><code>success</code>, <code>warning</code>, or <code>fatal</code></p>
+<p>
+</p>
+<h3><a name="file">file</a></h3>
+<p>the file from which these prefs were read, or to which this error refers (relative filename)</p>
+<p>
+</p>
+<h3><a name="ext">ext</a></h3>
+<p>the file's extension, which determines how to load it</p>
+<p>
+</p>
+<h3><a name="dir">dir</a></h3>
+<p>the directory the file was read from</p>
+<p>
+</p>
+<h3><a name="abs">abs</a></h3>
+<p>the absolute path to the file</p>
+<p>
+</p>
+<h2><a name="errors">Errors</a></h2>
+<p>Error results (warning and fatal) contain:</p>
+<p>
+</p>
+<h3><a name="msg">msg</a></h3>
+<p>the error message (usually either <a href="../../../lib/pod/perlvar.html#__"><code>$!</code></a> or a YAML error)</p>
+<p>
+</p>
+<h2><a name="successes">Successes</a></h2>
+<p>Success results contain:</p>
+<p>
+</p>
+<h3><a name="prefs">prefs</a></h3>
+<p>an arrayref of CPAN::Distroprefs::Pref objects</p>
+<p>
+</p>
+<hr />
+<h1><a name="prefs">PREFS</a></h1>
+<p>CPAN::Distroprefs::Pref objects represent individual distroprefs documents.
+They are constructed automatically as part of <code>success</code> results from <code>find()</code>.</p>
+<p>
+</p>
+<h3><a name="data">data</a></h3>
+<p>the pref information as a hashref, suitable for e.g. passing to Kwalify</p>
+<p>
+</p>
+<h3><a name="match_attributes">match_attributes</a></h3>
+<p>returns a list of the valid match attributes (see the Distroprefs section in <a href="../../../.cpan/build/CPAN-2.00-pg4WuD/blib/html/site/lib/CPAN.html">the CPAN manpage</a>)</p>
+<p>currently: <code>env perl perlconfig distribution module</code></p>
+<p>
+</p>
+<h3><a name="has_any_match">has_any_match</a></h3>
+<p>true if this pref has a 'match' attribute at all</p>
+<p>
+</p>
+<h3><a name="has_valid_subkeys">has_valid_subkeys</a></h3>
+<p>true if this pref has a 'match' attribute and at least one valid match attribute</p>
+<p>
+</p>
+<h3><a name="matches">matches</a></h3>
+<pre>
+  <span class="keyword">if</span> <span class="operator">(</span><span class="variable">$pref</span><span class="operator">-&gt;</span><span class="variable">matches</span><span class="operator">(\</span><span class="variable">%arg</span><span class="operator">))</span> <span class="operator">{</span> <span class="operator">...</span> <span class="operator">}</span>
+</pre>
+<p>true if this pref matches the passed-in hashref, which must have a value for
+each of the <code>match_attributes</code> (above)</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>This program is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.</p>
+
+</body>
+
+</html>

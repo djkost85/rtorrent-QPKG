@@ -1,0 +1,40 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+_QLIBNAME="lbdefsh" ; _QLIB_version="0.1.0"
+_QLIBDESC="QPX Framework Unix Environment Variables Helper"
+
+##### LOAD ONLY ONCE #####
+[ ! -z "$(eval echo \"\$QPX_l${_QLIBNAME}\")" ] && {
+        [ "$DEBUG" != "0" ] && echo "[ $QPROJECT $_QLIBNAME ] Version ${_QLIB_version} already started!"
+        return 1
+} || {
+        [ "$DEBUG" != "0" ] && echo "[ $QPROJECT $_QLIBNAME ] Version ${_QLIB_version} is loading right now..."
+        eval QPX_l${_QLIBNAME}="${_QLIB_version}"
+        #export QPX_l${_QLIBNAME}
+}
+
+
+
+#
+# returns 0 if a variable is defined (set)
+# returns 1 if a variable is unset
+#
+function defined {
+    [[ "${!1-X}" == "${!1-Y}" ]]
+}
+
+#
+# returns 0 if a variable is defined (set) and value's length > 0
+# returns 1 otherwise
+#
+function has_value {
+	if defined $1; then
+		if [[ -n ${!1} ]]; then
+			return 0
+		fi
+	fi
+	return 1
+}

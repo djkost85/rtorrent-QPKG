@@ -1,0 +1,82 @@
+#!/usr/bin/env sh
+: ${DEBUG:=1}
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include useextglob
+
+#
+# is
+#
+
+# bool is (string <class>, string <value>)
+#
+function is {
+	## assume "$# -eq 2 && \$2 == @(alnum|alpha|ascii|blank|cntrl|digit|graph|lower|print|punct|space|upper|word|xdigit)" "$1" -- "Not a valid class: $1"
+	[[ $2 == +([[:$1:]]) ]]
+}
+
+
+# bool is_not (string <class>, string <value>)
+#
+function is_not {
+	[[ $2 != +([[:$1:]]) ]]
+}
+
+
+# bool is_alpha (string <value>)
+#
+function is_alpha {
+	[[ $1 == +([[:alpha:]]) ]]
+}
+
+
+# bool is_lower (string <value>)
+#
+function is_lower {
+	[[ $1 == +([[:lower:]]) ]]
+}
+
+
+# bool is_upper (string <value>)
+#
+function is_upper {
+	[[ $1 == +([[:upper:]]) ]]
+}
+
+
+# bool is_digit (string <value>)
+#
+function is_digit {
+	[[ $1 == +([[:digit:]]) ]]
+}
+
+
+# bool is_not_alpha (string <value>)
+#
+function is_not_alpha {
+	[[ $1 != +([[:alpha:]]) ]]
+}
+
+
+# bool is_not_lower (string <value>)
+#
+function is_not_lower {
+	[[ $1 != +([[:lower:]]) ]]
+}
+
+
+# bool is_not_upper (string <value>)
+#
+function is_not_upper {
+	[[ $1 != +([[:upper:]]) ]]
+}
+
+
+# bool is_not_digit (string <value>)
+#
+function is_not_digit {
+	[[ $1 != +([[:digit:]]) ]]
+}

@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+: ${DEBUG:=1}
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include null
+
+# bool available (string <ap>)
+#
+function available {
+	type -t "$1" >&"$NULL"
+}

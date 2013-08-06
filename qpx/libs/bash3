@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+# Checks if host shell is Bash and that its version is at least 3.0.
+
+[[ BASH_VERSINFO -ge 3 ]] || {
+	echo "This script requires Bash versions 3.0 or later." >&2
+	exit 1
+}

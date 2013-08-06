@@ -1,0 +1,18 @@
+rutorrent requires that rtorrent be built with xmlrpc. If you are using rutorrent
+over any public network (such as the internet) you will need to provide some 
+mehtod of security. The details of this will be different, depending on how you 
+set up your server, and depending on which webserver.
+
+Webserver SCGI
+--------------
+If you are using a webserver for SCGI (apache's mod_scgi for instance) be sure
+that this SCGI mount is protected.
+
+Rutorrent Plugins
+-----------------
+Another thing you can do is use the RPC or HttpRPC plugins.
+
+--------------------------------------------------------------------------------
+Note: If you use one of these plguins, do not set up SCGI via the webserver,
+if you do it defeats the purpose
+--------------------------------------------------------------------------------

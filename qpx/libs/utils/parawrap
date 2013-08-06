@@ -1,0 +1,63 @@
+#!/usr/bin/env sh
+
+# bool utils_parawrap (string <paragraph>, [uint LINEWIDTH = COLUMNS])
+#
+# Wraps text.
+# Returns true if text is wrapped into lines.
+#
+# > string array __A0 = array containing the wrapped lines
+# > integer      __I0 = number of lines
+#
+function utils_parawrap {
+	local LINEWIDTH=${2:-${COLUMNS:-80}}
+	local -i P Q R LP LE WP LASTP LASTNS
+
+	# P      =  the general pointer to every letter in the paragraph, increments by 1 every loop
+	# Q      =  a pointer relative to LP that increments along with P; this is a bit delayed compared to R
+	# R      =  similar to Q
+	# LP     =  the pointer to the first letter of the current line
+	# LE     =  the pointer (relative to LP) to the last letter of the last word that can be included to the line
+	# WP     =  pointer to the first letter of the current word
+	# LASTP  =  points to paragraph's last letter
+	# LASTNS =  the last nonspace character that has been analyzed (also relative to LP)
+
+	__A0=() __I0=0
+
+	(( LASTP = ${#1} - 1 ))
+
+	for (( P = 0, Q = 0, LASTNS = 0; P <= LASTP; P++ )); do
+		if [[ Q -eq 0 ]]; then
+			[[ ${1:P:1} != [[:space:]] ]] && (( LP = P, LE = 0, LASTNS = 1, WP = 0, Q = 1 ))
+			continue
+		fi
+
+		(( R = Q + 1 ))
+
+		if [[ ${1:P:1} == [[:space:]] ]]; then
+			[[ LE -lt LASTNS ]] && (( LE = LASTNS ))
+		else
+			[[ LASTNS -lt Q ]] && (( WP = P ))
+			(( LASTNS = R ))
+		fi
+
+		if [[ R -eq LINEWIDTH && LE -eq 0 && LASTNS -eq R && P -ne LASTP ]] && [[ ${1:P + 1:1} != [[:space:]] ]]; then
+			__A0[__I0++]=${1:LP:Q}'-'
+			(( LP = P, Q = 1, WP = 0 ))
+		elif [[ Q -eq LINEWIDTH ]]; then
+			__A0[__I0++]=${1:LP:LE}
+
+			if [[ LASTNS -eq R ]]; then
+				# 'LP -lt WP &&' was also part of the expression but it's always true if 'LASTNS -eq R'
+				(( LASTNS -= WP - LP, LP = WP, Q = P - WP + 1, LE = 0 ))
+			else
+				(( Q = 0, LASTNS = 0 ))
+			fi
+		else
+			(( Q = R ))
+		fi
+	done
+
+	[[ LASTNS -gt 0 ]] && __A0[__I0++]=${1:LP:LASTNS}
+
+	[[ __I0 -gt 1 ]]
+}

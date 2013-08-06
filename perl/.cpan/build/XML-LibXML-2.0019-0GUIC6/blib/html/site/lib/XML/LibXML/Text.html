@@ -1,0 +1,225 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::Text - XML::LibXML Class for Text Nodes</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::Text - XML::LibXML Class for Text Nodes</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::Text - XML::LibXML Class for Text Nodes</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML</span><span class="operator">;</span>
+  <span class="comment"># Only methods specific to Text nodes are listed here,</span>
+  <span class="comment"># see XML::LibXML::Node manpage for other methods</span>
+</pre>
+<pre>
+  <span class="variable">$text</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Text</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="variable">$content</span> <span class="operator">);</span>
+  <span class="variable">$nodedata</span> <span class="operator">=</span> <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">data</span><span class="operator">;</span>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">setData</span><span class="operator">(</span> <span class="variable">$text_content</span> <span class="operator">);</span>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">substringData</span><span class="operator">(</span><span class="variable">$offset</span><span class="operator">,</span> <span class="variable">$length</span><span class="operator">);</span>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">appendData</span><span class="operator">(</span> <span class="variable">$somedata</span> <span class="operator">);</span>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">insertData</span><span class="operator">(</span><span class="variable">$offset</span><span class="operator">,</span> <span class="variable">$string</span><span class="operator">);</span>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">deleteData</span><span class="operator">(</span><span class="variable">$offset</span><span class="operator">,</span> <span class="variable">$length</span><span class="operator">);</span>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">deleteDataString</span><span class="operator">(</span><span class="variable">$remstring</span><span class="operator">,</span> <span class="variable">$all</span><span class="operator">);</span>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">replaceData</span><span class="operator">(</span><span class="variable">$offset</span><span class="operator">,</span> <span class="variable">$length</span><span class="operator">,</span> <span class="variable">$string</span><span class="operator">);</span>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">replaceDataString</span><span class="operator">(</span><span class="variable">$old</span><span class="operator">,</span> <span class="variable">$new</span><span class="operator">,</span> <span class="variable">$flag</span><span class="operator">);</span>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">replaceDataRegEx</span><span class="operator">(</span> <span class="variable">$search_cond</span><span class="operator">,</span> <span class="variable">$replace_cond</span><span class="operator">,</span> <span class="variable">$reflags</span> <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>Unlike the DOM specification, XML::LibXML implements the text node as the base
+class of all character data node. Therefore there exists no CharacterData
+class. This allows one to apply methods of text nodes also to Comments and
+CDATA-sections.</p>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>The class inherits from <a href="../../../../.cpan/build/XML-LibXML-2.0019-0GUIC6/blib/lib/XML/LibXML/Node.html">the XML::LibXML::Node manpage</a>. The documentation for Inherited methods is not listed here.</p>
+<p>Many functions listed here are extensively documented in the DOM Level 3 specification (<a href="http://www.w3.org/TR/DOM-Level-3-Core/">http://www.w3.org/TR/DOM-Level-3-Core/</a>). Please refer to the specification for extensive documentation.</p>
+<dl>
+<dt><strong><a name="new" class="item">new</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$text</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Text</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="variable">$content</span> <span class="operator">);</span>
+</pre>
+<p>The constructor of the class. It creates an unbound text node.</p>
+</dd>
+<dt><strong><a name="data" class="item">data</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$nodedata</span> <span class="operator">=</span> <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">data</span><span class="operator">;</span>
+</pre>
+<p>Although there exists the <code>nodeValue</code> attribute in the Node class, the DOM specification defines data as a separate
+attribute. <code>XML::LibXML</code> implements these two attributes not as different attributes, but as aliases,
+such as <code>libxml2</code> does. Therefore</p>
+<pre>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">data</span><span class="operator">;</span>
+</pre>
+<p>and</p>
+<pre>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">nodeValue</span><span class="operator">;</span>
+</pre>
+<p>will have the same result and are not different entities.</p>
+</dd>
+<dt><strong><a name="setdata" class="item"><code>setData($string)</code></a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">setData</span><span class="operator">(</span> <span class="variable">$text_content</span> <span class="operator">);</span>
+</pre>
+<p>This function sets or replaces text content to a node. The node has to be of
+the type &quot;text&quot;, &quot;cdata&quot; or &quot;comment&quot;.</p>
+</dd>
+<dt><strong><a name="substringdata" class="item"><code>substringData($offset,$length)</code></a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">substringData</span><span class="operator">(</span><span class="variable">$offset</span><span class="operator">,</span> <span class="variable">$length</span><span class="operator">);</span>
+</pre>
+<p>Extracts a range of data from the node. (DOM Spec) This function takes the two
+parameters $offset and $length and returns the sub-string, if available.</p>
+<p>If the node contains no data or $offset refers to an non-existing string index,
+this function will return <em>undef </em>&gt;&gt;&gt;&gt;&gt;. If $length is out of range <a href="#substringdata"><code>substringData</code></a> will return the data starting at $offset instead of causing an error.</p>
+</dd>
+<dt><strong><a name="appenddata" class="item"><code>appendData($string)</code></a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">appendData</span><span class="operator">(</span> <span class="variable">$somedata</span> <span class="operator">);</span>
+</pre>
+<p>Appends a string to the end of the existing data. If the current text node
+contains no data, this function has the same effect as <a href="#setdata"><code>setData</code></a>.</p>
+</dd>
+<dt><strong><a name="insertdata" class="item"><code>insertData($offset,$string)</code></a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">insertData</span><span class="operator">(</span><span class="variable">$offset</span><span class="operator">,</span> <span class="variable">$string</span><span class="operator">);</span>
+</pre>
+<p>Inserts the parameter $string at the given $offset of the existing data of the
+node. This operation will not remove existing data, but change the order of the
+existing data.</p>
+<p>The $offset has to be a positive value. If $offset is out of range, <a href="#insertdata"><code>insertData</code></a> will have the same behaviour as <a href="#appenddata"><code>appendData</code></a>.</p>
+</dd>
+<dt><strong><a name="deletedata" class="item">deleteData($offset, $length)</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">deleteData</span><span class="operator">(</span><span class="variable">$offset</span><span class="operator">,</span> <span class="variable">$length</span><span class="operator">);</span>
+</pre>
+<p>This method removes a chunk from the existing node data at the given offset.
+The $length parameter tells, how many characters should be removed from the
+string.</p>
+</dd>
+<dt><strong><a name="deletedatastring" class="item">deleteDataString($string, [$all])</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">deleteDataString</span><span class="operator">(</span><span class="variable">$remstring</span><span class="operator">,</span> <span class="variable">$all</span><span class="operator">);</span>
+</pre>
+<p>This method removes a chunk from the existing node data. Since the DOM spec is
+quite unhandy if you already know <code>which</code> string to remove from a text node, this method allows more perlish code :)</p>
+<p>The functions takes two parameters: <em>$string </em>&gt;&gt;&gt;&gt;&gt; and optional the <em>$all </em>&gt;&gt;&gt;&gt;&gt; flag. If $all is not set, <em>undef </em>&gt;&gt;&gt;&gt;&gt; or <em>0 </em>&gt;&gt;&gt;&gt;&gt;, <a href="#deletedatastring"><code>deleteDataString</code></a> will remove only the first occurrence of $string. If $all is <em>TRUE </em>&gt;&gt;&gt;&gt;&gt;<a href="#deletedatastring"><code>deleteDataString</code></a> will remove all occurrences of <em>$string </em>&gt;&gt;&gt;&gt;&gt; from the node data.</p>
+</dd>
+<dt><strong><a name="replacedata" class="item">replaceData($offset, $length, $string)</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">replaceData</span><span class="operator">(</span><span class="variable">$offset</span><span class="operator">,</span> <span class="variable">$length</span><span class="operator">,</span> <span class="variable">$string</span><span class="operator">);</span>
+</pre>
+<p>The DOM style version to replace node data.</p>
+</dd>
+<dt><strong><a name="replacedatastring" class="item">replaceDataString($oldstring, $newstring, [$all])</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">replaceDataString</span><span class="operator">(</span><span class="variable">$old</span><span class="operator">,</span> <span class="variable">$new</span><span class="operator">,</span> <span class="variable">$flag</span><span class="operator">);</span>
+</pre>
+<p>The more programmer friendly version of <a href="#replacedata"><code>replaceData()</code></a> :)</p>
+<p>Instead of giving offsets and length one can specify the exact string (<em>$oldstring </em>&gt;&gt;&gt;&gt;&gt;) to be replaced. Additionally the <em>$all </em>&gt;&gt;&gt;&gt;&gt; flag allows to replace all occurrences of <em>$oldstring </em>&gt;&gt;&gt;&gt;&gt;.</p>
+</dd>
+<dt><strong><a name="replacedataregex" class="item">replaceDataRegEx( $search_cond, $replace_cond, $reflags )</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$text</span><span class="operator">-&gt;</span><span class="variable">replaceDataRegEx</span><span class="operator">(</span> <span class="variable">$search_cond</span><span class="operator">,</span> <span class="variable">$replace_cond</span><span class="operator">,</span> <span class="variable">$reflags</span> <span class="operator">);</span>
+</pre>
+<p>This method replaces the node's data by a <code>simple</code> regular expression. Optional, this function allows to pass some flags that will
+be added as flag to the replace statement.</p>
+<p><em>NOTE: </em>&gt;&gt;&gt;&gt;&gt; This is a shortcut for</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$datastr</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">getData</span><span class="operator">();</span>
+   <span class="variable">$datastr</span> <span class="operator">=~</span> <span class="regex">s/somecond/replacement/g</span><span class="operator">;</span> <span class="comment"># 'g' is just an example for any flag</span>
+   <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">setData</span><span class="operator">(</span> <span class="variable">$datastr</span> <span class="operator">);</span>
+</pre>
+<p>This function can make things easier to read for simple replacements. For more
+complex variants it is recommended to use the code snippet above.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Matt Sergeant,
+Christian Glahn,
+Petr Pajas</p>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p>2.0019</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>2001-2007, AxKit.com Ltd.</p>
+<p>2002-2006, Christian Glahn.</p>
+<p>2006-2009, Petr Pajas.</p>
+
+</body>
+
+</html>

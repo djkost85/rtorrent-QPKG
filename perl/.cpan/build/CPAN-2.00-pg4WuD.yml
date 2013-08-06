@@ -1,0 +1,83 @@
+---
+distribution: !!perl/hash:CPAN::Distribution
+  CALLED_FOR: CPAN
+  CHECKSUM_STATUS: OK
+  ID: A/AN/ANDK/CPAN-2.00.tar.gz
+  RO:
+    CPAN_COMMENT: ~
+    CPAN_USERID: ANDK
+  archived: tar
+  build_dir: /usr/bin/rtorrent/perl/.cpan/build/CPAN-2.00-pg4WuD
+  incommandcolor: 1
+  install: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 13
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581578
+  localfile: /usr/bin/rtorrent/perl/.cpan/sources/authors/id/A/AN/ANDK/CPAN-2.00.tar.gz
+  make: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 13
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581565
+  make_test: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 13
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581576
+  negative_prefs_cache: 13
+  prefs:
+    install: {}
+  prereq_pm:
+    build_requires:
+      ExtUtils::MakeMaker: '0'
+    requires:
+      Archive::Tar: '0'
+      Archive::Zip: '0'
+      Compress::Zlib: '0'
+      Data::Dumper: '0'
+      Digest::MD5: '0'
+      Digest::SHA: '0'
+      ExtUtils::CBuilder: '0'
+      File::Copy: '0'
+      File::HomeDir: '0'
+      File::Spec: '0'
+      File::Temp: '0'
+      File::Which: '0'
+      HTTP::Tiny: '0'
+      IO::Compress::Base: '0'
+      IO::Zlib: '0'
+      LWP::UserAgent: '0'
+      MIME::Base64: '0'
+      Module::Build: '0'
+      Net::FTP: '0'
+      Net::Ping: '0'
+      Parse::CPAN::Meta: '0'
+      Scalar::Util: '0'
+      Term::ReadKey: '0'
+      Term::ReadLine::Perl: '0'
+      Test::Harness: '2.62'
+      Test::More: '0'
+      Text::Glob: '0'
+      Text::ParseWords: '0'
+      Text::Wrap: '0'
+      YAML::XS: '0'
+      perl: '5.004'
+  reqtype: c
+  sponsored_mods: {}
+  unwrapped: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 13
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581560
+  writemakefile: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 13
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581562
+perl:
+  $^X: /usr/bin/rtorrent/perl/bin/perl-static
+  mtime_$^X: 1375581022
+  mtime_dll: 0
+  sitearchexp: /usr/bin/rtorrent/perl/site/lib
+time: 1375581578

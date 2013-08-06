@@ -1,0 +1,88 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../scineplex.css">
+<title>CPAN::Kwalify - Interface between CPAN.pm and Kwalify.pm</title>
+<link rel="stylesheet" href="../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',3);</script>
+<h1><a>CPAN::Kwalify - Interface between CPAN.pm and Kwalify.pm</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>CPAN::Kwalify - Interface between CPAN.pm and Kwalify.pm</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">CPAN::Kwalify</span><span class="operator">;</span>
+  <span class="variable">validate</span><span class="operator">(</span><span class="variable">$schema_name</span><span class="operator">,</span> <span class="variable">$data</span><span class="operator">,</span> <span class="variable">$file</span><span class="operator">,</span> <span class="variable">$doc</span><span class="operator">);</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<dl>
+<dt><strong><a name="_validate" class="item">_validate($schema_name, $data, $file, $doc)</a></strong></dt>
+
+<dd>
+<p>$schema_name is the name of a supported schema. Currently only
+<code>distroprefs</code> is supported. $data is the data to be validated. $file
+is the absolute path to the file the data are coming from. $doc is the
+index of the document within $doc that is to be validated. The last
+two arguments are only there for better error reporting.</p>
+<p>Relies on being called from within CPAN.pm.</p>
+<p>Dies if something fails. Does not return anything useful.</p>
+</dd>
+<dt><strong><a name="yaml" class="item"><code>yaml($schema_name)</code></a></strong></dt>
+
+<dd>
+<p>Returns the YAML text of that schema. Dies if something fails.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Andreas Koenig <code>&lt;andk@cpan.org&gt;</code></p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>This program is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.</p>
+<p>See <a href="http://www.perl.com/perl/misc/Artistic.html">http://www.perl.com/perl/misc/Artistic.html</a></p>
+
+</body>
+
+</html>

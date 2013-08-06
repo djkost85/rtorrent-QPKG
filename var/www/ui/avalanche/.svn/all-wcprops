@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 22
+/svn/!svn/ver/49/trunk
+END
+LICENSE.txt
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/19/trunk/LICENSE.txt
+END
+torrenthandler.php
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/48/trunk/torrenthandler.php
+END
+remote.php
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/svn/!svn/ver/43/trunk/remote.php
+END
+setsettings.php
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/19/trunk/setsettings.php
+END
+settings.php
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/48/trunk/settings.php
+END
+prefs.json
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/svn/!svn/ver/43/trunk/prefs.json
+END
+index.html
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/svn/!svn/ver/48/trunk/index.html
+END

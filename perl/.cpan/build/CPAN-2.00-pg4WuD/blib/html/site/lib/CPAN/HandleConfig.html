@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../scineplex.css">
+<title>CPAN::HandleConfig - internal configuration handling for CPAN.pm</title>
+<link rel="stylesheet" href="../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',3);</script>
+<h1><a>CPAN::HandleConfig - internal configuration handling for CPAN.pm</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<ul>
+
+		<li><a href="#class__safe_quote_item"><code>CLASS-&gt;safe_quote ITEM</code></a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>CPAN::HandleConfig - internal configuration handling for CPAN.pm</p>
+<p>
+</p>
+<h2><a name="class__safe_quote_item"><code>CLASS-&gt;safe_quote ITEM</code></a></h2>
+<p>Quotes an item to become safe against spaces
+in shell interpolation. An item is enclosed
+in double quotes if:</p>
+<pre>
+  - the item contains spaces in the middle
+  - the item does not start with a quote</pre>
+<p>This happens to avoid shell interpolation
+problems when whitespace is present in
+directory names.</p>
+<p>This method uses <code>commands_quote</code> to determine
+the correct quote. If <code>commands_quote</code> is
+a space, no quoting will take place.</p>
+<p>if it starts and ends with the same quote character: leave it as it is</p>
+<p>if it contains no whitespace: leave it as it is</p>
+<p>if it contains whitespace, then</p>
+<p>if it contains quotes: better leave it as it is</p>
+<p>else: quote it with the correct quote type for the box we're on</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>This program is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.</p>
+
+</body>
+
+</html>

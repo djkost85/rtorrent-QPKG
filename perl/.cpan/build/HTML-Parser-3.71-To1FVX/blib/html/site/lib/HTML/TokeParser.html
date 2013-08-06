@@ -1,0 +1,258 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../scineplex.css">
+<title>HTML::TokeParser - Alternative HTML::Parser interface</title>
+<link rel="stylesheet" href="../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',3);</script>
+<h1><a>HTML::TokeParser - Alternative HTML::Parser interface</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>HTML::TokeParser - Alternative HTML::Parser interface</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ <span class="keyword">require</span> <span class="variable">HTML::TokeParser</span><span class="operator">;</span>
+ <span class="variable">$p</span> <span class="operator">=</span> <span class="variable">HTML::TokeParser</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="string">"index.html"</span><span class="operator">)</span> <span class="operator">||</span>
+      <span class="keyword">die</span> <span class="string">"Can't open: $!"</span><span class="operator">;</span>
+ <span class="variable">$p</span><span class="operator">-&gt;</span><span class="variable">empty_element_tags</span><span class="operator">(</span><span class="number">1</span><span class="operator">);</span>  <span class="comment"># configure its behaviour</span>
+</pre>
+<pre>
+ <span class="keyword">while</span> <span class="operator">(</span><span class="keyword">my</span> <span class="variable">$token</span> <span class="operator">=</span> <span class="variable">$p</span><span class="operator">-&gt;</span><span class="variable">get_token</span><span class="operator">)</span> <span class="operator">{</span>
+     <span class="comment">#...</span>
+ <span class="operator">}</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The <code>HTML::TokeParser</code> is an alternative interface to the
+<code>HTML::Parser</code> class.  It is an <code>HTML::PullParser</code> subclass with a
+predeclared set of token types.  If you wish the tokens to be reported
+differently you probably want to use the <code>HTML::PullParser</code> directly.</p>
+<p>The following methods are available:</p>
+<dl>
+<dt><strong><a name="new" class="item">$p = HTML::TokeParser-&gt;new( $filename, %opt );</a></strong></dt>
+
+<dt><strong>$p = HTML::TokeParser-&gt;new( $filehandle, %opt );</strong></dt>
+
+<dt><strong>$p = HTML::TokeParser-&gt;new( \$document, %opt );</strong></dt>
+
+<dd>
+<p>The object constructor argument is either a file name, a file handle
+object, or the complete document to be parsed.  Extra options can be
+provided as key/value pairs and are processed as documented by the base
+classes.</p>
+<p>If the argument is a plain scalar, then it is taken as the name of a
+file to be opened and parsed.  If the file can't be opened for
+reading, then the constructor will return <a href="../../../lib/pod/perlfunc.html#undef"><code>undef</code></a> and $! will tell
+you why it failed.</p>
+<p>If the argument is a reference to a plain scalar, then this scalar is
+taken to be the literal document to parse.  The value of this
+scalar should not be changed before all tokens have been extracted.</p>
+<p>Otherwise the argument is taken to be some object that the
+<code>HTML::TokeParser</code> can <a href="../../../lib/pod/perlfunc.html#read"><code>read()</code></a> from when it needs more data.  Typically
+it will be a filehandle of some kind.  The stream will be <a href="../../../lib/pod/perlfunc.html#read"><code>read()</code></a> until
+EOF, but not closed.</p>
+<p>A newly constructed <code>HTML::TokeParser</code> differ from its base classes
+by having the <code>unbroken_text</code> attribute enabled by default. See
+<a href="../../../.cpan/build/HTML-Parser-3.71-To1FVX/blib/html/site/lib/HTML/Parser.html">the HTML::Parser manpage</a> for a description of this and other attributes that
+influence how the document is parsed. It is often a good idea to enable
+<code>empty_element_tags</code> behaviour.</p>
+<p>Note that the parsing result will likely not be valid if raw undecoded
+UTF-8 is used as a source.  When parsing UTF-8 encoded files turn
+on UTF-8 decoding:</p>
+<pre>
+   <span class="keyword">open</span><span class="operator">(</span><span class="keyword">my</span> <span class="variable">$fh</span><span class="operator">,</span> <span class="string">"&lt;:utf8"</span><span class="operator">,</span> <span class="string">"index.html"</span><span class="operator">)</span> <span class="operator">||</span> <span class="keyword">die</span> <span class="string">"Can't open 'index.html': $!"</span><span class="operator">;</span>
+   <span class="keyword">my</span> <span class="variable">$p</span> <span class="operator">=</span> <span class="variable">HTML::TokeParser</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="variable">$fh</span> <span class="operator">);</span>
+   <span class="comment"># ...</span>
+</pre>
+<p>If a $filename is passed to the constructor the file will be opened in
+raw mode and the parsing result will only be valid if its content is
+Latin-1 or pure ASCII.</p>
+<p>If parsing from an UTF-8 encoded string buffer decode it first:</p>
+<pre>
+   <span class="variable">utf8::decode</span><span class="operator">(</span><span class="variable">$document</span><span class="operator">);</span>
+   <span class="keyword">my</span> <span class="variable">$p</span> <span class="operator">=</span> <span class="variable">HTML::TokeParser</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="operator">\</span><span class="variable">$document</span> <span class="operator">);</span>
+   <span class="comment"># ...</span>
+</pre>
+</dd>
+<dt><strong><a name="get_token" class="item">$p-&gt;get_token</a></strong></dt>
+
+<dd>
+<p>This method will return the next <em>token</em> found in the HTML document,
+or <a href="../../../lib/pod/perlfunc.html#undef"><code>undef</code></a> at the end of the document.  The token is returned as an
+array reference.  The first element of the array will be a string
+denoting the type of this token: &quot;S&quot; for start tag, &quot;E&quot; for end tag,
+&quot;T&quot; for text, &quot;C&quot; for comment, &quot;D&quot; for declaration, and &quot;PI&quot; for
+process instructions.  The rest of the token array depend on the type
+like this:</p>
+<pre>
+  [&quot;S&quot;,  $tag, $attr, $attrseq, $text]
+  [&quot;E&quot;,  $tag, $text]
+  [&quot;T&quot;,  $text, $is_data]
+  [&quot;C&quot;,  $text]
+  [&quot;D&quot;,  $text]
+  [&quot;PI&quot;, $token0, $text]</pre>
+<p>where $attr is a hash reference, $attrseq is an array reference and
+the rest are plain scalars.  The <a href="../../../.cpan/build/HTML-Parser-3.71-To1FVX/blib/html/site/lib/HTML/Parser.html#argspec">Argspec in the HTML::Parser manpage</a> explains the
+details.</p>
+</dd>
+<dt><strong><a name="unget_token" class="item">$p-&gt;unget_token( @tokens )</a></strong></dt>
+
+<dd>
+<p>If you find you have read too many tokens you can push them back,
+so that they are returned the next time $p-&gt;get_token is called.</p>
+</dd>
+<dt><strong><a name="get_tag" class="item">$p-&gt;get_tag</a></strong></dt>
+
+<dt><strong>$p-&gt;get_tag( @tags )</strong></dt>
+
+<dd>
+<p>This method returns the next start or end tag (skipping any other
+tokens), or <a href="../../../lib/pod/perlfunc.html#undef"><code>undef</code></a> if there are no more tags in the document.  If
+one or more arguments are given, then we skip tokens until one of the
+specified tag types is found.  For example:</p>
+<pre>
+   <span class="variable">$p</span><span class="operator">-&gt;</span><span class="variable">get_tag</span><span class="operator">(</span><span class="string">"font"</span><span class="operator">,</span> <span class="string">"/font"</span><span class="operator">);</span>
+</pre>
+<p>will find the next start or end tag for a font-element.</p>
+<p>The tag information is returned as an array reference in the same form
+as for $p-&gt;get_token above, but the type code (first element) is
+missing. A start tag will be returned like this:</p>
+<pre>
+  [$tag, $attr, $attrseq, $text]</pre>
+<p>The tagname of end tags are prefixed with &quot;/&quot;, i.e. end tag is
+returned like this:</p>
+<pre>
+  [&quot;/$tag&quot;, $text]</pre>
+</dd>
+<dt><strong><a name="get_text" class="item">$p-&gt;get_text</a></strong></dt>
+
+<dt><strong>$p-&gt;get_text( @endtags )</strong></dt>
+
+<dd>
+<p>This method returns all text found at the current position. It will
+return a zero length string if the next token is not text. Any
+entities will be converted to their corresponding character.</p>
+<p>If one or more arguments are given, then we return all text occurring
+before the first of the specified tags found. For example:</p>
+<pre>
+   <span class="variable">$p</span><span class="operator">-&gt;</span><span class="variable">get_text</span><span class="operator">(</span><span class="string">"p"</span><span class="operator">,</span> <span class="string">"br"</span><span class="operator">);</span>
+</pre>
+<p>will return the text up to either a paragraph of linebreak element.</p>
+<p>The text might span tags that should be <em>textified</em>.  This is
+controlled by the $p-&gt;{textify} attribute, which is a hash that
+defines how certain tags can be treated as text.  If the name of a
+start tag matches a key in this hash then this tag is converted to
+text.  The hash value is used to specify which tag attribute to obtain
+the text from.  If this tag attribute is missing, then the upper case
+name of the tag enclosed in brackets is returned, e.g. &quot;[IMG]&quot;.  The
+hash value can also be a subroutine reference.  In this case the
+routine is called with the start tag token content as its argument and
+the return value is treated as the text.</p>
+<p>The default $p-&gt;{textify} value is:</p>
+<pre>
+  <span class="operator">{</span><span class="string">img</span> <span class="operator">=&gt;</span> <span class="string">"alt"</span><span class="operator">,</span> <span class="string">applet</span> <span class="operator">=&gt;</span> <span class="string">"alt"</span><span class="operator">}</span>
+</pre>
+<p>This means that &lt;IMG&gt; and &lt;APPLET&gt; tags are treated as text, and that
+the text to substitute can be found in the ALT attribute.</p>
+</dd>
+<dt><strong><a name="get_trimmed_text" class="item">$p-&gt;get_trimmed_text</a></strong></dt>
+
+<dt><strong>$p-&gt;get_trimmed_text( @endtags )</strong></dt>
+
+<dd>
+<p>Same as $p-&gt;get_text above, but will collapse any sequences of white
+space to a single space character.  Leading and trailing white space is
+removed.</p>
+</dd>
+<dt><strong><a name="get_phrase" class="item">$p-&gt;get_phrase</a></strong></dt>
+
+<dd>
+<p>This will return all text found at the current position ignoring any
+phrasal-level tags.  Text is extracted until the first non
+phrasal-level tag.  Textification of tags is the same as for
+<a href="#get_text"><code>get_text()</code></a>.  This method will collapse white space in the same way as
+<a href="#get_trimmed_text"><code>get_trimmed_text()</code></a> does.</p>
+<p>The definition of &lt;i&gt;phrasal-level tags&lt;/i&gt; is obtained from the
+HTML::Tagset module.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>This example extracts all links from a document.  It will print one
+line for each link, containing the URL and the textual description
+between the &lt;A&gt;...&lt;/A&gt; tags:</p>
+<pre>
+  <span class="keyword">use</span> <span class="variable">HTML::TokeParser</span><span class="operator">;</span>
+  <span class="variable">$p</span> <span class="operator">=</span> <span class="variable">HTML::TokeParser</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="keyword">shift</span><span class="operator">||</span><span class="string">"index.html"</span><span class="operator">);</span>
+</pre>
+<pre>
+  <span class="keyword">while</span> <span class="operator">(</span><span class="keyword">my</span> <span class="variable">$token</span> <span class="operator">=</span> <span class="variable">$p</span><span class="operator">-&gt;</span><span class="variable">get_tag</span><span class="operator">(</span><span class="string">"a"</span><span class="operator">))</span> <span class="operator">{</span>
+      <span class="keyword">my</span> <span class="variable">$url</span> <span class="operator">=</span> <span class="variable">$token</span><span class="operator">-&gt;</span><span class="operator">[</span><span class="number">1</span><span class="operator">]{</span><span class="string">href</span><span class="operator">}</span> <span class="operator">||</span> <span class="string">"-"</span><span class="operator">;</span>
+      <span class="keyword">my</span> <span class="variable">$text</span> <span class="operator">=</span> <span class="variable">$p</span><span class="operator">-&gt;</span><span class="variable">get_trimmed_text</span><span class="operator">(</span><span class="string">"/a"</span><span class="operator">);</span>
+      <span class="keyword">print</span> <span class="string">"</span><span class="variable">$url</span><span class="string">\t</span><span class="variable">$text</span><span class="string">\n"</span><span class="operator">;</span>
+  <span class="operator">}</span>
+</pre>
+<p>This example extract the &lt;TITLE&gt; from the document:</p>
+<pre>
+  <span class="keyword">use</span> <span class="variable">HTML::TokeParser</span><span class="operator">;</span>
+  <span class="variable">$p</span> <span class="operator">=</span> <span class="variable">HTML::TokeParser</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="keyword">shift</span><span class="operator">||</span><span class="string">"index.html"</span><span class="operator">);</span>
+  <span class="keyword">if</span> <span class="operator">(</span><span class="variable">$p</span><span class="operator">-&gt;</span><span class="variable">get_tag</span><span class="operator">(</span><span class="string">"title"</span><span class="operator">))</span> <span class="operator">{</span>
+      <span class="keyword">my</span> <span class="variable">$title</span> <span class="operator">=</span> <span class="variable">$p</span><span class="operator">-&gt;</span><span class="variable">get_trimmed_text</span><span class="operator">;</span>
+      <span class="keyword">print</span> <span class="string">"Title: </span><span class="variable">$title</span><span class="string">\n"</span><span class="operator">;</span>
+  <span class="operator">}</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><a href="../../../.cpan/build/HTML-Parser-3.71-To1FVX/blib/html/site/lib/HTML/PullParser.html">the HTML::PullParser manpage</a>, <a href="../../../.cpan/build/HTML-Parser-3.71-To1FVX/blib/html/site/lib/HTML/Parser.html">the HTML::Parser manpage</a></p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 1998-2005 Gisle Aas.</p>
+<p>This library is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.</p>
+
+</body>
+
+</html>

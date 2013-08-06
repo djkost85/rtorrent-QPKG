@@ -1,0 +1,73 @@
+#!/usr/bin/env sh
+: ${DEBUG:=1}
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+# parseline
+#
+
+# bool parseline (string <line>)
+#
+# Parses a string line and converts it to arrays.
+# Returns true if significant arrays were extracted from it.
+#
+# String may contain double quotes and single quotes for encapsulating
+# strings.
+#
+# > string array __A0 = arguments
+# > int __I0 = number of arguments
+#
+function parseline {
+	__A0=()
+	__I0=0
+
+	local -i LENGTH=${#1} I BASE
+	local TOKEN=''
+
+	for (( I = 0; I < LENGTH; ++I )); do
+		A=${1:I:1}
+		case "$A" in
+		[[:space:]])
+			[[ -n $TOKEN ]] && {
+				__A0[__I0++]=$TOKEN
+				TOKEN=''
+			}
+			;;
+		\\)
+			(( ++I ))
+			[[ I -lt LENGTH ]] && A=${1:I:1}
+			TOKEN=${TOKEN}${A}
+			;;
+		\')
+			for (( ++I, BASE = I; I < LENGTH; ++I )); do
+				[[ ${1:I:1} = \' ]] && break
+			done
+			[[ I -gt BASE ]] && TOKEN=${TOKEN}${1:BASE:I - BASE}
+			;;
+		\")
+			for (( ++I; I < LENGTH; ++I )); do
+				A=${1:I:1}
+				case "$A" in
+				\")
+					break
+					;;
+				\\)
+					(( ++I ))
+					[[ I -lt LENGTH ]] && A=${1:I:1}
+					;;
+				esac
+				TOKEN=${TOKEN}${A}
+			done
+			;;
+		*)
+			TOKEN=${TOKEN}${A}
+			;;
+		esac
+	done
+
+	[[ -n $TOKEN ]] && __A0[__I0++]=$TOKEN
+
+	[[ __I0 -gt 0 ]]
+}

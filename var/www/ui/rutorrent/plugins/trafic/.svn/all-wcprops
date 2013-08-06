@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2325/trunk/plugins/trafic
+END
+getdata.php
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/2115/trunk/plugins/trafic/getdata.php
+END
+stat.php
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2115/trunk/plugins/trafic/stat.php
+END
+action.php
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2115/trunk/plugins/trafic/action.php
+END
+ratios.php
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2115/trunk/plugins/trafic/ratios.php
+END
+update.php
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2291/trunk/plugins/trafic/update.php
+END
+plugin.info
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/2255/trunk/plugins/trafic/plugin.info
+END
+init.php
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2202/trunk/plugins/trafic/init.php
+END
+conf.php
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2115/trunk/plugins/trafic/conf.php
+END
+done.php
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2115/trunk/plugins/trafic/done.php
+END
+init.js
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2308/trunk/plugins/trafic/init.js
+END

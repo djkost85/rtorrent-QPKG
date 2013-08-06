@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2332/trunk/plugins/source
+END
+action.php
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2115/trunk/plugins/source/action.php
+END
+plugin.info
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/2255/trunk/plugins/source/plugin.info
+END
+init.js
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2332/trunk/plugins/source/init.js
+END

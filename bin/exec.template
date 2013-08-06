@@ -1,0 +1,22 @@
+#!/bin/sh
+
+source /usr/bin/rtorrent/bin/rtorrent.env
+
+# defined strict PATH
+export PATH="/usr/bin/rtorrent/bin:/usr/bin/rtorrent/sbin"
+
+# Try to fix the missing version information issue
+export LD_RUN_PATH="/usr/bin/rtorrent/lib"
+export LD_LIBRARY_PATH="/usr/bin/rtorrent/lib"
+
+
+me=$([[ $0 == /* ]] && echo "$0" || echo "${PWD}/${0#./}")
+root=$(dirname ${me})
+
+script=${0#./}.exec
+
+echo Executing: ${root}/${script} ${@}
+${root}/${script} ${@}
+
+RETVAL=$?
+exit $?

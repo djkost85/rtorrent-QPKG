@@ -1,0 +1,53 @@
+8
+
+dir
+54
+http://avalanche-rt.googlecode.com/svn/trunk/lang
+http://avalanche-rt.googlecode.com/svn
+
+
+
+2010-05-03T09:23:39.534881Z
+47
+keithamus
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+3051db82-1d7c-11df-8d00-ad93a377a9c4
+
+en-gb.json
+file
+
+
+
+
+2013-08-03T18:05:29.000000Z
+170417553f2d29f004c23f9cbf6e4fe5
+2010-05-03T09:23:39.534881Z
+47
+keithamus
+has-props
+
+ja-jp.json
+file
+
+
+
+
+2013-08-03T18:05:29.000000Z
+9fe3a3b6f8fa8ed4418496029b467a0e
+2010-05-03T09:23:39.534881Z
+47
+keithamus
+

@@ -1,0 +1,134 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+_QLIBNAME="libQNAP" ; _QLIB_version="0.1.2"
+_QLIBDESC="QPX Framework Common QNAP Functions Library"
+
+##### LOAD ONLY ONCE #####
+[ ! -z "$(eval echo \"\$QPX_l${_QLIBNAME}\")" ] && {
+	[ "$DEBUG" != "0" ] && echo "[ $QPROJECT $_QLIBNAME ] Version ${_QLIB_version} already started!"
+	return 1
+} || {
+	[ "$DEBUG" != "0" ] && echo "[ $QPROJECT $_QLIBNAME ] Version ${_QLIB_version} is loading right now..."
+	eval QPX_l${_QLIBNAME}="${_QLIB_version}"
+	#export QPX_l${_QLIBNAME}
+}
+
+
+include globals
+include qlog
+include ansi
+include xcmdlog
+include deps/hostname
+include deps/cut
+include deps/echo
+include deps/getcfg
+
+
+##### System definitions #####
+SYS_PWD_DIR="$(pwd)"
+SYS_CONFIG_DIR="/etc/config"
+SYS_INIT_DIR="/etc/init.d"
+SYS_STARTUP_DIR="/etc/rcS.d"
+SYS_SHUTDOWN_DIR="/etc/rcK.d"
+SYS_RSS_IMG_DIR="/home/httpd/RSS/images"
+SYS_QPKG_CONFIG_FILE="$SYS_CONFIG_DIR/qpkg.conf"
+SYS_HOSTNAME=$(hostname)
+
+
+# Base locations
+SYS_QPKG_BASE=""
+SYS_QPKG_ROOT=""
+SYS_QPKG_DIR=""
+
+
+###############################################################################
+# Determine location of given share and assign to variable in second argument.
+###############################################################################
+get_share_path(){
+        [ -n "$1" ] && [ -n "$2" ] || return 1
+        local share="$1"
+        local path="$2"
+
+        # Get location from smb.conf
+        local location=$(getcfg "$share" path -f $SYS_CONFIG_DIR/smb.conf)
+
+        [ -n "$location" ] || return 1
+        eval $path=\"$location\"
+}
+
+
+####################################################
+# Determine name and location for all system shares
+####################################################
+init_share_settings(){
+        SYS_PUBLIC_SHARE=$(getcfg SHARE_DEF defPublic -d Public -f $SYS_CONFIG_DIR/def_share.info)
+        SYS_DOWNLOAD_SHARE=$(getcfg SHARE_DEF defDownload -d Qdownload -f $SYS_CONFIG_DIR/def_share.info)
+        SYS_MULTIMEDIA_SHARE=$(getcfg SHARE_DEF defMultimedia -d Qmultimedia -f $SYS_CONFIG_DIR/def_share.info)
+        SYS_RECORDINGS_SHARE=$(getcfg SHARE_DEF defRecordings -d Qrecordings -f $SYS_CONFIG_DIR/def_share.info)
+        SYS_USB_SHARE=$(getcfg SHARE_DEF defUsb -d Qusb -f $SYS_CONFIG_DIR/def_share.info)
+        SYS_WEB_SHARE=$(getcfg SHARE_DEF defWeb -d Qweb -f $SYS_CONFIG_DIR/def_share.info)
+
+        get_share_path $SYS_PUBLIC_SHARE     SYS_PUBLIC_PATH
+        get_share_path $SYS_DOWNLOAD_SHARE   SYS_DOWNLOAD_PATH
+        get_share_path $SYS_MULTIMEDIA_SHARE SYS_MULTIMEDIA_PATH
+        get_share_path $SYS_RECORDINGS_SHARE SYS_RECORDINGS_PATH
+        get_share_path $SYS_USB_SHARE        SYS_USB_PATH
+        get_share_path $SYS_WEB_SHARE        SYS_WEB_PATH
+}
+
+
+##################################################################
+# Determine BASE installation location and assign to SYS_QPKG_DIR
+##################################################################
+assign_base(){
+        local base=""
+        if [ -n "$SYS_PUBLIC_PATH" ] && [ -d "$SYS_PUBLIC_PATH" ]; then
+                local dirp1=$(echo $SYS_PUBLIC_PATH | cut -d "/" -f 2)
+                local dirp2=$(echo $SYS_PUBLIC_PATH | cut -d "/" -f 3)
+                local dirp3=$(echo $SYS_PUBLIC_PATH | cut -d "/" -f 4)
+                [ -n "$dirp1" ] && [ -n "$dirp2" ] && [ -n "$dirp3" ] &&
+                        [ -d "/$dirp1/$dirp2/$SYS_PUBLIC_SHARE" ] && base="/$dirp1/$dirp2"
+        fi
+
+        # Determine BASE location by checking where the directory is.
+        if [ -z "$base" ]; then
+                for datadirtest in /share/HDA_DATA /share/HDB_DATA /share/HDC_DATA \
+                                   /share/HDD_DATA /share/HDE_DATA /share/HDF_DATA \
+                                   /share/HDG_DATA /share/HDH_DATA /share/MD0_DATA \
+                                   /share/MD1_DATA /share/MD2_DATA /share/MD3_DATA
+                do
+                        [ -d "$datadirtest/$SYS_PUBLIC_SHARE" ] && base="$datadirtest"
+                done
+        fi
+        if [ -z "$base" ] ; then
+                err_log "Public share not found"
+        fi
+        SYS_QPKG_BASE="$base"
+        SYS_QPKG_ROOT="$SYS_QPKG_BASE/.qpkg"
+}
+
+######################################
+# Export RT_BASE envoirment locations
+######################################
+export_basic_env(){
+							[ "$DEBUG" != "0" ] && msg_debug "[ $QPROJECT $_QLIBNAME ] ++Exporting Basic Environment Definitions"
+
+	##### system paths
+	export QPKG_BASE="${SYS_QPKG_BASE}" ; 		[ "$DEBUG" != "0" ] && msg_debug "[ $QPROJECT $_QLIBNAME ] QPKG Base: ${QPKG_BASE}"
+	export QPKG_ROOT="${SYS_QPKG_ROOT}" ; 		[ "$DEBUG" != "0" ] && msg_debug "[ $QPROJECT $_QLIBNAME ] QPKG ROOT: ${QPKG_ROOT}"
+	export QPKG_DIR="${PROGDIR}" ; 			[ "$DEBUG" != "0" ] && msg_debug "[ $QPROJECT $_QLIBNAME ] QPKG DIR : ${QPKG_DIR}"
+	
+	##### file paths
+	export F_PKG_INFO="${QPKG_DIR}/${_PKG_INFO}" ; 	[ "$DEBUG" != "0" ] && msg_debug "[ $QPROJECT $_QLIBNAME ] Pkg Info : ${F_PKG_INFO}"
+	export F_PKG_CFG="${QPKG_DIR}/${_PKG_CFG}" ; 	[ "$DEBUG" != "0" ] && msg_debug "[ $QPROJECT $_QLIBNAME ] Pkg Confg: ${F_PKG_CFG}"
+}
+
+
+init_share_settings
+assign_base
+export_basic_env
+#read_pkgcfg

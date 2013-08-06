@@ -1,0 +1,8 @@
+/usr/bin/rtorrent/perl/lib/DBD/SQLite.pm
+/usr/bin/rtorrent/perl/lib/DBD/SQLite/Cookbook.pod
+/usr/bin/rtorrent/perl/lib/auto/DBD/SQLite/SQLite.bs
+/usr/bin/rtorrent/perl/lib/auto/DBD/SQLite/SQLite.so
+/usr/bin/rtorrent/perl/lib/auto/share/dist/DBD-SQLite/sqlite3.c
+/usr/bin/rtorrent/perl/lib/auto/share/dist/DBD-SQLite/sqlite3.h
+/usr/bin/rtorrent/perl/man/man3/DBD::SQLite.3
+/usr/bin/rtorrent/perl/man/man3/DBD::SQLite::Cookbook.3

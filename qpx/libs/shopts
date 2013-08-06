@@ -1,0 +1,58 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include null
+
+# shopts
+#
+# Parent controller of shoptsargs/*.sh.
+#
+
+SHOPTS=()
+SHOPTS_COUNT=0
+
+
+function shopts_register {
+	SHOPTS[SHOPTS_COUNT++]=$1
+}
+
+
+function shopts_on {
+	local A
+	for A in "${SHOPTS[@]}"; do
+		"shopts_${A}_on"
+	done
+}
+
+
+function shopts_off {
+	local A
+	for A in "${SHOPTS[@]}"; do
+		"shopts_${A}_off"
+	done
+}
+
+
+function shopts_save {
+	local A
+	for A in "${SHOPTS[@]}"; do
+		"shopts_${A}_save"
+	done
+}
+
+
+function shopts_restore {
+	local A
+	for A in "${SHOPTS[@]}"; do
+		"shopts_${A}_restore"
+	done
+}
+
+
+#function shopts_test {
+#	read __ < <(shopt -p "$@" 2>&1)
+#	[[ $__ == shopt* ]]
+#}

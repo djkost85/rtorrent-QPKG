@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+include needs
+needs hostname

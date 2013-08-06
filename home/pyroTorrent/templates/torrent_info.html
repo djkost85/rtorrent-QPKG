@@ -1,0 +1,90 @@
+{% extends "base.jinja2" %}
+
+{% macro dfs(node) -%}
+
+<li>
+{% if node.children %}
+<b>{{ node.name }}</b> 
+{% else %}
+    {% if file_downloads %}
+    <a href="{{ url_for('torrent_get_file', target=target['name'],
+        torrent=torrent.get_hash, filename=node.get_path_no_root()) }}"> <i>{{ node.name }}</i>
+    </a>
+    <b>(Chunks completed: {{ node.obj.get_completed_chunks }} / {{
+        node.obj.get_size_chunks }} )</b>
+    {% else %}
+    <i>{{ node.name }}</i>
+    <b>(Chunks completed: {{ node.obj.get_completed_chunks }} / {{
+        node.obj.get_size_chunks }} )</b>
+    {% endif %}
+{% endif %}
+</li>
+
+{% if node.children %}
+    <div class="torrentfile-div">
+    <ul>
+    {% for x in node.children %}
+        {{ dfs(x) }}
+    {% endfor %}
+    </ul>
+    </div>
+{% endif %}
+{%- endmacro %}
+
+{% block main %}
+{% if torrent %}
+        <div class="torrent-def-div">
+            <p>
+            {% for action in ['open', 'close', 'start', 'stop', 'pause',
+            'resume', 'erase'] %}
+            <a href="{{ url_for('torrent_info', target=target['name'],
+                torrent=torrent.get_hash, action=action) }}">{{ action }}</a>
+            {% endfor %}
+            </p>
+        </div>
+        <div class="torrent-def-div">
+        <h1> {{ torrent.get_name }}
+            ({{ wn(torrent.get_download_total) }} /
+            {{ wn(torrent.get_size_bytes) }}) </h1>
+        <p> Loaded file: 
+        <a
+            href="{{ url_for('torrent_file', target=target['name'],
+            torrent=torrent.get_hash) }}">
+            {{ torrent.get_loaded_file }}
+        </a>
+        </p>
+        {% if torrent.get_message %}
+        <p> Message: {{ torrent.get_message }} </p>
+        {% endif %}
+        <p> Active:
+        {% if torrent.is_active %}
+        True
+        {% else %}
+        False
+        {% endif %}
+        </p>
+        </div>
+        <div class="torrent-def-div">
+        <p>
+        <ul>
+            {{ dfs(tree) }}
+        </ul>
+        </p>
+        </div>
+
+        {% if peers %}
+            <div class="torrent-def-div">
+            <h1> Peers </h1>
+            {% for peer in peers %}
+            <p>
+            <a href="{{ url_for('peer_info', target=target['name'],
+                torrent=torrent.get_hash, peer_id=peer.get_id) }}">
+            Version: {{ peer.get_client_version }}, Address: {{ peer.get_address
+            }}, encrypted: {{ peer.is_encrypted }}.
+            </a>
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+{% endif %}
+{% endblock %}

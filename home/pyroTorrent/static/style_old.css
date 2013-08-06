@@ -1,0 +1,250 @@
+body {
+   /* background-color: #EEEEEE; */
+/*    background-image: url('/torrent/static/fox.png');*/
+    background-image: url('/torrent/static/cat.jpg');
+    color: #555555;
+    font: 12px/18px "Liberation Sans", Arial, Verdana, Sans;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: rgba(190,212,235, 0.4);
+    color: #212224;
+    font-weight: bold;
+
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+
+    margin: 1em;
+    padding-left: 1em;
+}
+
+span.logo {
+    font-size: 22px;
+    line-height: 33px;
+    margin-right: 10px;
+}
+
+#torrent_list {
+/*    margin: 20px 0 0 0; */
+    margin: 1em;
+    padding: 0;
+
+}
+
+div.torrent_list_wiz {
+    background-color: #D8DEE3;
+    background-color: rgba(216, 222, 227, 0.4);
+    padding: 1em;
+
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+#torrent_list ul {
+    margin: 0em;
+    padding: 0;
+
+}
+
+#torrent_list li {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding: 2px 6px;
+    list-style: none;
+
+
+    /*
+    border: 2em;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    */
+}
+
+
+span.up {
+    color: #1D1;
+}
+
+span.down {
+    color: #D11;
+}
+
+h1.target_header {
+    padding-top: 1em;
+}
+
+div.target_header_bottom {
+    padding-bottom: 1em;
+}
+
+span.ip {
+    color: #fff;
+    font-weight: bold;
+}
+
+li.torrent_complete {
+    background-color: rgba(120, 120, 200, 0.4);
+}
+
+li.torrent_incomplete {
+    background-color: rgba(190, 190, 240, 0.4);
+}
+
+span.upload_rate, span.download_rate, span.progress {
+    clear: none;
+    display: inline-block;
+    margin-top: -17px;
+    position: absolute;
+    right: 0%;
+    text-align: right;
+}
+
+span.progress {
+    border: 1px solid #272;
+    width: 140px;
+    height: 14px;
+    right: 30px;
+    line-height: 16px;
+
+    /*
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    */
+}
+
+span.download_rate {
+    margin-right: 210px;
+}
+
+span.upload_rate {
+    margin-right: 152px;
+}
+
+span.progress {
+    color: #000;
+    margin-right: 0px;
+}
+
+a {
+    color: #000;
+    text-decoration: none;
+}
+
+a:link {
+    color: #000;
+}
+
+a:hover {
+    color: #000;
+    text-decoration: underline;
+}
+
+div.target_info {
+    border: 1px;
+/*    background-color: #C8D5E3; */
+    background-color: rgba(200, 213, 227, 0.4);
+    color: #212224;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    border: 2em;
+}
+
+div.inner_target_info {
+    margin: 2em;
+}
+
+
+li.torrent_complete span.progress {
+    color: #000;
+    border: 0;
+    padding: 1px 5px;
+}
+
+li.torrent_incomplete span.progress_bar {
+    /* Made the background colour more visible. I probably lack taste so
+     * feel free to change it to a more fitting (but still noticable!) colour
+     */
+    background-color: rgba(50, 200, 60, 0.4);
+    width: 20%;
+    height: 14px;
+    display: block;
+    float: left;
+    position: absolute;
+    z-index: 1;
+}
+
+li.torrent_incomplete span.progress_text {
+    display: inline-block;
+    float: right;
+    position: absolute;
+    text-align: right;
+    right: 2px;
+    width: 100%;
+    z-index: 2;
+
+    color: #000;
+}
+
+li.torrent_incomplete:hover, li.torrent_complete:hover {
+    background-color: rgba(0, 0, 0, 0.0); /* Fully transparent background */
+}
+
+span.download_icon, span.upload_icon {
+    float: right;
+    height: 16px;
+    width: 16px;
+    margin-left: 0em;
+    margin-right: 1em;
+}
+
+span.download_icon {
+    background: transparent url(/torrent/static/icons/arrow_down.png);
+}
+span.upload_icon {
+    background: transparent url(/torrent/static/icons/arrow_up.png);
+}
+
+span.add_torrent_icon {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+}
+
+span.add_torrent_icon {
+    background: transparent url('/torrent/static/icons/add.png');
+}
+
+div.torrent-def-div {
+    background-color: rgba(100, 100, 100, 0.4);
+   /* background-color: rgba(34, 34, 34, 0.4);*/
+    color: #fff;
+
+    margin-top: 2em;
+    padding: 1em;
+    border: 2em;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+/* Form styling */
+
+input, input.file {
+    background-color: rgba(0, 0, 0, 0.0);
+    color: #222222;
+}
+
+/* Hack from
+http://www.dreamincode.net/forums/topic/15621-styling-a-file-browse-button/
+*/
+input.hide {
+    position: absolute;
+    left: -137px;
+    opacity: 0;
+    z-index: 2;
+}

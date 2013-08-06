@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/2325/trunk/plugins/geoip
+END
+lookup.php
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/2290/trunk/plugins/geoip/lookup.php
+END
+action.php
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/2115/trunk/plugins/geoip/action.php
+END
+ip_db.php
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2115/trunk/plugins/geoip/ip_db.php
+END
+plugin.info
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2255/trunk/plugins/geoip/plugin.info
+END
+init.php
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2115/trunk/plugins/geoip/init.php
+END
+geoip.css
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2039/trunk/plugins/geoip/geoip.css
+END
+conf.php
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2200/trunk/plugins/geoip/conf.php
+END
+init.js
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2039/trunk/plugins/geoip/init.js
+END
+make_css.sh
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/866/trunk/plugins/geoip/make_css.sh
+END

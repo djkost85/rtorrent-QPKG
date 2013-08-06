@@ -1,0 +1,53 @@
+---
+distribution: !!perl/hash:CPAN::Distribution
+  CALLED_FOR: JSON
+  CHECKSUM_STATUS: OK
+  ID: M/MA/MAKAMAKA/JSON-2.59.tar.gz
+  RO:
+    CPAN_COMMENT: ~
+    CPAN_USERID: MAKAMAKA
+  archived: tar
+  build_dir: /usr/bin/rtorrent/perl/.cpan/build/JSON-2.59-jk8Frh
+  incommandcolor: 1
+  install: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 0
+    FAILED: ''
+    TEXT: YES
+    TIME: 1374596688
+  localfile: /usr/bin/rtorrent/perl/.cpan/sources/authors/id/M/MA/MAKAMAKA/JSON-2.59.tar.gz
+  make: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 0
+    FAILED: ''
+    TEXT: YES
+    TIME: 1374596674
+  make_test: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 0
+    FAILED: ''
+    TEXT: YES
+    TIME: 1374596687
+  negative_prefs_cache: 0
+  prefs:
+    install: {}
+  prereq_pm:
+    build_requires:
+      ExtUtils::MakeMaker: '0'
+    requires:
+      Test::More: '0'
+  reqtype: c
+  sponsored_mods: {}
+  unwrapped: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 0
+    FAILED: ''
+    TEXT: YES
+    TIME: 1374596671
+  writemakefile: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 0
+    FAILED: ''
+    TEXT: YES
+    TIME: 1374596672
+perl:
+  $^X: /usr/bin/rtorrent/perl/bin/perl-static
+  mtime_$^X: 1372863820
+  mtime_dll: 0
+  sitearchexp: /usr/bin/rtorrent/perl/site/lib
+time: 1374596688

@@ -1,0 +1,662 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::Reader - XML::LibXML::Reader - interface to libxml2 pull parser</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::Reader - XML::LibXML::Reader - interface to libxml2 pull parser</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#constructor">CONSTRUCTOR</a></li>
+	<ul>
+
+		<li><a href="#source_specification">Source specification</a></li>
+		<li><a href="#reader_options">Reader options</a></li>
+	</ul>
+
+	<li><a href="#methods_controlling_parsing_progress">METHODS CONTROLLING PARSING PROGRESS</a></li>
+	<li><a href="#methods_extracting_information">METHODS EXTRACTING INFORMATION</a></li>
+	<li><a href="#methods_extracting_dom_nodes">METHODS EXTRACTING DOM NODES</a></li>
+	<li><a href="#methods_processing_attributes">METHODS PROCESSING ATTRIBUTES</a></li>
+	<li><a href="#other_methods">OTHER METHODS</a></li>
+	<li><a href="#destruction">DESTRUCTION</a></li>
+	<li><a href="#node_types">NODE TYPES</a></li>
+	<li><a href="#states">STATES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#original_implementation">ORIGINAL IMPLEMENTATION</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::Reader - XML::LibXML::Reader - interface to libxml2 pull parser</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML::Reader</span><span class="operator">;</span>
+</pre>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$reader</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Reader</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="string">location</span> <span class="operator">=&gt;</span> <span class="string">"file.xml"</span><span class="operator">)</span>
+         <span class="keyword">or</span> <span class="keyword">die</span> <span class="string">"cannot read file.xml\n"</span><span class="operator">;</span>
+  <span class="keyword">while</span> <span class="operator">(</span><span class="variable">$reader</span><span class="operator">-&gt;</span><span class="variable">read</span><span class="operator">)</span> <span class="operator">{</span>
+    <span class="variable">processNode</span><span class="operator">(</span><span class="variable">$reader</span><span class="operator">);</span>
+  <span class="operator">}</span>
+</pre>
+<pre>
+  <span class="keyword">sub</span><span class="variable"> processNode </span><span class="operator">{</span>
+      <span class="keyword">my</span> <span class="variable">$reader</span> <span class="operator">=</span> <span class="keyword">shift</span><span class="operator">;</span>
+      <span class="keyword">printf</span> <span class="string">"%d %d %s %d\n"</span><span class="operator">,</span> <span class="operator">(</span><span class="variable">$reader</span><span class="operator">-&gt;</span><span class="variable">depth</span><span class="operator">,</span>
+                               <span class="variable">$reader</span><span class="operator">-&gt;</span><span class="variable">nodeType</span><span class="operator">,</span>
+                               <span class="variable">$reader</span><span class="operator">-&gt;</span><span class="variable">name</span><span class="operator">,</span>
+                               <span class="variable">$reader</span><span class="operator">-&gt;</span><span class="variable">isEmptyElement</span><span class="operator">);</span>
+  <span class="operator">}</span>
+</pre>
+<p>or</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$reader</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Reader</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="string">location</span> <span class="operator">=&gt;</span> <span class="string">"file.xml"</span><span class="operator">)</span>
+         <span class="keyword">or</span> <span class="keyword">die</span> <span class="string">"cannot read file.xml\n"</span><span class="operator">;</span>
+    <span class="variable">$reader</span><span class="operator">-&gt;</span><span class="variable">preservePattern</span><span class="operator">(</span><span class="string">'//table/tr'</span><span class="operator">);</span>
+    <span class="variable">$reader</span><span class="operator">-&gt;</span><span class="variable">finish</span><span class="operator">;</span>
+    <span class="keyword">print</span> <span class="variable">$reader</span><span class="operator">-&gt;</span><span class="variable">document</span><span class="operator">-&gt;</span><span class="variable">toString</span><span class="operator">(</span><span class="number">1</span><span class="operator">);</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This is a perl interface to libxml2's pull-parser implementation xmlTextReader <em><a href="http://xmlsoft.org/html/libxml-xmlreader.html">http://xmlsoft.org/html/libxml-xmlreader.html</a> </em>&gt;&gt;&gt;&gt;&gt;. This feature requires at least libxml2-2.6.21. Pull-parsers (such as StAX in
+Java, or XmlReader in C#) use an iterator approach to parse XML documents. They
+are easier to program than event-based parser (SAX) and much more lightweight
+than tree-based parser (DOM), which load the complete tree into memory.</p>
+<p>The Reader acts as a cursor going forward on the document stream and stopping
+at each node in the way. At every point DOM-like methods of the Reader object
+allow to examine the current node (name, namespace, attributes, etc.)</p>
+<p>The user's code keeps control of the progress and simply calls the <a href="#read"><code>read()</code></a> function repeatedly to progress to the next node in the document order. Other
+functions provide means for skipping complete sub-trees, or nodes until a
+specific element, etc.</p>
+<p>At every time, only a very limited portion of the document is kept in the
+memory, which makes the API more memory-efficient than using DOM. However, it
+is also possible to mix Reader with DOM. At every point the user may copy the
+current node (optionally expanded into a complete sub-tree) from the processed
+document to another DOM tree, or to instruct the Reader to collect sub-document
+in form of a DOM tree consisting of selected nodes.</p>
+<p>Reader API also supports namespaces, xml:base, entity handling, and DTD
+validation. Schema and RelaxNG validation support will probably be added in
+some later revision of the Perl interface.</p>
+<p>The naming of methods compared to libxml2 and C# XmlTextReader has been changed
+slightly to match the conventions of XML::LibXML. Some functions have been
+changed or added with respect to the C interface.</p>
+<p>
+</p>
+<hr />
+<h1><a name="constructor">CONSTRUCTOR</a></h1>
+<p>Depending on the XML source, the Reader object can be created with either of:</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$reader</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Reader</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="string">location</span> <span class="operator">=&gt;</span> <span class="string">"file.xml"</span><span class="operator">,</span> <span class="operator">...</span> <span class="operator">);</span>
+    <span class="keyword">my</span> <span class="variable">$reader</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Reader</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="string">string</span> <span class="operator">=&gt;</span> <span class="variable">$xml_string</span><span class="operator">,</span> <span class="operator">...</span> <span class="operator">);</span>
+    <span class="keyword">my</span> <span class="variable">$reader</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Reader</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="string">IO</span> <span class="operator">=&gt;</span> <span class="variable">$file_handle</span><span class="operator">,</span> <span class="operator">...</span> <span class="operator">);</span>
+    <span class="keyword">my</span> <span class="variable">$reader</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Reader</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="string">FD</span> <span class="operator">=&gt;</span> <span class="keyword">fileno</span><span class="operator">(</span><span class="variable">STDIN</span><span class="operator">),</span> <span class="operator">...</span> <span class="operator">);</span>
+    <span class="keyword">my</span> <span class="variable">$reader</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Reader</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="string">DOM</span> <span class="operator">=&gt;</span> <span class="variable">$dom</span><span class="operator">,</span> <span class="operator">...</span> <span class="operator">);</span>
+</pre>
+<p>where ... are (optional) reader options described below in <a href="#reader_options">Reader options</a> or various parser options described in <a href="../../../../.cpan/build/XML-LibXML-2.0019-0GUIC6/blib/lib/XML/LibXML/Parser.html">the XML::LibXML::Parser manpage</a>. The constructor recognizes the following XML sources:</p>
+<p>
+</p>
+<h2><a name="source_specification">Source specification</a></h2>
+<dl>
+<dt><strong><a name="location" class="item">location</a></strong></dt>
+
+<dd>
+<p>Read XML from a local file or URL.</p>
+</dd>
+<dt><strong><a name="string" class="item">string</a></strong></dt>
+
+<dd>
+<p>Read XML from a string.</p>
+</dd>
+<dt><strong><a name="io" class="item">IO</a></strong></dt>
+
+<dd>
+<p>Read XML a Perl IO filehandle.</p>
+</dd>
+<dt><strong><a name="fd" class="item">FD</a></strong></dt>
+
+<dd>
+<p>Read XML from a file descriptor (bypasses Perl I/O layer, only applicable to
+filehandles for regular files or pipes). Possibly faster than IO.</p>
+</dd>
+<dt><strong><a name="dom" class="item">DOM</a></strong></dt>
+
+<dd>
+<p>Use reader API to walk through a pre-parsed <a href="../../../../.cpan/build/XML-LibXML-2.0019-0GUIC6/blib/lib/XML/LibXML/Document.html">the XML::LibXML::Document manpage</a>.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="reader_options">Reader options</a></h2>
+<dl>
+<dt><strong><a name="encoding_encoding" class="item">encoding =&gt; $encoding</a></strong></dt>
+
+<dd>
+<p>override document encoding.</p>
+</dd>
+<dt><strong><a name="relaxng_rng_schema" class="item">RelaxNG =&gt; $rng_schema</a></strong></dt>
+
+<dd>
+<p>can be used to pass either a <a href="../../../../.cpan/build/XML-LibXML-2.0019-0GUIC6/blib/lib/XML/LibXML/RelaxNG.html">the XML::LibXML::RelaxNG manpage</a> object or a filename or URL of a RelaxNG schema to the constructor. The schema
+is then used to validate the document as it is processed.</p>
+</dd>
+<dt><strong><a name="schema_xsd_schema" class="item">Schema =&gt; $xsd_schema</a></strong></dt>
+
+<dd>
+<p>can be used to pass either a <a href="../../../../.cpan/build/XML-LibXML-2.0019-0GUIC6/blib/lib/XML/LibXML/Schema.html">the XML::LibXML::Schema manpage</a> object or a filename or URL of a W3C XSD schema to the constructor. The schema
+is then used to validate the document as it is processed.</p>
+</dd>
+<dt><strong><a name="___" class="item">...</a></strong></dt>
+
+<dd>
+<p>the reader further supports various parser options described in <a href="../../../../.cpan/build/XML-LibXML-2.0019-0GUIC6/blib/lib/XML/LibXML/Parser.html">the XML::LibXML::Parser manpage</a> (specifically those labeled by /reader/).</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="methods_controlling_parsing_progress">METHODS CONTROLLING PARSING PROGRESS</a></h1>
+<dl>
+<dt><strong><a name="read" class="item">read ()</a></strong></dt>
+
+<dd>
+<p>Moves the position to the next node in the stream, exposing its properties.</p>
+<p>Returns 1 if the node was read successfully, 0 if there is no more nodes to
+read, or -1 in case of error</p>
+</dd>
+<dt><strong><a name="readattributevalue" class="item">readAttributeValue ()</a></strong></dt>
+
+<dd>
+<p>Parses an attribute value into one or more Text and EntityReference nodes.</p>
+<p>Returns 1 in case of success, 0 if the reader was not positioned on an
+attribute node or all the attribute values have been read, or -1 in case of
+error.</p>
+</dd>
+<dt><strong><a name="readstate" class="item">readState ()</a></strong></dt>
+
+<dd>
+<p>Gets the read state of the reader. Returns the state value, or -1 in case of
+error. The module exports constants for the Reader states, see STATES below.</p>
+</dd>
+<dt><strong><a name="depth" class="item">depth ()</a></strong></dt>
+
+<dd>
+<p>The depth of the node in the tree, starts at 0 for the root node.</p>
+</dd>
+<dt><strong><a name="next" class="item">next ()</a></strong></dt>
+
+<dd>
+<p>Skip to the node following the current one in the document order while avoiding
+the sub-tree if any. Returns 1 if the node was read successfully, 0 if there is
+no more nodes to read, or -1 in case of error.</p>
+</dd>
+<dt><strong><a name="nextelement" class="item">nextElement (localname?,nsURI?)</a></strong></dt>
+
+<dd>
+<p>Skip nodes following the current one in the document order until a specific
+element is reached. The element's name must be equal to a given localname if
+defined, and its namespace must equal to a given nsURI if defined. Either of
+the arguments can be undefined (or omitted, in case of the latter or both).</p>
+<p>Returns 1 if the element was found, 0 if there is no more nodes to read, or -1
+in case of error.</p>
+</dd>
+<dt><strong><a name="nextpatternmatch" class="item">nextPatternMatch (compiled_pattern)</a></strong></dt>
+
+<dd>
+<p>Skip nodes following the current one in the document order until an element
+matching a given compiled pattern is reached. See <a href="../../../../.cpan/build/XML-LibXML-2.0019-0GUIC6/blib/lib/XML/LibXML/Pattern.html">the XML::LibXML::Pattern manpage</a> for information on compiled patterns. See also the <a href="#matchespattern"><code>matchesPattern</code></a> method.</p>
+<p>Returns 1 if the element was found, 0 if there is no more nodes to read, or -1
+in case of error.</p>
+</dd>
+<dt><strong><a name="skipsiblings" class="item">skipSiblings ()</a></strong></dt>
+
+<dd>
+<p>Skip all nodes on the same or lower level until the first node on a higher
+level is reached. In particular, if the current node occurs in an element, the
+reader stops at the end tag of the parent element, otherwise it stops at a node
+immediately following the parent node.</p>
+<p>Returns 1 if successful, 0 if end of the document is reached, or -1 in case of
+error.</p>
+</dd>
+<dt><strong><a name="nextsibling" class="item">nextSibling ()</a></strong></dt>
+
+<dd>
+<p>It skips to the node following the current one in the document order while
+avoiding the sub-tree if any.</p>
+<p>Returns 1 if the node was read successfully, 0 if there is no more nodes to
+read, or -1 in case of error</p>
+</dd>
+<dt><strong><a name="nextsiblingelement" class="item">nextSiblingElement (name?,nsURI?)</a></strong></dt>
+
+<dd>
+<p>Like nextElement but only processes sibling elements of the current node
+(moving forward using <a href="#nextsibling"><code>nextSibling ()</code></a> rather than <a href="#read"><code>read ()</code></a>, internally).</p>
+<p>Returns 1 if the element was found, 0 if there is no more sibling nodes, or -1
+in case of error.</p>
+</dd>
+<dt><strong><a name="finish" class="item">finish ()</a></strong></dt>
+
+<dd>
+<p>Skip all remaining nodes in the document, reaching end of the document.</p>
+<p>Returns 1 if successful, 0 in case of error.</p>
+</dd>
+<dt><strong><a name="close" class="item">close ()</a></strong></dt>
+
+<dd>
+<p>This method releases any resources allocated by the current instance and closes
+any underlying input. It returns 0 on failure and 1 on success. This method is
+automatically called by the destructor when the reader is forgotten, therefore
+you do not have to call it directly.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="methods_extracting_information">METHODS EXTRACTING INFORMATION</a></h1>
+<dl>
+<dt><strong><a name="name" class="item">name ()</a></strong></dt>
+
+<dd>
+<p>Returns the qualified name of the current node, equal to (Prefix:)LocalName.</p>
+</dd>
+<dt><strong><a name="nodetype" class="item">nodeType ()</a></strong></dt>
+
+<dd>
+<p>Returns the type of the current node. See NODE TYPES below.</p>
+</dd>
+<dt><strong><a name="localname" class="item">localName ()</a></strong></dt>
+
+<dd>
+<p>Returns the local name of the node.</p>
+</dd>
+<dt><strong><a name="prefix" class="item">prefix ()</a></strong></dt>
+
+<dd>
+<p>Returns the prefix of the namespace associated with the node.</p>
+</dd>
+<dt><strong><a name="namespaceuri" class="item">namespaceURI ()</a></strong></dt>
+
+<dd>
+<p>Returns the URI defining the namespace associated with the node.</p>
+</dd>
+<dt><strong><a name="isemptyelement" class="item">isEmptyElement ()</a></strong></dt>
+
+<dd>
+<p>Check if the current node is empty, this is a bit bizarre in the sense that
+&lt;a/&gt; will be considered empty while &lt;a&gt;&lt;/a&gt; will not.</p>
+</dd>
+<dt><strong><a name="hasvalue" class="item">hasValue ()</a></strong></dt>
+
+<dd>
+<p>Returns true if the node can have a text value.</p>
+</dd>
+<dt><strong><a name="value" class="item">value ()</a></strong></dt>
+
+<dd>
+<p>Provides the text value of the node if present or undef if not available.</p>
+</dd>
+<dt><strong><a name="readinnerxml" class="item">readInnerXml ()</a></strong></dt>
+
+<dd>
+<p>Reads the contents of the current node, including child nodes and markup.
+Returns a string containing the XML of the node's content, or undef if the
+current node is neither an element nor attribute, or has no child nodes.</p>
+</dd>
+<dt><strong><a name="readouterxml" class="item">readOuterXml ()</a></strong></dt>
+
+<dd>
+<p>Reads the contents of the current node, including child nodes and markup.</p>
+<p>Returns a string containing the XML of the node including its content, or undef
+if the current node is neither an element nor attribute.</p>
+</dd>
+<dt><strong><a name="nodepath" class="item"><code>nodePath()</code></a></strong></dt>
+
+<dd>
+<p>Returns a canonical location path to the current element from the root node to
+the current node. Namespaced elements are matched by '*', because there is no
+way to declare prefixes within XPath patterns. Unlike <a href="#nodepath"><code>XML::LibXML::Node::nodePath()</code></a>, this function does not provide sibling counts (i.e. instead of e.g. '/a/b[1]'
+and '/a/b[2]' you get '/a/b' for both matches).</p>
+</dd>
+<dt><strong><a name="matchespattern" class="item">matchesPattern(compiled_pattern)</a></strong></dt>
+
+<dd>
+<p>Returns a true value if the current node matches a compiled pattern. See <a href="../../../../.cpan/build/XML-LibXML-2.0019-0GUIC6/blib/lib/XML/LibXML/Pattern.html">the XML::LibXML::Pattern manpage</a> for information on compiled patterns. See also the <a href="#nextpatternmatch"><code>nextPatternMatch</code></a> method.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="methods_extracting_dom_nodes">METHODS EXTRACTING DOM NODES</a></h1>
+<dl>
+<dt><strong><a name="document" class="item">document ()</a></strong></dt>
+
+<dd>
+<p>Provides access to the document tree built by the reader. This function can be
+used to collect the preserved nodes (see <a href="#preservenode"><code>preserveNode()</code></a> and preservePattern).</p>
+<p>CAUTION: Never use this function to modify the tree unless reading of the whole
+document is completed!</p>
+</dd>
+<dt><strong><a name="copycurrentnode" class="item">copyCurrentNode (deep)</a></strong></dt>
+
+<dd>
+<p>This function is similar a DOM function <code>copyNode()</code>. It returns a copy of the currently processed node as a corresponding DOM
+object. Use deep = 1 to obtain the full sub-tree.</p>
+</dd>
+<dt><strong><a name="preservenode" class="item">preserveNode ()</a></strong></dt>
+
+<dd>
+<p>This tells the XML Reader to preserve the current node in the document tree. A
+document tree consisting of the preserved nodes and their content can be
+obtained using the method <a href="#document"><code>document()</code></a> once parsing is finished.</p>
+<p>Returns the node or NULL in case of error.</p>
+</dd>
+<dt><strong><a name="preservepattern" class="item">preservePattern (pattern,\%ns_map)</a></strong></dt>
+
+<dd>
+<p>This tells the XML Reader to preserve all nodes matched by the pattern (which
+is a streaming XPath subset). A document tree consisting of the preserved nodes
+and their content can be obtained using the method <a href="#document"><code>document()</code></a> once parsing is finished.</p>
+<p>An optional second argument can be used to provide a HASH reference mapping
+prefixes used by the XPath to namespace URIs.</p>
+<p>The XPath subset available with this function is described at</p>
+<pre>
+  <a href="http://www.w3.org/TR/xmlschema-1/#Selector">http://www.w3.org/TR/xmlschema-1/#Selector</a></pre>
+<p>and matches the production</p>
+<pre>
+  Path ::= ('.//')? ( Step '/' )* ( Step | '@' NameTest )</pre>
+<p>Returns a positive number in case of success and -1 in case of error</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="methods_processing_attributes">METHODS PROCESSING ATTRIBUTES</a></h1>
+<dl>
+<dt><strong><a name="attributecount" class="item">attributeCount ()</a></strong></dt>
+
+<dd>
+<p>Provides the number of attributes of the current node.</p>
+</dd>
+<dt><strong><a name="hasattributes" class="item">hasAttributes ()</a></strong></dt>
+
+<dd>
+<p>Whether the node has attributes.</p>
+</dd>
+<dt><strong><a name="getattribute" class="item">getAttribute (name)</a></strong></dt>
+
+<dd>
+<p>Provides the value of the attribute with the specified qualified name.</p>
+<p>Returns a string containing the value of the specified attribute, or undef in
+case of error.</p>
+</dd>
+<dt><strong><a name="getattributens" class="item">getAttributeNs (localName, namespaceURI)</a></strong></dt>
+
+<dd>
+<p>Provides the value of the specified attribute.</p>
+<p>Returns a string containing the value of the specified attribute, or undef in
+case of error.</p>
+</dd>
+<dt><strong><a name="getattributeno" class="item">getAttributeNo (no)</a></strong></dt>
+
+<dd>
+<p>Provides the value of the attribute with the specified index relative to the
+containing element.</p>
+<p>Returns a string containing the value of the specified attribute, or undef in
+case of error.</p>
+</dd>
+<dt><strong><a name="isdefault" class="item">isDefault ()</a></strong></dt>
+
+<dd>
+<p>Returns true if the current attribute node was generated from the default value
+defined in the DTD.</p>
+</dd>
+<dt><strong><a name="movetoattribute" class="item">moveToAttribute (name)</a></strong></dt>
+
+<dd>
+<p>Moves the position to the attribute with the specified local name and namespace
+URI.</p>
+<p>Returns 1 in case of success, -1 in case of error, 0 if not found</p>
+</dd>
+<dt><strong><a name="movetoattributeno" class="item">moveToAttributeNo (no)</a></strong></dt>
+
+<dd>
+<p>Moves the position to the attribute with the specified index relative to the
+containing element.</p>
+<p>Returns 1 in case of success, -1 in case of error, 0 if not found</p>
+</dd>
+<dt><strong><a name="movetoattributens" class="item">moveToAttributeNs (localName,namespaceURI)</a></strong></dt>
+
+<dd>
+<p>Moves the position to the attribute with the specified local name and namespace
+URI.</p>
+<p>Returns 1 in case of success, -1 in case of error, 0 if not found</p>
+</dd>
+<dt><strong><a name="movetofirstattribute" class="item">moveToFirstAttribute ()</a></strong></dt>
+
+<dd>
+<p>Moves the position to the first attribute associated with the current node.</p>
+<p>Returns 1 in case of success, -1 in case of error, 0 if not found</p>
+</dd>
+<dt><strong><a name="movetonextattribute" class="item">moveToNextAttribute ()</a></strong></dt>
+
+<dd>
+<p>Moves the position to the next attribute associated with the current node.</p>
+<p>Returns 1 in case of success, -1 in case of error, 0 if not found</p>
+</dd>
+<dt><strong><a name="movetoelement" class="item">moveToElement ()</a></strong></dt>
+
+<dd>
+<p>Moves the position to the node that contains the current attribute node.</p>
+<p>Returns 1 in case of success, -1 in case of error, 0 if not moved</p>
+</dd>
+<dt><strong><a name="isnamespacedecl" class="item">isNamespaceDecl ()</a></strong></dt>
+
+<dd>
+<p>Determine whether the current node is a namespace declaration rather than a
+regular attribute.</p>
+<p>Returns 1 if the current node is a namespace declaration, 0 if it is a regular
+attribute or other type of node, or -1 in case of error.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="other_methods">OTHER METHODS</a></h1>
+<dl>
+<dt><strong><a name="lookupnamespace" class="item">lookupNamespace (prefix)</a></strong></dt>
+
+<dd>
+<p>Resolves a namespace prefix in the scope of the current element.</p>
+<p>Returns a string containing the namespace URI to which the prefix maps or undef
+in case of error.</p>
+</dd>
+<dt><strong><a name="encoding" class="item">encoding ()</a></strong></dt>
+
+<dd>
+<p>Returns a string containing the encoding of the document or undef in case of
+error.</p>
+</dd>
+<dt><strong><a name="standalone" class="item">standalone ()</a></strong></dt>
+
+<dd>
+<p>Determine the standalone status of the document being read. Returns 1 if the
+document was declared to be standalone, 0 if it was declared to be not
+standalone, or -1 if the document did not specify its standalone status or in
+case of error.</p>
+</dd>
+<dt><strong><a name="xmlversion" class="item">xmlVersion ()</a></strong></dt>
+
+<dd>
+<p>Determine the XML version of the document being read. Returns a string
+containing the XML version of the document or undef in case of error.</p>
+</dd>
+<dt><strong><a name="baseuri" class="item">baseURI ()</a></strong></dt>
+
+<dd>
+<p>Returns the base URI of a given node.</p>
+</dd>
+<dt><strong><a name="isvalid" class="item">isValid ()</a></strong></dt>
+
+<dd>
+<p>Retrieve the validity status from the parser.</p>
+<p>Returns 1 if valid, 0 if no, and -1 in case of error.</p>
+</dd>
+<dt><strong><a name="xmllang" class="item">xmlLang ()</a></strong></dt>
+
+<dd>
+<p>The xml:lang scope within which the node resides.</p>
+</dd>
+<dt><strong><a name="linenumber" class="item">lineNumber ()</a></strong></dt>
+
+<dd>
+<p>Provide the line number of the current parsing point.</p>
+</dd>
+<dt><strong><a name="columnnumber" class="item">columnNumber ()</a></strong></dt>
+
+<dd>
+<p>Provide the column number of the current parsing point.</p>
+</dd>
+<dt><strong><a name="byteconsumed" class="item">byteConsumed ()</a></strong></dt>
+
+<dd>
+<p>This function provides the current index of the parser relative to the start of
+the current entity. This function is computed in bytes from the beginning
+starting at zero and finishing at the size in bytes of the file if parsing a
+file. The function is of constant cost if the input is UTF-8 but can be costly
+if run on non-UTF-8 input.</p>
+</dd>
+<dt><strong><a name="setparserprop" class="item">setParserProp (prop =&gt; value, ...)</a></strong></dt>
+
+<dd>
+<p>Change the parser processing behaviour by changing some of its internal
+properties. The following properties are available with this function:
+``load_ext_dtd'', ``complete_attributes'', ``validation'', ``expand_entities''.</p>
+<p>Since some of the properties can only be changed before any read has been done,
+it is best to set the parsing properties at the constructor.</p>
+<p>Returns 0 if the call was successful, or -1 in case of error</p>
+</dd>
+<dt><strong><a name="getparserprop" class="item">getParserProp (prop)</a></strong></dt>
+
+<dd>
+<p>Get value of an parser internal property. The following property names can be
+used: ``load_ext_dtd'', ``complete_attributes'', ``validation'',
+``expand_entities''.</p>
+<p>Returns the value, usually 0 or 1, or -1 in case of error.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="destruction">DESTRUCTION</a></h1>
+<p>XML::LibXML takes care of the reader object destruction when the last reference
+to the reader object goes out of scope. The document tree is preserved, though,
+if either of $reader-&gt;document or $reader-&gt;preserveNode was used and references
+to the document tree exist.</p>
+<p>
+</p>
+<hr />
+<h1><a name="node_types">NODE TYPES</a></h1>
+<p>The reader interface provides the following constants for node types (the
+constant symbols are exported by default or if tag <code>:types</code> is used).</p>
+<pre>
+  XML_READER_TYPE_NONE                    =&gt; 0
+  XML_READER_TYPE_ELEMENT                 =&gt; 1
+  XML_READER_TYPE_ATTRIBUTE               =&gt; 2
+  XML_READER_TYPE_TEXT                    =&gt; 3
+  XML_READER_TYPE_CDATA                   =&gt; 4
+  XML_READER_TYPE_ENTITY_REFERENCE        =&gt; 5
+  XML_READER_TYPE_ENTITY                  =&gt; 6
+  XML_READER_TYPE_PROCESSING_INSTRUCTION  =&gt; 7
+  XML_READER_TYPE_COMMENT                 =&gt; 8
+  XML_READER_TYPE_DOCUMENT                =&gt; 9
+  XML_READER_TYPE_DOCUMENT_TYPE           =&gt; 10
+  XML_READER_TYPE_DOCUMENT_FRAGMENT       =&gt; 11
+  XML_READER_TYPE_NOTATION                =&gt; 12
+  XML_READER_TYPE_WHITESPACE              =&gt; 13
+  XML_READER_TYPE_SIGNIFICANT_WHITESPACE  =&gt; 14
+  XML_READER_TYPE_END_ELEMENT             =&gt; 15
+  XML_READER_TYPE_END_ENTITY              =&gt; 16
+  XML_READER_TYPE_XML_DECLARATION         =&gt; 17</pre>
+<p>
+</p>
+<hr />
+<h1><a name="states">STATES</a></h1>
+<p>The following constants represent the values returned by <a href="#readstate"><code>readState()</code></a>. They are exported by default, or if tag <code>:states</code> is used:</p>
+<pre>
+  XML_READER_NONE      =&gt; -1
+  XML_READER_START     =&gt;  0
+  XML_READER_ELEMENT   =&gt;  1
+  XML_READER_END       =&gt;  2
+  XML_READER_EMPTY     =&gt;  3
+  XML_READER_BACKTRACK =&gt;  4
+  XML_READER_DONE      =&gt;  5
+  XML_READER_ERROR     =&gt;  6</pre>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><a href="../../../../.cpan/build/XML-LibXML-2.0019-0GUIC6/blib/lib/XML/LibXML/Pattern.html">the XML::LibXML::Pattern manpage</a> for information about compiled patterns.</p>
+<p><a href="http://xmlsoft.org/html/libxml-xmlreader.html">http://xmlsoft.org/html/libxml-xmlreader.html</a></p>
+<p><a href="http://dotgnu.org/pnetlib-doc/System/Xml/XmlTextReader.html">http://dotgnu.org/pnetlib-doc/System/Xml/XmlTextReader.html</a></p>
+<p>
+</p>
+<hr />
+<h1><a name="original_implementation">ORIGINAL IMPLEMENTATION</a></h1>
+<p>Heiko Klein, &lt;<a href="mailto:H.Klein@gmx.net<gt">H.Klein@gmx.net<gt</a>&gt; and Petr Pajas</p>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Matt Sergeant,
+Christian Glahn,
+Petr Pajas</p>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p>2.0019</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>2001-2007, AxKit.com Ltd.</p>
+<p>2002-2006, Christian Glahn.</p>
+<p>2006-2009, Petr Pajas.</p>
+
+</body>
+
+</html>

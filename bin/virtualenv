@@ -1,0 +1,3 @@
+#!/usr/bin/rtorrent/bin/python
+import virtualenv
+virtualenv.main()

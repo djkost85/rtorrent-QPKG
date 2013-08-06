@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2325/trunk/plugins/scheduler
+END
+action.php
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/2115/trunk/plugins/scheduler/action.php
+END
+scheduler.php
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/2115/trunk/plugins/scheduler/scheduler.php
+END
+scheduler.css
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/2162/trunk/plugins/scheduler/scheduler.css
+END
+update.php
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/2115/trunk/plugins/scheduler/update.php
+END
+plugin.info
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/2255/trunk/plugins/scheduler/plugin.info
+END
+init.php
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/2268/trunk/plugins/scheduler/init.php
+END
+conf.php
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/2115/trunk/plugins/scheduler/conf.php
+END
+done.php
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/2115/trunk/plugins/scheduler/done.php
+END
+init.js
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2162/trunk/plugins/scheduler/init.js
+END

@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+# void utils_displaywithnumbers (string <filepath>, ...)
+#
+# Displays files with line numbers along each line. Total number of
+# lines displayed is saved to variable __I0.
+#
+# > int __I0 = total number of lines displayed
+#
+function utils_displaywithnumbers {
+	local FILE LINE SPACES='    ' TAB=$'\t'
+	local -i N=0
+	for FILE; do
+		if [[ -f $FILE ]]; then
+			while read LINE; do
+				(( ++N ))
+				echo "${SPACES:${#N}}${N}${TAB}${LINE}"
+			done < "$FILE"
+		fi
+	done
+	__I0=$N
+}

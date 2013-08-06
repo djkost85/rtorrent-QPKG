@@ -1,0 +1,233 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+_QLIBNAME="libANSI" ; _QLIB_version="0.1.4"
+_QLIBDESC="QPX ANSI Color Terminal Library"
+
+##### LOAD ONLY ONCE #####
+[ ! -z "$(eval echo \"\$QPX_l${_QLIBNAME}\")" ] && {
+        [ "$DEBUG" != "0" ] && echo "[ $QPROJECT $_QLIBNAME ] Version ${_QLIB_version} already started!"
+        return 1
+} || {
+        eval QPX_l${_QLIBNAME}="${_QLIB_version}"
+        #export QPX_l${_QLIBNAME}
+}
+
+LD_LIBRARY_PATH=$PROGDIR/lib:$LD_LIBRARY_PATH
+
+##### Look for TERMINFO and TERMCAP #####
+[ -z "$TERMCAP" ] && {
+	echo -n "[ $QPROJECT $_QLIBNAME ] Looking for TERMCAP..."
+	for _termcap in $PROGDIR/etc/termcap /etc/termcap /opt/etc/termcap
+	do
+		[ -f "$_termcap" ] && [ -z "$TERMCAP" ] && export TERMCAP="$_termcap"
+		#echo $_termcap
+	done
+	if [ -z "$TERMCAP" ]; then
+		echo "not found"
+	else
+		echo "found $TERMCAP"
+	fi
+	export TERMCAP
+}
+
+[ -z "$TERMINFO" ] && {
+	echo -n "[ $QPROJECT $_QLIBNAME ] Looking for TERMINFO..."
+	for _terminfo in $PROGDIR/share/terminfo /share/terminfo /usr/share/terminfo /opt/etc/terminfo
+	do
+		[ -d "$_terminfo" ] && [ -z "$TERMINFO" ] && export TERMINFO="$_terminfo"
+		#echo $_terminfo
+	done
+	if [ -z "$TERMINFO" ]; then
+		echo "not found"
+	else
+		echo "found $TERMINFO"
+	fi
+	export TERMINFO
+}
+
+export TERM=xterm
+
+
+##### Is Color Terminal? #####
+test -t 1 || {
+	export esc="" ; export esq=""
+
+	export  black="" ; export  red="" ; export  green="" ; export  yellow="" ; export  blue="" ; export  magenta="" ; export  cyan="" ; export  white=""
+	export bblack="" ; export bred="" ; export bgreen="" ; export byellow="" ; export bblue="" ; export bmagenta="" ; export bcyan="" ; export bwhite=""
+
+	export  bd="" ; export  bdoff="" ; export  ft="" ; export  ftoff="" ; export  it="" ; export  itoff="" ; export  ul="" ; export  uloff=""
+	export  bl="" ; export  bloff="" ; export  fb="" ; export  fboff="" ; export  rv="" ; export  rvoff="" ; export inv="" ; export invoff="" ; export dim="" ; export dimoff=""
+
+	export hide_cur="" ; export nc="" ; export cls="" ; export claf="" ; export cl2eol="" ; export cln="" ; export con_home="" ; export con_hl="" ; export con_reset="" ; export con_restore="" ; export con_save=""
+	
+	return 1
+}
+
+
+esc="\033" ; esc="\e"								# Escape character
+
+
+: ${_terminfo_present:=0}
+_cmd_available=0
+
+if command -v "include" >/dev/null 2>&1; then
+	include available
+
+	if command -v "available" >/dev/null 2>&1; then
+		_cmd_available=1
+		
+		if available tr; then
+			esc=$(echo | tr '012' '033')				# Escape character
+		fi
+		
+		if available tput; then
+			_terminfo_present=1
+		else
+			_terminfo_present=0
+		fi
+		echo -e "[ $QPROJECT $_QLIBNAME ] Loading ANSI Color/TERM Library as QPX Framework module."
+	fi
+fi
+
+if [ $_cmd_available -eq 0 ]; then
+	if command -v "tr" >/dev/null 2>&1; then
+		esc=$(echo | tr '012' '033')					# Escape character
+	fi
+
+	if command -v "tput" >/dev/null 2>&1; then
+		_terminfo_present=1
+	else
+		_terminfo_present=0
+	fi
+	echo -e "[ $QPROJECT $_QLIBNAME ] Loading ANSI Color/TERM Library as Standalone STDLIB."
+fi
+esq="$esc["									# Escape sequence
+
+
+case $TERM in
+        *xterm* | dtterm | *vt100* | *linux* | *cyg*)
+
+                # Foreground Colors
+                black="${esq}30m"		;	red="${esq}31m"
+                green="${esq}32m"		;	yellow="${esq}33m"
+                blue="${esq}34m"		;	magenta="${esq}35m"
+                cyan="${esq}36m"		;	white="${esq}37m"
+
+                # Background Colors
+                bblack="${esq}40m"		;	bred="${esq}41m"
+                bgreen="${esq}42m"		;	byellow="${esq}43m"
+                bblue="${esq}44m"		;	bmagenta="${esq}45m"
+                bcyan="${esq}46m"		;	bwhite="${esq}47m"
+
+                # Styles
+                bd="${esq}1m"		;	bdoff="${esq}22m"		# Bold
+                ft="${esq}2m"		;	ftoff="${esq}0m"		# Faint
+                it="${esq}3m"		;	itoff="${esq}0m"		# Italic
+                ul="${esq}4m"		;	uloff="${esq}0m"		# Underline
+                bl="${esq}5m"		;	bloff="${esq}0m"		# Blink
+                fb="${esq}6m"		;	fboff="${esq}0m"		# Fastblink
+                rv="${esq}7m"		;	rvoff="${esq}0m"		# Reversed Video
+                inv="${esq}8m"		;	invoff="${esq}0m"		# Invert
+
+                nc="${esq}0m"							# Clearstyle
+
+                cls=$'\e[H\e[2J'						# clear Screen
+                claf=$'\e[J'							# clear all after
+                cl2eol=$'\e[K'							# clear to EOL
+                cln=$'\e[G\e[K'							# clear line
+                con_home=$'\e[H'						# console home
+                con_hl=$'\e[G'							# console homeline
+                con_reset=$'\e[]R]'						# console reset
+                con_restore=$'\e[u'						# console restore
+                con_save=$'\e[s'						# console save
+        ;;
+        *)
+        ;;
+esac
+
+#if command -v "tput" >/dev/null 2>&1; then
+#if available tput; then
+if [ $_terminfo_present -eq 1 ]; then
+
+                # Color Capabilities
+                : ${ansi_colors:=1}
+                [[ $ansi_colors -eq 0 ]] && _aset="set" || _aset="seta"
+
+                # Foreground Colors
+                black="$(tput ${_aset}f 0)"	;	red="$(tput ${_aset}f 1)"
+                green="$(tput ${_aset}f 2)"	;	yellow="$(tput ${_aset}f 3)"
+                blue="$(tput ${_aset}f 4)"	;	magenta="$(tput ${_aset}f 5)"
+                cyan="$(tput ${_aset}f 6)"	;	white="$(tput ${_aset}f 7)"
+
+                # Background Colors
+                bblack="$(tput ${_aset}b 0)"	;	bred="$(tput ${_aset}b 1)"
+                bgreen="$(tput ${_aset}b 2)"	;	byellow="$(tput ${_aset}b 3)"
+                bblue="$(tput ${_aset}b 4)"	;	bmagenta="$(tput ${_aset}b 5)"
+                bcyan="$(tput ${_aset}b 6)"	;	bwhite="$(tput ${_aset}b 7)"
+
+                # Styles
+                [[ "$TERM" = "rxvt" ]] && {				# Bold (rxvt)
+                	bd="$(tput smso)"	;	bdoff="$(tput rmso)"
+                } || {							# Bold (vt100|xterm|...)
+                	bd="$(tput bold)"	;	bdoff="$(tput sgr0)"
+                }
+                #ft="$(tput )"		;	ftoff="$(tput )" ;	# Faint
+                #it="$(tput )"		;	itoff="$(tput )" ;	# Italic
+                ul="$(tput smul)"	;	uloff="$(tput rmul)" ;	# Underline
+                #bl="$(tput )"		;	bloff="$(tput )" ;	# Blink
+                #fb="$(tput )"		;	fboff="$(tput )" ;	# Fastblink
+                rv="$(tput rev)"	;	rvoff="$(tput sgr0)" ;	# Reversed Video
+                #inv="$(tput )"		;	invoff="$(tput )" ;	# Invert
+                #dim="$(tput dim)"	;	dimoff="$(tput sgr0)" ;	# Half-Bright Dim
+                #bell="$(tput bel)"	;	dimoff="$(tput sgr0)" ;	# Bell
+
+                hide_cur="$(tput civis)" ; show_cur="tput cnorm"
+
+                nc="$(tput sgr0)"	;	# Clearstyle
+                cls="$(tput clear)"
+
+                con_reset="$(tput reset)"	# Clearstyle
+                
+                TERMBIN=`dirname $(command -v tput)`
+                echo -e "[ $QPROJECT $_QLIBNAME ] Terminfo/Termcap found $TERMBIN ${cyan}OKAY${nc}"
+else
+                echo -e "[ $QPROJECT $_QLIBNAME ] Using ANSI Escape Sequences."
+fi
+
+function color_presets {
+                # Pre-defined styles
+                alert="${white}${bred}"						# White on red background
+                error="${black}${bred}"						# Black on red background
+                warn="${black}${byellow}"					# Black on yellow background
+                noerr="${black}${bgreen}"					# Black on yellow background
+}
+
+
+function console_clearline {
+	echo -n "${cln}"
+}
+
+color_presets
+
+export esc ; export esq
+
+export  black ; export  red ; export  green ; export  yellow ; export  blue ; export  magenta ; export  cyan ; export  white
+export bblack ; export bred ; export bgreen ; export byellow ; export bblue ; export bmagenta ; export bcyan ; export bwhite
+
+export  bd ; export  bdoff ; export  ft ; export  ftoff ; export  it ; export  itoff ; export  ul ; export  uloff
+export  bl ; export  bloff ; export  fb ; export  fboff ; export  rv ; export  rvoff ; export inv ; export invoff ; export dim ; export dimoff
+
+export hide_cur ; export nc ; export cls ; export claf ; export cl2eol ; export cln ; export con_home ; export con_hl ; export con_reset ; export con_restore ; export con_save
+
+#echo -e $blue blue $red red $yellow yellow $nc
+#echo -e $dim $blue blue $red red $yellow yellow $nc
+#echo -e $bell $blue blue $red red $yellow yellow $nc
+#echo -e $bd $blue blue $red red $yellow yellow $nc
+#echo -e $(tput smso) $blue blue $red red $yellow yellow $nc
+#echo -e $inv $blue blue $red red $yellow yellow $nc
+
+

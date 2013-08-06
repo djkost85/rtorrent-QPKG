@@ -1,0 +1,15 @@
+/usr/bin/rtorrent/perl/html/site/lib/JSON.html
+/usr/bin/rtorrent/perl/html/site/lib/JSON/backportPP.html
+/usr/bin/rtorrent/perl/html/site/lib/JSON/backportPP/Boolean.html
+/usr/bin/rtorrent/perl/html/site/lib/JSON/backportPP/Compat5005.html
+/usr/bin/rtorrent/perl/html/site/lib/JSON/backportPP/Compat5006.html
+/usr/bin/rtorrent/perl/site/lib/JSON.pm
+/usr/bin/rtorrent/perl/site/lib/JSON/backportPP.pm
+/usr/bin/rtorrent/perl/site/lib/JSON/backportPP/Boolean.pm
+/usr/bin/rtorrent/perl/site/lib/JSON/backportPP/Compat5005.pm
+/usr/bin/rtorrent/perl/site/lib/JSON/backportPP/Compat5006.pm
+/usr/bin/rtorrent/perl/site/man/man3/JSON.3
+/usr/bin/rtorrent/perl/site/man/man3/JSON::backportPP.3
+/usr/bin/rtorrent/perl/site/man/man3/JSON::backportPP::Boolean.3
+/usr/bin/rtorrent/perl/site/man/man3/JSON::backportPP::Compat5005.3
+/usr/bin/rtorrent/perl/site/man/man3/JSON::backportPP::Compat5006.3

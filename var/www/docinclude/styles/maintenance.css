@@ -1,0 +1,46 @@
+body, html {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+::selection {
+	background: #fff;
+}
+
+* {
+	position: absolute;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
+	-ms-user-select: none;
+}
+
+a {
+	position: relative !important;
+	color: #0272fc;
+}
+
+.FooterView a {
+	color: #545454;
+	text-decoration: none;
+}
+
+.FooterView a:hover {
+	color: #fff;
+}
+
+br, strong {
+	position: relative !important;
+}
+
+em {
+	position: relative !important;
+	color: #0272fc;
+	font-style: normal;
+}
+
+

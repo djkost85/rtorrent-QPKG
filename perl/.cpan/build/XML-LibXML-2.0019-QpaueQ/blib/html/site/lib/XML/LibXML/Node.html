@@ -1,0 +1,791 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::Node - Abstract Base Class of XML::LibXML Nodes</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::Node - Abstract Base Class of XML::LibXML Nodes</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::Node - Abstract Base Class of XML::LibXML Nodes</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML</span><span class="operator">;</span>
+</pre>
+<pre>
+  <span class="variable">$name</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">nodeName</span><span class="operator">;</span>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">setNodeName</span><span class="operator">(</span> <span class="variable">$newName</span> <span class="operator">);</span>
+  <span class="variable">$bool</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">isSameNode</span><span class="operator">(</span> <span class="variable">$other_node</span> <span class="operator">);</span>
+  <span class="variable">$bool</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">isEqual</span><span class="operator">(</span> <span class="variable">$other_node</span> <span class="operator">);</span>
+  <span class="variable">$content</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">nodeValue</span><span class="operator">;</span>
+  <span class="variable">$content</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">textContent</span><span class="operator">;</span>
+  <span class="variable">$type</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">nodeType</span><span class="operator">;</span>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">unbindNode</span><span class="operator">();</span>
+  <span class="variable">$childnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">removeChild</span><span class="operator">(</span> <span class="variable">$childnode</span> <span class="operator">);</span>
+  <span class="variable">$oldnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">replaceChild</span><span class="operator">(</span> <span class="variable">$newNode</span><span class="operator">,</span> <span class="variable">$oldNode</span> <span class="operator">);</span>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">replaceNode</span><span class="operator">(</span><span class="variable">$newNode</span><span class="operator">);</span>
+  <span class="variable">$childnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">appendChild</span><span class="operator">(</span> <span class="variable">$childnode</span> <span class="operator">);</span>
+  <span class="variable">$childnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">addChild</span><span class="operator">(</span> <span class="variable">$childnode</span> <span class="operator">);</span>
+  <span class="variable">$node</span> <span class="operator">=</span> <span class="variable">$parent</span><span class="operator">-&gt;</span><span class="variable">addNewChild</span><span class="operator">(</span> <span class="variable">$nsURI</span><span class="operator">,</span> <span class="variable">$name</span> <span class="operator">);</span>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">addSibling</span><span class="operator">(</span><span class="variable">$newNode</span><span class="operator">);</span>
+  <span class="variable">$newnode</span> <span class="operator">=</span><span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">cloneNode</span><span class="operator">(</span> <span class="variable">$deep</span> <span class="operator">);</span>
+  <span class="variable">$parentnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">parentNode</span><span class="operator">;</span>
+  <span class="variable">$nextnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">nextSibling</span><span class="operator">();</span>
+  <span class="variable">$nextnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">nextNonBlankSibling</span><span class="operator">();</span>
+  <span class="variable">$prevnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">previousSibling</span><span class="operator">();</span>
+  <span class="variable">$prevnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">previousNonBlankSibling</span><span class="operator">();</span>
+  <span class="variable">$boolean</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">hasChildNodes</span><span class="operator">();</span>
+  <span class="variable">$childnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">firstChild</span><span class="operator">;</span>
+  <span class="variable">$childnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">lastChild</span><span class="operator">;</span>
+  <span class="variable">$documentnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">ownerDocument</span><span class="operator">;</span>
+  <span class="variable">$node</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">getOwner</span><span class="operator">;</span>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">setOwnerDocument</span><span class="operator">(</span> <span class="variable">$doc</span> <span class="operator">);</span>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">insertBefore</span><span class="operator">(</span> <span class="variable">$newNode</span><span class="operator">,</span> <span class="variable">$refNode</span> <span class="operator">);</span>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">insertAfter</span><span class="operator">(</span> <span class="variable">$newNode</span><span class="operator">,</span> <span class="variable">$refNode</span> <span class="operator">);</span>
+  <span class="variable">@nodes</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">findnodes</span><span class="operator">(</span> <span class="variable">$xpath_expression</span> <span class="operator">);</span>
+  <span class="variable">$result</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">find</span><span class="operator">(</span> <span class="variable">$xpath</span> <span class="operator">);</span>
+  <span class="keyword">print</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">findvalue</span><span class="operator">(</span> <span class="variable">$xpath</span> <span class="operator">);</span>
+  <span class="variable">$bool</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">exists</span><span class="operator">(</span> <span class="variable">$xpath_expression</span> <span class="operator">);</span>
+  <span class="variable">@childnodes</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">childNodes</span><span class="operator">();</span>
+  <span class="variable">@childnodes</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">nonBlankChildNodes</span><span class="operator">();</span>
+  <span class="variable">$xmlstring</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">toString</span><span class="operator">(</span><span class="variable">$format</span><span class="operator">,</span><span class="variable">$docencoding</span><span class="operator">);</span>
+  <span class="variable">$c14nstring</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">toStringC14N</span><span class="operator">();</span>
+  <span class="variable">$c14nstring</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">toStringC14N</span><span class="operator">(</span><span class="variable">$with_comments</span><span class="operator">,</span> <span class="variable">$xpath_expression</span> <span class="operator">,</span> <span class="variable">$xpath_context</span><span class="operator">);</span>
+  <span class="variable">$ec14nstring</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">toStringEC14N</span><span class="operator">();</span>
+  <span class="variable">$ec14nstring</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">toStringEC14N</span><span class="operator">(</span><span class="variable">$with_comments</span><span class="operator">,</span> <span class="variable">$xpath_expression</span><span class="operator">,</span> <span class="variable">$inclusive_prefix_list</span><span class="operator">);</span>
+  <span class="variable">$ec14nstring</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">toStringEC14N</span><span class="operator">(</span><span class="variable">$with_comments</span><span class="operator">,</span> <span class="variable">$xpath_expression</span><span class="operator">,</span> <span class="variable">$xpath_context</span><span class="operator">,</span> <span class="variable">$inclusive_prefix_list</span><span class="operator">);</span>
+  <span class="variable">$str</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">serialize</span><span class="operator">(</span><span class="variable">$format</span><span class="operator">);</span>
+  <span class="variable">$localname</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">localname</span><span class="operator">;</span>
+  <span class="variable">$nameprefix</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">prefix</span><span class="operator">;</span>
+  <span class="variable">$uri</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">namespaceURI</span><span class="operator">();</span>
+  <span class="variable">$boolean</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">hasAttributes</span><span class="operator">();</span>
+  <span class="variable">@attributelist</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">attributes</span><span class="operator">();</span>
+  <span class="variable">$URI</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">lookupNamespaceURI</span><span class="operator">(</span> <span class="variable">$prefix</span> <span class="operator">);</span>
+  <span class="variable">$prefix</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">lookupNamespacePrefix</span><span class="operator">(</span> <span class="variable">$URI</span> <span class="operator">);</span>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">normalize</span><span class="operator">;</span>
+  <span class="variable">@nslist</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">getNamespaces</span><span class="operator">;</span>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">removeChildNodes</span><span class="operator">();</span>
+  <span class="variable">$strURI</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">baseURI</span><span class="operator">();</span>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">setBaseURI</span><span class="operator">(</span><span class="variable">$strURI</span><span class="operator">);</span>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">nodePath</span><span class="operator">();</span>
+  <span class="variable">$lineno</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">line_number</span><span class="operator">();</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>XML::LibXML::Node defines functions that are common to all Node Types. A
+LibXML::Node should never be created standalone, but as an instance of a high
+level class such as LibXML::Element or LibXML::Text. The class itself should
+provide only common functionality. In XML::LibXML each node is part either of a
+document or a document-fragment. Because of this there is no node without a
+parent. This may causes confusion with &quot;unbound&quot; nodes.</p>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>Many functions listed here are extensively documented in the DOM Level 3 specification (<a href="http://www.w3.org/TR/DOM-Level-3-Core/">http://www.w3.org/TR/DOM-Level-3-Core/</a>). Please refer to the specification for extensive documentation.</p>
+<dl>
+<dt><strong><a name="nodename2" class="item">nodeName</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$name</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">nodeName</span><span class="operator">;</span>
+</pre>
+<p>Returns the node's name. This function is aware of namespaces and returns the
+full name of the current node (<code>prefix:localname</code>).</p>
+<p>Since 1.62 this function also returns the correct DOM names for node types with
+constant names, namely: #text, #cdata-section, #comment, #document,
+#document-fragment.</p>
+</dd>
+<dt><strong><a name="setnodename" class="item">setNodeName</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">setNodeName</span><span class="operator">(</span> <span class="variable">$newName</span> <span class="operator">);</span>
+</pre>
+<p>In very limited situations, it is useful to change a nodes name. In the DOM
+specification this should throw an error. This Function is aware of namespaces.</p>
+</dd>
+<dt><strong><a name="issamenode" class="item">isSameNode</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$bool</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">isSameNode</span><span class="operator">(</span> <span class="variable">$other_node</span> <span class="operator">);</span>
+</pre>
+<p>returns TRUE (1) if the given nodes refer to the same node structure, otherwise
+FALSE (0) is returned.</p>
+</dd>
+<dt><strong><a name="isequal" class="item">isEqual</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$bool</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">isEqual</span><span class="operator">(</span> <span class="variable">$other_node</span> <span class="operator">);</span>
+</pre>
+<p>deprecated version of <a href="#issamenode"><code>isSameNode()</code></a>.</p>
+<p><em>NOTE </em>&gt;&gt;&gt;&gt;&gt; isEqual will change behaviour to follow the DOM specification</p>
+</dd>
+<dt><strong><a name="nodevalue" class="item">nodeValue</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$content</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">nodeValue</span><span class="operator">;</span>
+</pre>
+<p>If the node has any content (such as stored in a <code>text node</code>) it can get requested through this function.</p>
+<p><em>NOTE: </em>&gt;&gt;&gt;&gt;&gt; Element Nodes have no content per definition. To get the text value of an
+Element use <a href="#textcontent"><code>textContent()</code></a> instead!</p>
+</dd>
+<dt><strong><a name="textcontent" class="item">textContent</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$content</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">textContent</span><span class="operator">;</span>
+</pre>
+<p>this function returns the content of all text nodes in the descendants of the
+given node as specified in DOM.</p>
+</dd>
+<dt><strong><a name="nodetype" class="item">nodeType</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$type</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">nodeType</span><span class="operator">;</span>
+</pre>
+<p>Return a numeric value representing the node type of this node. The module
+XML::LibXML by default exports constants for the node types (see the EXPORT
+section in the <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/html/site/lib/XML/LibXML.html">the XML::LibXML manpage</a> manual page).</p>
+</dd>
+<dt><strong><a name="unbindnode" class="item">unbindNode</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">unbindNode</span><span class="operator">();</span>
+</pre>
+<p>Unbinds the Node from its siblings and Parent, but not from the Document it
+belongs to. If the node is not inserted into the DOM afterwards, it will be
+lost after the program terminates. From a low level view, the unbound node is
+stripped from the context it is and inserted into a (hidden) document-fragment.</p>
+</dd>
+<dt><strong><a name="removechild" class="item">removeChild</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$childnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">removeChild</span><span class="operator">(</span> <span class="variable">$childnode</span> <span class="operator">);</span>
+</pre>
+<p>This will unbind the Child Node from its parent <code>$node</code>. The function returns the unbound node. If <code>oldNode</code> is not a child of the given Node the function will fail.</p>
+</dd>
+<dt><strong><a name="replacechild" class="item">replaceChild</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$oldnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">replaceChild</span><span class="operator">(</span> <span class="variable">$newNode</span><span class="operator">,</span> <span class="variable">$oldNode</span> <span class="operator">);</span>
+</pre>
+<p>Replaces the <code>$oldNode</code> with the <code>$newNode</code>. The <code>$oldNode</code> will be unbound from the Node. This function differs from the DOM L2
+specification, in the case, if the new node is not part of the document, the
+node will be imported first.</p>
+</dd>
+<dt><strong><a name="replacenode" class="item">replaceNode</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">replaceNode</span><span class="operator">(</span><span class="variable">$newNode</span><span class="operator">);</span>
+</pre>
+<p>This function is very similar to <a href="#replacechild"><code>replaceChild()</code></a>, but it replaces the node
+itself rather than a childnode. This is useful if a node found by any XPath
+function, should be replaced.</p>
+</dd>
+<dt><strong><a name="appendchild" class="item">appendChild</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$childnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">appendChild</span><span class="operator">(</span> <span class="variable">$childnode</span> <span class="operator">);</span>
+</pre>
+<p>The function will add the <code>$childnode</code> to the end of <code>$node</code>'s children. The function should fail, if the new childnode is already a child
+of <code>$node</code>. This function differs from the DOM L2 specification, in the case, if the new
+node is not part of the document, the node will be imported first.</p>
+</dd>
+<dt><strong><a name="addchild" class="item">addChild</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$childnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">addChild</span><span class="operator">(</span> <span class="variable">$childnode</span> <span class="operator">);</span>
+</pre>
+<p>As an alternative to <a href="#appendchild"><code>appendChild()</code></a> one can use the <a href="#addchild"><code>addChild()</code></a> function. This
+function is a bit faster, because it avoids all DOM conformity checks.
+Therefore this function is quite useful if one builds XML documents in memory
+where the order and ownership (<a href="#ownerdocument"><code>ownerDocument</code></a>) is assured.</p>
+<p><a href="#addchild"><code>addChild()</code></a> uses libxml2's own <code>xmlAddChild()</code> function. Thus it has to be used
+with extra care: If a text node is added to a node and the node itself or its
+last childnode is as well a text node, the node to add will be merged with the
+one already available. The current node will be removed from memory after this
+action. Because perl is not aware of this action, the perl instance is still
+available. XML::LibXML will catch the loss of a node and refuse to run any
+function called on that node.</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$t1</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">createTextNode</span><span class="operator">(</span> <span class="string">"foo"</span> <span class="operator">);</span>
+   <span class="keyword">my</span> <span class="variable">$t2</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">createTextNode</span><span class="operator">(</span> <span class="string">"bar"</span> <span class="operator">);</span>
+   <span class="variable">$t1</span><span class="operator">-&gt;</span><span class="variable">addChild</span><span class="operator">(</span> <span class="variable">$t2</span> <span class="operator">);</span>       <span class="comment"># is OK</span>
+   <span class="keyword">my</span> <span class="variable">$val</span> <span class="operator">=</span> <span class="variable">$t2</span><span class="operator">-&gt;</span><span class="variable">nodeValue</span><span class="operator">();</span> <span class="comment"># will fail, script dies</span>
+</pre>
+<p>Also <a href="#addchild"><code>addChild()</code></a> will not check if the added node belongs to the same document
+as the node it will be added to. This could lead to inconsistent documents and
+in more worse cases even to memory violations, if one does not keep track of
+this issue.</p>
+<p>Although this sounds like a lot of trouble, <a href="#addchild"><code>addChild()</code></a> is useful if a document
+is built from a stream, such as happens sometimes in SAX handlers or filters.</p>
+<p>If you are not sure about the source of your nodes, you better stay with
+<a href="#appendchild"><code>appendChild()</code></a>, because this function is more user friendly in the sense of
+being more error tolerant.</p>
+</dd>
+<dt><strong><a name="addnewchild" class="item">addNewChild</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$node</span> <span class="operator">=</span> <span class="variable">$parent</span><span class="operator">-&gt;</span><span class="variable">addNewChild</span><span class="operator">(</span> <span class="variable">$nsURI</span><span class="operator">,</span> <span class="variable">$name</span> <span class="operator">);</span>
+</pre>
+<p>Similar to <a href="#addchild"><code>addChild()</code></a>, this function uses low level libxml2 functionality to provide faster
+interface for DOM building. <em>addNewChild() </em>&gt;&gt;&gt;&gt;&gt; uses <code>xmlNewChild()</code> to create a new node on a given parent element.</p>
+<p><a href="#addnewchild"><code>addNewChild()</code></a> has two parameters $nsURI and $name, where $nsURI is an
+(optional) namespace URI. $name is the fully qualified element name;
+<a href="#addnewchild"><code>addNewChild()</code></a> will determine the correct prefix if necessary.</p>
+<p>The function returns the newly created node.</p>
+<p>This function is very useful for DOM building, where a created node can be
+directly associated with its parent. <em>NOTE </em>&gt;&gt;&gt;&gt;&gt; this function is not part of the DOM specification and its use will limit your
+code to XML::LibXML.</p>
+</dd>
+<dt><strong><a name="addsibling" class="item">addSibling</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">addSibling</span><span class="operator">(</span><span class="variable">$newNode</span><span class="operator">);</span>
+</pre>
+<p><a href="#addsibling"><code>addSibling()</code></a> allows adding an additional node to the end of a nodelist, defined
+by the given node.</p>
+</dd>
+<dt><strong><a name="clonenode" class="item">cloneNode</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$newnode</span> <span class="operator">=</span><span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">cloneNode</span><span class="operator">(</span> <span class="variable">$deep</span> <span class="operator">);</span>
+</pre>
+<p><em>cloneNode </em>&gt;&gt;&gt;&gt;&gt; creates a copy of <code>$node</code>. When $deep is set to 1 (true) the function will copy all child nodes as well.
+If $deep is 0 only the current node will be copied. Note that in case of
+element, attributes are copied even if $deep is 0.</p>
+<p>Note that the behavior of this function for $deep=0 has changed in 1.62 in
+order to be consistent with the DOM spec (in older versions attributes and
+namespace information was not copied for elements).</p>
+</dd>
+<dt><strong><a name="parentnode" class="item">parentNode</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$parentnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">parentNode</span><span class="operator">;</span>
+</pre>
+<p>Returns simply the Parent Node of the current node.</p>
+</dd>
+<dt><strong><a name="nextsibling" class="item">nextSibling</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$nextnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">nextSibling</span><span class="operator">();</span>
+</pre>
+<p>Returns the next sibling if any .</p>
+</dd>
+<dt><strong><a name="nextnonblanksibling" class="item">nextNonBlankSibling</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$nextnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">nextNonBlankSibling</span><span class="operator">();</span>
+</pre>
+<p>Returns the next non-blank sibling if any (a node is blank if it is a Text or
+CDATA node consisting of whitespace only). This method is not defined by DOM.</p>
+</dd>
+<dt><strong><a name="previoussibling" class="item">previousSibling</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$prevnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">previousSibling</span><span class="operator">();</span>
+</pre>
+<p>Analogous to <em>getNextSibling </em>&gt;&gt;&gt;&gt;&gt; the function returns the previous sibling if any.</p>
+</dd>
+<dt><strong><a name="previousnonblanksibling" class="item">previousNonBlankSibling</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$prevnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">previousNonBlankSibling</span><span class="operator">();</span>
+</pre>
+<p>Returns the previous non-blank sibling if any (a node is blank if it is a Text
+or CDATA node consisting of whitespace only). This method is not defined by
+DOM.</p>
+</dd>
+<dt><strong><a name="haschildnodes" class="item">hasChildNodes</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$boolean</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">hasChildNodes</span><span class="operator">();</span>
+</pre>
+<p>If the current node has child nodes this function returns TRUE (1), otherwise
+it returns FALSE (0, not undef).</p>
+</dd>
+<dt><strong><a name="firstchild" class="item">firstChild</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$childnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">firstChild</span><span class="operator">;</span>
+</pre>
+<p>If a node has child nodes this function will return the first node in the child
+list.</p>
+</dd>
+<dt><strong><a name="lastchild" class="item">lastChild</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$childnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">lastChild</span><span class="operator">;</span>
+</pre>
+<p>If the <code>$node</code> has child nodes this function returns the last child node.</p>
+</dd>
+<dt><strong><a name="ownerdocument" class="item">ownerDocument</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$documentnode</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">ownerDocument</span><span class="operator">;</span>
+</pre>
+<p>Through this function it is always possible to access the document the current
+node is bound to.</p>
+</dd>
+<dt><strong><a name="getowner" class="item">getOwner</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$node</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">getOwner</span><span class="operator">;</span>
+</pre>
+<p>This function returns the node the current node is associated with. In most
+cases this will be a document node or a document fragment node.</p>
+</dd>
+<dt><strong><a name="setownerdocument" class="item">setOwnerDocument</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">setOwnerDocument</span><span class="operator">(</span> <span class="variable">$doc</span> <span class="operator">);</span>
+</pre>
+<p>This function binds a node to another DOM. This method unbinds the node first,
+if it is already bound to another document.</p>
+<p>This function is the opposite calling of <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Document.html">the XML::LibXML::Document manpage</a>'s <code>adoptNode()</code> function. Because of this it has the same limitations with
+Entity References as <code>adoptNode()</code>.</p>
+</dd>
+<dt><strong><a name="insertbefore" class="item">insertBefore</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">insertBefore</span><span class="operator">(</span> <span class="variable">$newNode</span><span class="operator">,</span> <span class="variable">$refNode</span> <span class="operator">);</span>
+</pre>
+<p>The method inserts <code>$newNode</code> before <code>$refNode</code>. If <code>$refNode</code> is undefined, the newNode will be set as the new last child of the parent node.
+This function differs from the DOM L2 specification, in the case, if the new
+node is not part of the document, the node will be imported first,
+automatically.</p>
+<p>$refNode has to be passed to the function even if it is undefined:</p>
+<pre>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">insertBefore</span><span class="operator">(</span> <span class="variable">$newNode</span><span class="operator">,</span> <span class="keyword">undef</span> <span class="operator">);</span> <span class="comment"># the same as $node-&gt;appendChild( $newNode );</span>
+   <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">insertBefore</span><span class="operator">(</span> <span class="variable">$newNode</span> <span class="operator">);</span> <span class="comment"># wrong</span>
+</pre>
+<p>Note, that the reference node has to be a direct child of the node the function
+is called on. Also, $newChild is not allowed to be an ancestor of the new
+parent node.</p>
+</dd>
+<dt><strong><a name="insertafter" class="item">insertAfter</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">insertAfter</span><span class="operator">(</span> <span class="variable">$newNode</span><span class="operator">,</span> <span class="variable">$refNode</span> <span class="operator">);</span>
+</pre>
+<p>The method inserts <code>$newNode</code> after <code>$refNode</code>. If <code>$refNode</code> is undefined, the newNode will be set as the new last child of the parent node.</p>
+<p>Note, that $refNode has to be passed explicitly even if it is undef.</p>
+</dd>
+<dt><strong><a name="findnodes" class="item">findnodes</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">@nodes</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">findnodes</span><span class="operator">(</span> <span class="variable">$xpath_expression</span> <span class="operator">);</span>
+</pre>
+<p><em>findnodes </em>&gt;&gt;&gt;&gt;&gt; evaluates the xpath expression (XPath 1.0) on the current node and returns the
+resulting node set as an array. In scalar context, returns an <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/NodeList.html">the XML::LibXML::NodeList manpage</a> object.</p>
+<p>The xpath expression can be passed either as a string, or as a <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/XPathExpression.html">the XML::LibXML::XPathExpression manpage</a> object.</p>
+<p><em>NOTE ON NAMESPACES AND XPATH </em>&gt;&gt;&gt;&gt;&gt;:</p>
+<p>A common mistake about XPath is to assume that node tests consisting of an
+element name with no prefix match elements in the default namespace. This
+assumption is wrong - by XPath specification, such node tests can only match
+elements that are in no (i.e. null) namespace.</p>
+<p>So, for example, one cannot match the root element of an XHTML document with <a href="#find"><code>$node-&gt;find('/html')</code></a> since <code>'/html'</code> would only match if the root element <code>&lt;html&gt;</code> had no namespace, but all XHTML elements belong to the namespace
+<a href="http://www.w3.org/1999/xhtml.">http://www.w3.org/1999/xhtml.</a> (Note that <code>xmlns=&quot;...&quot;</code> namespace declarations can also be specified in a DTD, which makes the
+situation even worse, since the XML document looks as if there was no default
+namespace).</p>
+<p>There are several possible ways to deal with namespaces in XPath:</p>
+<ul>
+<li>
+<p>The recommended way is to use the <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/XPathContext.html">the XML::LibXML::XPathContext manpage</a> module to define an explicit context for XPath evaluation, in which a document
+independent prefix-to-namespace mapping can be defined. For example:</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$xpc</span> <span class="operator">=</span> <span class="variable">XML::LibXML::XPathContext</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">;</span>
+  <span class="variable">$xpc</span><span class="operator">-&gt;</span><span class="variable">registerNs</span><span class="operator">(</span><span class="string">'x'</span><span class="operator">,</span> <span class="string">'http://www.w3.org/1999/xhtml'</span><span class="operator">);</span>
+  <span class="variable">$xpc</span><span class="operator">-&gt;</span><span class="variable">find</span><span class="operator">(</span><span class="string">'/x:html'</span><span class="operator">,</span><span class="variable">$node</span><span class="operator">);</span>
+</pre>
+</li>
+<li>
+<p>Another possibility is to use prefixes declared in the queried document (if
+known). If the document declares a prefix for the namespace in question (and
+the context node is in the scope of the declaration), <code>XML::LibXML</code> allows you to use the prefix in the XPath expression, e.g.:</p>
+<pre>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">find</span><span class="operator">(</span><span class="string">'/x:html'</span><span class="operator">);</span>
+</pre>
+</li>
+</ul>
+<p>See also XML::LibXML::XPathContext-&gt;findnodes.</p>
+</dd>
+<dt><strong><a name="find" class="item">find</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$result</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">find</span><span class="operator">(</span> <span class="variable">$xpath</span> <span class="operator">);</span>
+</pre>
+<p><em>find </em>&gt;&gt;&gt;&gt;&gt; evaluates the XPath 1.0 expression using the current node as the context of the
+expression, and returns the result depending on what type of result the XPath
+expression had. For example, the XPath &quot;1 * 3 + 52&quot; results in a <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Number.html">the XML::LibXML::Number manpage</a> object being returned. Other expressions might return an <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Boolean.html">the XML::LibXML::Boolean manpage</a> object, or an <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Literal.html">the XML::LibXML::Literal manpage</a> object (a string). Each of those objects uses Perl's overload feature to &quot;do
+the right thing&quot; in different contexts.</p>
+<p>The xpath expression can be passed either as a string, or as a <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/XPathExpression.html">the XML::LibXML::XPathExpression manpage</a> object.</p>
+<p>See also <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/XPathContext.html">the XML::LibXML::XPathContext manpage</a>-&gt;find.</p>
+</dd>
+<dt><strong><a name="findvalue" class="item">findvalue</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="keyword">print</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">findvalue</span><span class="operator">(</span> <span class="variable">$xpath</span> <span class="operator">);</span>
+</pre>
+<p><em>findvalue </em>&gt;&gt;&gt;&gt;&gt; is exactly equivalent to:</p>
+<pre>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">find</span><span class="operator">(</span> <span class="variable">$xpath</span> <span class="operator">)-&gt;</span><span class="variable">to_literal</span><span class="operator">;</span>
+</pre>
+<p>That is, it returns the literal value of the results. This enables you to
+ensure that you get a string back from your search, allowing certain shortcuts.
+This could be used as the equivalent of XSLT's &lt;xsl:value-of
+select=&quot;some_xpath&quot;/&gt;.</p>
+<p>See also <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/XPathContext.html">the XML::LibXML::XPathContext manpage</a>-&gt;findvalue.</p>
+<p>The xpath expression can be passed either as a string, or as a <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/XPathExpression.html">the XML::LibXML::XPathExpression manpage</a> object.</p>
+</dd>
+<dt><strong><a name="exists" class="item">exists</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$bool</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">exists</span><span class="operator">(</span> <span class="variable">$xpath_expression</span> <span class="operator">);</span>
+</pre>
+<p>This method behaves like <em>findnodes </em>&gt;&gt;&gt;&gt;&gt;, except that it only returns a boolean value (1 if the expression matches a
+node, 0 otherwise) and may be faster than <em>findnodes </em>&gt;&gt;&gt;&gt;&gt;, because the XPath evaluation may stop early on the first match (this is true
+for libxml2 &gt;= 2.6.27).</p>
+<p>For XPath expressions that do not return node-set, the method returns true if
+the returned value is a non-zero number or a non-empty string.</p>
+</dd>
+<dt><strong><a name="childnodes" class="item">childNodes</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">@childnodes</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">childNodes</span><span class="operator">();</span>
+</pre>
+<p><em>childNodes </em>&gt;&gt;&gt;&gt;&gt; implements a more intuitive interface to the childnodes of the current node. It
+enables you to pass all children directly to a <a href="../../../../lib/pod/perlfunc.html#map"><code>map</code></a> or <a href="../../../../lib/pod/perlfunc.html#grep"><code>grep</code></a>. If this function is called in scalar context, a <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/NodeList.html">the XML::LibXML::NodeList manpage</a> object will be returned.</p>
+</dd>
+<dt><strong><a name="nonblankchildnodes" class="item">nonBlankChildNodes</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">@childnodes</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">nonBlankChildNodes</span><span class="operator">();</span>
+</pre>
+<p>This is like <em>childNodes </em>&gt;&gt;&gt;&gt;&gt;, but returns only non-blank nodes (where a node is blank if it is a Text or
+CDATA node consisting of whitespace only). This method is not defined by DOM.</p>
+</dd>
+<dt><strong><a name="tostring2" class="item">toString</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$xmlstring</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">toString</span><span class="operator">(</span><span class="variable">$format</span><span class="operator">,</span><span class="variable">$docencoding</span><span class="operator">);</span>
+</pre>
+<p>This method is similar to the method <a href="#tostring"><code>toString</code></a> of a <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Document.html">the XML::LibXML::Document manpage</a> but for a single node. It returns a string consisting of XML serialization of
+the given node and all its descendants. Unlike <code>XML::LibXML::Document::toString</code>, in this case the resulting string is by default a character string (UTF-8
+encoded with UTF8 flag on). An optional flag $format controls indentation, as
+in <code>XML::LibXML::Document::toString</code>. If the second optional $docencoding flag is true, the result will be a byte
+string in the document encoding (see <code>XML::LibXML::Document::actualEncoding</code>).</p>
+</dd>
+<dt><strong><a name="tostringc14n2" class="item">toStringC14N</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$c14nstring</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">toStringC14N</span><span class="operator">();</span>
+  <span class="variable">$c14nstring</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">toStringC14N</span><span class="operator">(</span><span class="variable">$with_comments</span><span class="operator">,</span> <span class="variable">$xpath_expression</span> <span class="operator">,</span> <span class="variable">$xpath_context</span><span class="operator">);</span>
+</pre>
+<p>The function is similar to <a href="#tostring"><code>toString()</code></a>. Instead of simply serializing the
+document tree, it transforms it as it is specified in the XML-C14N
+Specification (see <a href="http://www.w3.org/TR/xml-c14n">http://www.w3.org/TR/xml-c14n</a>). Such transformation is known as canonization.</p>
+<p>If $with_comments is 0 or not defined, the result-document will not contain any
+comments that exist in the original document. To include comments into the
+canonized document, $with_comments has to be set to 1.</p>
+<p>The parameter $xpath_expression defines the nodeset of nodes that should be
+visible in the resulting document. This can be used to filter out some nodes.
+One has to note, that only the nodes that are part of the nodeset, will be
+included into the result-document. Their child-nodes will not exist in the
+resulting document, unless they are part of the nodeset defined by the xpath
+expression.</p>
+<p>If $xpath_expression is omitted or empty, toStringC14N() will include all nodes
+in the given sub-tree, using the following XPath expressions: with comments</p>
+<pre>
+  (. | .//node() | .//@* | .//namespace::*)</pre>
+<p>and without comments</p>
+<pre>
+  (. | .//node() | .//@* | .//namespace::*)[not(self::comment())]</pre>
+<p>An optional parameter $xpath_context can be used to pass an <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/XPathContext.html">the XML::LibXML::XPathContext manpage</a> object defining the context for evaluation of $xpath_expression. This is useful
+for mapping namespace prefixes used in the XPath expression to namespace URIs.
+Note, however, that $node will be used as the context node for the evaluation,
+not the context node of $xpath_context!</p>
+</dd>
+<dt><strong><a name="tostringec14n2" class="item">toStringEC14N</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$ec14nstring</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">toStringEC14N</span><span class="operator">();</span>
+  <span class="variable">$ec14nstring</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">toStringEC14N</span><span class="operator">(</span><span class="variable">$with_comments</span><span class="operator">,</span> <span class="variable">$xpath_expression</span><span class="operator">,</span> <span class="variable">$inclusive_prefix_list</span><span class="operator">);</span>
+  <span class="variable">$ec14nstring</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">toStringEC14N</span><span class="operator">(</span><span class="variable">$with_comments</span><span class="operator">,</span> <span class="variable">$xpath_expression</span><span class="operator">,</span> <span class="variable">$xpath_context</span><span class="operator">,</span> <span class="variable">$inclusive_prefix_list</span><span class="operator">);</span>
+</pre>
+<p>The function is similar to toStringC14N() but follows the XML-EXC-C14N
+Specification (see <a href="http://www.w3.org/TR/xml-exc-c14n">http://www.w3.org/TR/xml-exc-c14n</a>) for exclusive canonization of XML.</p>
+<p>The arguments $with_comments, $xpath_expression, $xpath_context are as in
+toStringC14N(). An ARRAY reference can be passed as the last argument
+$inclusive_prefix_list, listing namespace prefixes that are to be handled in
+the manner described by the Canonical XML Recommendation (i.e. preserved in the
+output even if the namespace is not used). C.f. the spec for details.</p>
+</dd>
+<dt><strong><a name="serialize" class="item">serialize</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$str</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">serialize</span><span class="operator">(</span><span class="variable">$format</span><span class="operator">);</span>
+</pre>
+<p>An alias for <a href="#tostring"><code>toString()</code></a>. This function was name added to be more consistent
+with libxml2.</p>
+</dd>
+<dt><strong><a name="serialize_c14n" class="item">serialize_c14n</a></strong></dt>
+
+<dd>
+<p>An alias for toStringC14N().</p>
+</dd>
+<dt><strong><a name="serialize_exc_c14n" class="item">serialize_exc_c14n</a></strong></dt>
+
+<dd>
+<p>An alias for toStringEC14N().</p>
+</dd>
+<dt><strong><a name="localname" class="item">localname</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$localname</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">localname</span><span class="operator">;</span>
+</pre>
+<p>Returns the local name of a tag. This is the part behind the colon.</p>
+</dd>
+<dt><strong><a name="prefix" class="item">prefix</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$nameprefix</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">prefix</span><span class="operator">;</span>
+</pre>
+<p>Returns the prefix of a tag. This is the part before the colon.</p>
+</dd>
+<dt><strong><a name="namespaceuri" class="item">namespaceURI</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$uri</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">namespaceURI</span><span class="operator">();</span>
+</pre>
+<p>returns the URI of the current namespace.</p>
+</dd>
+<dt><strong><a name="hasattributes" class="item">hasAttributes</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$boolean</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">hasAttributes</span><span class="operator">();</span>
+</pre>
+<p>returns 1 (TRUE) if the current node has any attributes set, otherwise 0
+(FALSE) is returned.</p>
+</dd>
+<dt><strong><a name="attributes" class="item">attributes</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">@attributelist</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">attributes</span><span class="operator">();</span>
+</pre>
+<p>This function returns all attributes and namespace declarations assigned to the
+given node.</p>
+<p>Because XML::LibXML does not implement namespace declarations and attributes
+the same way, it is required to test what kind of node is handled while
+accessing the functions result.</p>
+<p>If this function is called in array context the attribute nodes are returned as
+an array. In scalar context, the function will return a <a href="../../../../XML/LibXML/NamedNodeMap.html">the XML::LibXML::NamedNodeMap manpage</a> object.</p>
+</dd>
+<dt><strong><a name="lookupnamespaceuri" class="item">lookupNamespaceURI</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$URI</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">lookupNamespaceURI</span><span class="operator">(</span> <span class="variable">$prefix</span> <span class="operator">);</span>
+</pre>
+<p>Find a namespace URI by its prefix starting at the current node.</p>
+</dd>
+<dt><strong><a name="lookupnamespaceprefix" class="item">lookupNamespacePrefix</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$prefix</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">lookupNamespacePrefix</span><span class="operator">(</span> <span class="variable">$URI</span> <span class="operator">);</span>
+</pre>
+<p>Find a namespace prefix by its URI starting at the current node.</p>
+<p><em>NOTE </em>&gt;&gt;&gt;&gt;&gt; Only the namespace URIs are meant to be unique. The prefix is only document
+related. Also the document might have more than a single prefix defined for a
+namespace.</p>
+</dd>
+<dt><strong><a name="normalize" class="item">normalize</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">normalize</span><span class="operator">;</span>
+</pre>
+<p>This function normalizes adjacent text nodes. This function is not as strict as
+libxml2's <code>xmlTextMerge()</code> function, since it will not free a node that is still
+referenced by the perl layer.</p>
+</dd>
+<dt><strong><a name="getnamespaces" class="item">getNamespaces</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">@nslist</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">getNamespaces</span><span class="operator">;</span>
+</pre>
+<p>If a node has any namespaces defined, this function will return these
+namespaces. Note, that this will not return all namespaces that are in scope,
+but only the ones declared explicitly for that node.</p>
+<p>Although getNamespaces is available for all nodes, it only makes sense if used
+with element nodes.</p>
+</dd>
+<dt><strong><a name="removechildnodes" class="item">removeChildNodes</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">removeChildNodes</span><span class="operator">();</span>
+</pre>
+<p>This function is not specified for any DOM level: It removes all childnodes
+from a node in a single step. Other than the libxml2 function itself
+(xmlFreeNodeList), this function will not immediately remove the nodes from the
+memory. This saves one from getting memory violations, if there are nodes still
+referred to from the Perl level.</p>
+</dd>
+<dt><strong><a name="baseuri" class="item">baseURI ()</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$strURI</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">baseURI</span><span class="operator">();</span>
+</pre>
+<p>Searches for the base URL of the node. The method should work on both XML and
+HTML documents even if base mechanisms for these are completely different. It
+returns the base as defined in <a href="http://www.ietf.org/rfc/rfc2396.txt" class="rfc">RFC 2396</a> sections &quot;5.1.1. Base URI within
+Document Content&quot; and &quot;5.1.2. Base URI from the Encapsulating Entity&quot;. However
+it does not return the document base (5.1.3), use method <code>URI</code> of <code>XML::LibXML::Document</code> for this.</p>
+</dd>
+<dt><strong><a name="setbaseuri" class="item">setBaseURI ($strURI)</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">setBaseURI</span><span class="operator">(</span><span class="variable">$strURI</span><span class="operator">);</span>
+</pre>
+<p>This method only does something useful for an element node in an XML document.
+It sets the xml:base attribute on the node to $strURI, which effectively sets
+the base URI of the node to the same value.</p>
+<p>Note: For HTML documents this behaves as if the document was XML which may not
+be desired, since it does not effectively set the base URI of the node. See <a href="http://www.ietf.org/rfc/rfc2396.txt" class="rfc">RFC
+2396</a> appendix D for an example of how base URI can be specified in HTML.</p>
+</dd>
+<dt><strong><a name="nodepath" class="item">nodePath</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">nodePath</span><span class="operator">();</span>
+</pre>
+<p>This function is not specified for any DOM level: It returns a canonical
+structure based XPath for a given node.</p>
+</dd>
+<dt><strong><a name="line_number" class="item">line_number</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$lineno</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">line_number</span><span class="operator">();</span>
+</pre>
+<p>This function returns the line number where the tag was found during parsing.
+If a node is added to the document the line number is 0. Problems may occur, if
+a node from one document is passed to another one.</p>
+<p>IMPORTANT: Due to limitations in the libxml2 library line numbers greater than
+65535 will be returned as 65535. Please see <a href="http://bugzilla.gnome.org/show_bug.cgi?id=325533">http://bugzilla.gnome.org/show_bug.cgi</a> for more details.</p>
+<p>Note: <a href="#line_number"><code>line_number()</code></a> is special to XML::LibXML and not part of the DOM
+specification.</p>
+<p>If the line_numbers flag of the parser was not activated before parsing,
+<a href="#line_number"><code>line_number()</code></a> will always return 0.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Matt Sergeant,
+Christian Glahn,
+Petr Pajas</p>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p>2.0019</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>2001-2007, AxKit.com Ltd.</p>
+<p>2002-2006, Christian Glahn.</p>
+<p>2006-2009, Petr Pajas.</p>
+
+</body>
+
+</html>

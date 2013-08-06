@@ -1,0 +1,6 @@
+/usr/bin/rtorrent/perl/lib/Net/HTTP.pm
+/usr/bin/rtorrent/perl/lib/Net/HTTP/Methods.pm
+/usr/bin/rtorrent/perl/lib/Net/HTTP/NB.pm
+/usr/bin/rtorrent/perl/lib/Net/HTTPS.pm
+/usr/bin/rtorrent/perl/man/man3/Net::HTTP.3
+/usr/bin/rtorrent/perl/man/man3/Net::HTTP::NB.3

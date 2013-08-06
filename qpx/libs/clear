@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include console
+include null
+
+# Provides clear().
+
+# void clear (void)
+#
+function clear {
+	local CLEAR=''
+
+	[[ $(type -t clear) = file ]] && \
+		CLEAR=$(command clear)
+	[[ -z $CLEAR ]] && type -t tput >&"$NULL" && \
+		CLEAR=$(exec tput clear)
+	[[ -z $CLEAR ]] && \
+		CLEAR=$CONSOLE_CLEARSCREEN
+
+	if [[ -n $CLEAR ]]; then
+		eval "function clear { echo -en '$CLEAR'; }"
+		echo -en "$CLEAR"
+	fi
+}

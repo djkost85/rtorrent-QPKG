@@ -1,0 +1,69 @@
+#!/usr/bin/env sh
+
+include assume
+include log
+include deps/gawk
+
+# Note: Since these functions doesn't make error messages, concern for
+#       the preparation of the files is passed to the caller.
+
+
+# stat utils_ifilter (string SOURCEFILE, string OUTPUTFILE, string COUNTFILE | "", [string <keyword>, ...])
+#
+# Filters a file with expressions.  Case is ignored.
+# This function will return true status code (0) if a match is found.
+#
+function utils_ifilter {
+	log_fcall "$@"
+
+	assume "$# -ge 3 && -f \$2 && -f \$3 && (-z \$4 || -f \$4)" "$1" "$2" "$3" -- \
+		"\"$1\", \"$2\", \"$3\""
+
+	local SOURCEFILE=$1 OUTPUTFILE=$2 COUNTFILE=$3
+	shift 3
+
+	gawk -- \
+		'
+			BEGIN {
+				if (ARGC < 3)
+					exit(1)
+
+				COUNTFILE = ARGV[2]
+				delete ARGV[2]
+
+				for (I = 3; I < ARGC; I++) {
+					EXPR[I - 1] = ARGV[I]
+					delete ARGV[I]
+				}
+
+				IGNORECASE = 1
+
+				COUNT = 0
+			}
+			{
+				for (I in EXPR) {
+					if ($0 !~ EXPR[I]) {
+						next
+					}
+				}
+
+				print $0
+
+				COUNT++
+			}
+			END {
+				if (COUNTFILE != "") {
+					print COUNT > COUNTFILE
+				}
+
+				if (COUNT > 0) {
+					exit 0
+				} else {
+					exit 1
+				}
+			}
+		' \
+		"$SOURCEFILE" "$COUNTFILE" "$@" > "$OUTPUTFILE"
+
+	[[ $? -eq 0 ]]
+}

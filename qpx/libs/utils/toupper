@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+
+include deps/tr
+
+# void utils_toupper (string, string var)
+#
+# Converts lowercase characters to uppercase.
+#
+if [[ BASH_VERSINFO -ge 4 ]]; then
+	function utils_toupper {
+		eval "$2=\${1^^}"
+	}
+else
+	function utils_toupper {
+		eval "$2=\$(echo \"\$1\" | tr '[:lower:]' '[:upper:]')"
+	}
+fi

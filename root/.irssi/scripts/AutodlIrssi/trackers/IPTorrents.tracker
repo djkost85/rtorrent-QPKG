@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is IRC Auto Downloader.
+   -
+   - The Initial Developer of the Original Code is
+   - David Nilsson.
+   - Portions created by the Initial Developer are Copyright (C) 2010, 2011
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s):
+   -
+   - ***** END LICENSE BLOCK ***** -->
+
+<trackerinfo
+	type="ipt"
+	shortName="IPT"
+	longName="IPTorrents"
+	siteName="www.iptorrents.com">
+
+	<settings>
+		<cookie_description text="FireFox -> Preferences -> Privacy -> Show Cookies and find the uid and pass cookies. Example: uid=1234; pass=asdf12347asdf13"/>
+		<cookie/>
+	</settings>
+
+	<servers>
+		<server
+			network="IPTorrents"
+			serverNames="irc.iptorrents.com"
+			channelNames="#ipt.announce"
+			announcerNames="IPT"
+			/>
+	</servers>
+
+	<parseinfo>
+		<linepatterns>
+			<extract>
+				<!--[TV/Packs] Star Blazers US S01-02 DVDRip XviD-SPRiNTER [FreeLeech] - http://www.iptorrents.com/details.php?id=396777 - 9.416 GB-->
+				<regex value="^\[([^\]]*)](.*)\[FreeLeech]\s*-\s+https?\:\/\/([^\/]+).*[&amp;\?]id=(\d+)\s*-(.*)"/>
+				<vars>
+					<var name="category"/>
+					<var name="torrentName"/>
+					<var name="$baseUrl"/>
+					<var name="$torrentId"/>
+					<var name="torrentSize"/>
+				</vars>
+			</extract>
+			<extract>
+				<!--[Movies/XviD] The First Men In The Moon 2010 DVDRip XviD-VoMiT - http://www.iptorrents.com/details.php?id=396589 - 716.219 MB-->
+				<regex value="^\[([^\]]*)](.*)-\s+https?\:\/\/([^\/]+).*[&amp;\?]id=(\d+)\s*-(.*)"/>
+				<vars>
+					<var name="category"/>
+					<var name="torrentName"/>
+					<var name="$baseUrl"/>
+					<var name="$torrentId"/>
+					<var name="torrentSize"/>
+				</vars>
+			</extract>
+		</linepatterns>
+		<linematched>
+			<var name="torrentUrl">
+				<string value="http://"/>
+				<var name="$baseUrl"/>
+				<string value="/download.php/"/>
+				<var name="$torrentId"/>
+				<string value="/"/>
+				<varenc name="torrentName"/>
+				<string value=".torrent"/>
+			</var>
+			<http name="cookie">
+				<var name="cookie"/>
+			</http>
+		</linematched>
+		<ignore>
+			<regex value="details\.php\?id=\d+" expected="false"/>
+		</ignore>
+	</parseinfo>
+</trackerinfo>

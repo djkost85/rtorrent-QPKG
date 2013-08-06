@@ -1,0 +1,166 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::Common - Constants and Character Encoding Routines</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::Common - Constants and Character Encoding Routines</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<ul>
+
+		<li><a href="#exporter_tags">Exporter TAGS</a></li>
+		<li><a href="#exports">Exports</a></li>
+		<li><a href="#encoding_functions">Encoding functions</a></li>
+		<li><a href="#a_note_on_history">A note on history</a></li>
+	</ul>
+
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::Common - Constants and Character Encoding Routines</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML::Common</span><span class="operator">;</span>
+</pre>
+<pre>
+  <span class="variable">$encodedstring</span> <span class="operator">=</span> <span class="variable">encodeToUTF8</span><span class="operator">(</span> <span class="variable">$name_of_encoding</span><span class="operator">,</span> <span class="variable">$sting_to_encode</span> <span class="operator">);</span>
+  <span class="variable">$decodedstring</span> <span class="operator">=</span> <span class="variable">decodeFromUTF8</span><span class="operator">(</span><span class="variable">$name_of_encoding</span><span class="operator">,</span> <span class="variable">$string_to_decode</span> <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>XML::LibXML::Common defines constants for all node types and provides interface
+to libxml2 charset conversion functions.</p>
+<p>Since XML::LibXML use their own node type definitions, one may want to use
+XML::LibXML::Common in its compatibility mode:</p>
+<p>
+</p>
+<h2><a name="exporter_tags">Exporter TAGS</a></h2>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML::Common</span> <span class="string">qw(:libxml)</span><span class="operator">;</span>
+</pre>
+<p><code>:libxml</code> tag will use the XML::LibXML Compatibility mode, which defines the old 'XML_'
+node-type definitions.</p>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML::Common</span> <span class="string">qw(:gdome)</span><span class="operator">;</span>
+</pre>
+<p><code>:gdome</code> tag will use the XML::GDOME Compatibility mode, which defines the old 'GDOME_'
+node-type definitions.</p>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML::Common</span> <span class="string">qw(:w3c)</span><span class="operator">;</span>
+</pre>
+<p>This uses the nodetype definition names as specified for DOM.</p>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML::Common</span> <span class="string">qw(:encoding)</span><span class="operator">;</span>
+</pre>
+<p>This tag can be used to export only the charset encoding functions of
+XML::LibXML::Common.</p>
+<p>
+</p>
+<h2><a name="exports">Exports</a></h2>
+<p>By default the W3 definitions as defined in the DOM specifications and the
+encoding functions are exported by XML::LibXML::Common.</p>
+<p>
+</p>
+<h2><a name="encoding_functions">Encoding functions</a></h2>
+<p>To encode or decode a string to or from UTF-8, XML::LibXML::Common exports two
+functions, which provide an interface to the encoding support in <code>libxml2</code>. Which encodings are supported by these functions depends on how <code>libxml2</code> was compiled. UTF-16 is always supported and on most installations, ISO
+encodings are supported as well.</p>
+<p>This interface was useful for older versions of Perl. Since Perl &gt;= 5.8
+provides similar functions via the <code>Encode</code> module, it is probably a good idea to use those instead.</p>
+<dl>
+<dt><strong><a name="encodetoutf8" class="item">encodeToUTF8</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$encodedstring</span> <span class="operator">=</span> <span class="variable">encodeToUTF8</span><span class="operator">(</span> <span class="variable">$name_of_encoding</span><span class="operator">,</span> <span class="variable">$sting_to_encode</span> <span class="operator">);</span>
+</pre>
+<p>The function will convert a byte string from the specified encoding to an UTF-8
+encoded character string.</p>
+</dd>
+<dt><strong><a name="decodetoutf8" class="item">decodeToUTF8</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$decodedstring</span> <span class="operator">=</span> <span class="variable">decodeFromUTF8</span><span class="operator">(</span><span class="variable">$name_of_encoding</span><span class="operator">,</span> <span class="variable">$string_to_decode</span> <span class="operator">);</span>
+</pre>
+<p>This function converts an UTF-8 encoded character string to a specified
+encoding. Note that the conversion can raise an error if the given string
+contains characters that cannot be represented in the target encoding.</p>
+</dd>
+</dl>
+<p>Both these functions report their errors on the standard error. If an error
+occurs the function will <code>croak()</code>. To catch the error information it is required
+to call the encoding function from within an eval block in order to prevent the
+entire script from being stopped on encoding error.</p>
+<p>
+</p>
+<h2><a name="a_note_on_history">A note on history</a></h2>
+<p>Before XML::LibXML 1.70, this class was available as a separate CPAN
+distribution, intended to provide functionality shared between XML::LibXML,
+XML::GDOME, and possibly other modules. Since there seems to be no progress in
+this direction, we decided to merge XML::LibXML::Common 0.13 and XML::LibXML
+1.70 to one CPAN distribution.</p>
+<p>The merge also naturally eliminates a practical and urgent problem experienced
+by many XML::LibXML users on certain platforms, namely mysterious misbehavior
+of XML::LibXML occurring if the installed (often pre-packaged) version of
+XML::LibXML::Common was compiled against an older version of libxml2 than
+XML::LibXML.</p>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Matt Sergeant,
+Christian Glahn,
+Petr Pajas</p>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p>2.0019</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>2001-2007, AxKit.com Ltd.</p>
+<p>2002-2006, Christian Glahn.</p>
+<p>2006-2009, Petr Pajas.</p>
+
+</body>
+
+</html>

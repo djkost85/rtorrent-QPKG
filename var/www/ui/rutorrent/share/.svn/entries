@@ -1,0 +1,49 @@
+8
+
+dir
+2335
+http://rutorrent.googlecode.com/svn/trunk/rutorrent/share
+http://rutorrent.googlecode.com/svn
+
+
+
+2012-02-06T11:01:27.137861Z
+1961
+novik65@gmail.com
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+f4b6cfda-67a8-11de-ba0c-230037762ff9
+
+settings
+dir
+
+torrents
+dir
+
+users
+dir
+
+.htaccess
+file
+
+
+
+
+2013-08-03T18:18:06.000000Z
+90f78f2bea108528ffe6d764b3a66a16
+2012-02-06T11:01:27.137861Z
+1961
+novik65@gmail.com
+

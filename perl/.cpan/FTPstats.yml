@@ -1,0 +1,222 @@
+---
+history:
+- attempts:
+  - method: dleasy
+    start: 1374596334.25761
+    url: &1 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1374596336.54362
+  file: authors/01mailrc.txt.gz
+  filesize: 210833
+  start: 1374596334.24674
+  thesiteurl: *1
+- attempts:
+  - method: dleasy
+    start: 1374596337.67869
+    url: &2 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1374596341.07241
+  file: modules/02packages.details.txt.gz
+  filesize: 1437012
+  start: 1374596337.67827
+  thesiteurl: *2
+- attempts:
+  - method: dleasy
+    start: 1374596360.97077
+    url: &3 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1374596362.79324
+  file: modules/03modlist.data.gz
+  filesize: 210441
+  start: 1374596360.97058
+  thesiteurl: *3
+- attempts:
+  - method: dleasy
+    start: 1374596397.31625
+    url: &4 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1374596399.14873
+  file: authors/id/G/GA/GAAS/HTML-Parser-3.71.tar.gz
+  filesize: 90368
+  start: 1374596397.31446
+  thesiteurl: *4
+- attempts:
+  - method: dleasy
+    start: 1374596399.18587
+    url: &5 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1374596400.42501
+  file: authors/id/G/GA/GAAS/CHECKSUMS
+  filesize: 76910
+  start: 1374596399.18373
+  thesiteurl: *5
+- attempts:
+  - method: dleasy
+    start: 1374596435.3205
+    url: &6 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1374596437.74391
+  file: authors/id/M/MI/MIKEM/Net-SSLeay-1.55.tar.gz
+  filesize: 394657
+  start: 1374596435.31926
+  thesiteurl: *6
+- attempts:
+  - method: dleasy
+    start: 1374596437.75364
+    url: &7 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1374596438.61182
+  file: authors/id/M/MI/MIKEM/CHECKSUMS
+  filesize: 24654
+  start: 1374596437.75124
+  thesiteurl: *7
+- attempts:
+  - method: dleasy
+    start: 1374596529.83681
+    url: &8 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1374596532.48165
+  file: authors/id/S/SH/SHLOMIF/XML-LibXML-2.0019.tar.gz
+  filesize: 452874
+  start: 1374596529.83599
+  thesiteurl: *8
+- attempts:
+  - method: dleasy
+    start: 1374596532.49201
+    url: &9 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1374596534.44111
+  file: authors/id/S/SH/SHLOMIF/CHECKSUMS
+  filesize: 136960
+  start: 1374596532.48924
+  thesiteurl: *9
+- attempts:
+  - method: dleasy
+    start: 1374596669.44632
+    url: &10 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1374596670.86886
+  file: authors/id/M/MA/MAKAMAKA/JSON-2.59.tar.gz
+  filesize: 83997
+  start: 1374596669.44559
+  thesiteurl: *10
+- attempts:
+  - method: dleasy
+    start: 1374596670.87972
+    url: &11 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1374596671.72709
+  file: authors/id/M/MA/MAKAMAKA/CHECKSUMS
+  filesize: 27340
+  start: 1374596670.87673
+  thesiteurl: *11
+- attempts:
+  - method: dleasy
+    start: 1374596762.28145
+    url: &12 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1374596763.70714
+  file: authors/id/M/ML/MLEHMANN/JSON-XS-2.34.tar.gz
+  filesize: 75468
+  start: 1374596762.28073
+  thesiteurl: *12
+- attempts:
+  - method: dleasy
+    start: 1374596763.71855
+    url: &13 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1374596764.97043
+  file: authors/id/M/ML/MLEHMANN/CHECKSUMS
+  filesize: 66422
+  start: 1374596763.71528
+  thesiteurl: *13
+- attempts:
+  - method: dleasy
+    start: 1374596806.74575
+    url: &14 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1374596808.18937
+  file: authors/id/Z/ZE/ZEFRAM/Time-HiRes-1.9725.tar.gz
+  filesize: 88527
+  start: 1374596806.7449
+  thesiteurl: *14
+- attempts:
+  - method: dleasy
+    start: 1374596808.20138
+    url: &15 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1374596809.82075
+  file: authors/id/Z/ZE/ZEFRAM/CHECKSUMS
+  filesize: 165067
+  start: 1374596808.19781
+  thesiteurl: *15
+- attempts:
+  - method: dleasy
+    start: 1375581083.52704
+    url: &16 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1375581085.95732
+  file: authors/01mailrc.txt.gz
+  filesize: 211319
+  start: 1375581083.52674
+  thesiteurl: *16
+- attempts:
+  - method: dleasy
+    start: 1375581087.06137
+    url: &17 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1375581090.53065
+  file: modules/02packages.details.txt.gz
+  filesize: 1444604
+  start: 1375581087.06116
+  thesiteurl: *17
+- attempts:
+  - method: dleasy
+    start: 1375581101.86202
+    url: &18 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1375581103.55759
+  file: modules/03modlist.data.gz
+  filesize: 210987
+  start: 1375581101.86182
+  thesiteurl: *18
+- attempts:
+  - method: dleasy
+    start: 1375581556.26483
+    url: &19 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1375581558.95647
+  file: authors/id/A/AN/ANDK/CPAN-2.00.tar.gz
+  filesize: 745694
+  start: 1375581556.26386
+  thesiteurl: *19
+- attempts:
+  - method: dleasy
+    start: 1375581558.9679
+    url: &20 !!perl/hash:CPAN::URL
+      FROM: USER
+      TEXT: http://ppm.activestate.com/CPAN/
+  end: 1375581559.94807
+  file: authors/id/A/AN/ANDK/CHECKSUMS
+  filesize: 35935
+  start: 1375581558.96287
+  thesiteurl: *20

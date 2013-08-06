@@ -1,0 +1,6 @@
+/usr/bin/rtorrent/perl/site/lib/HTTP/Server/Simple.pm
+/usr/bin/rtorrent/perl/site/lib/HTTP/Server/Simple/CGI.pm
+/usr/bin/rtorrent/perl/site/lib/HTTP/Server/Simple/CGI/Environment.pm
+/usr/bin/rtorrent/perl/site/man/man3/HTTP::Server::Simple.3
+/usr/bin/rtorrent/perl/site/man/man3/HTTP::Server::Simple::CGI.3
+/usr/bin/rtorrent/perl/site/man/man3/HTTP::Server::Simple::CGI::Environment.3

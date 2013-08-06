@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+: ${DEBUG:=1}
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include parseline
+
+#
+# readline
+#
+
+# bool readline ([string <prompt>])
+#
+# Use readline to read input from user then expand it to tokens.
+# Returns true if a significant input was made.
+#
+# User may use double quotes and single quotes for encapsulating
+# strings.
+#
+# > string array __A0 = arguments
+# > int __I0 = number of arguments
+#
+# > string __V0 = raw input
+#
+function readline {
+	local -a PROMPT=()
+	[[ $# -ge 1 ]] && PROMPT=("-p" "$1")
+	__V0=''
+	read -re "${PROMPT[@]}" __V0 && parseline "$__V0"
+}

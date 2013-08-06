@@ -1,0 +1,89 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          lighttpd
+# Required-Start:    $syslog $remote_fs $network
+# Required-Stop:     $syslog $remote_fs $network
+# Should-Start:      fam
+# Should-Stop:       fam
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start the lighttpd web server.
+### END INIT INFO
+#export PATH=$Int_PATH:$PATH:$Int_PATH
+
+NAME=rtorrent-httpsd
+DESC="web server"
+PIDFILE=/var/run/$NAME.pid
+#SCRIPTNAME=/etc/init.d/$NAME
+SCRIPTNAME=/etc/init.d/lighttpd
+
+#DAEMON_OPTS="-f /etc/lighttpd/lighttpd.conf"
+DAEMON="/usr/bin/rtorrent/sbin/lighttpd.exe"
+user="admin"
+
+#set -e
+
+check_syntax()
+{
+	echo "[ rtorrent::httpsd ] Configuration syntax check..."
+	$DAEMON -t $DAEMON_OPTS > /dev/null || {
+		echo "[ rtorrent::httpsd ] -!! Syntax check failed!"
+		exit $?
+	} || echo "[ rtorrent::httpsd ] Syntax check okay."
+}
+
+case "$1" in
+    start)
+	#check_syntax
+        echo "[ rtorrent::httpsd ] Starting $DESC $NAME"
+        RETVAL=0
+        #/usr/bin/rtorrent/bin/su -c  "$DAEMON $DAEMON_OPTS" ${user}
+        [ -f "$PIDFILE" ] && rm "$PIDFILE"
+        $DAEMON
+        #sleep 1
+        sync
+        #if [ ! -f "$PIDFILE" ]; then
+        #        sleep 1
+        #        sync
+        #fi
+        [ -f "$PIDFILE" ] && D_PID="$(cat $PIDFILE)"
+        if [ ! -z "$D_PID" ]; then
+                D_PID="$(cat $PIDFILE)"
+		_proc_num=`/usr/bin/rtorrent/bin/ps -ef | grep "${D_PID}" | grep -v "grep" | grep -v "defunct" | wc -l`
+		[ $_proc_num -eq 0 ] && RETVAL=1
+        fi
+        exit $RETVAL
+        ;;
+    stop)
+	if [ -f "$PIDFILE" ]; then
+		D_PID="$(cat $PIDFILE)"
+		echo "[ rtorrent::httpsd ] Stop lighttpd from PID: ${yellow}$D_PID${nc}"
+		_proc_num=`/usr/bin/rtorrent/bin/ps -ef | grep "${D_PID}" | grep -v "grep" | grep -v "defunct" | wc -l`
+		if [ $_proc_num -eq 0 ]; then
+			echo "[ rtorrent::httpsd ] kill - No such process"
+			exit 1
+		else
+			kill $D_PID
+		fi
+		#RETVAL=$?
+		[ -f "$PIDFILE" ] && rm -f "$PIDFILE"
+		exit
+	else
+		echo "[ rtorrent::httpsd ] ${bd}${red}PID file not found.${nc}"
+		exit 1
+	fi
+        ;;
+    restart)
+	check_syntax
+        $0 stop
+        $0 start
+        ;;
+    status)
+        ;;
+    *)
+        echo "[ rtorrent::httpsd ] Usage: $SCRIPTNAME {start|stop|status}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0

@@ -1,0 +1,16 @@
+/usr/bin/rtorrent/perl/html/bin/ptar.html
+/usr/bin/rtorrent/perl/html/bin/ptardiff.html
+/usr/bin/rtorrent/perl/html/bin/ptargrep.html
+/usr/bin/rtorrent/perl/html/site/lib/Archive/Tar.html
+/usr/bin/rtorrent/perl/html/site/lib/Archive/Tar/File.html
+/usr/bin/rtorrent/perl/site/bin/ptar
+/usr/bin/rtorrent/perl/site/bin/ptardiff
+/usr/bin/rtorrent/perl/site/bin/ptargrep
+/usr/bin/rtorrent/perl/site/lib/Archive/Tar.pm
+/usr/bin/rtorrent/perl/site/lib/Archive/Tar/Constant.pm
+/usr/bin/rtorrent/perl/site/lib/Archive/Tar/File.pm
+/usr/bin/rtorrent/perl/site/man/man1/ptar.1
+/usr/bin/rtorrent/perl/site/man/man1/ptardiff.1
+/usr/bin/rtorrent/perl/site/man/man1/ptargrep.1
+/usr/bin/rtorrent/perl/site/man/man3/Archive::Tar.3
+/usr/bin/rtorrent/perl/site/man/man3/Archive::Tar::File.3

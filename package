@@ -1,0 +1,2 @@
+QPROJECT=rtorrent
+QPX_LOG_PATH=/share/Download/rtorrent/logs

@@ -1,0 +1,12 @@
+{% extends "base.jinja2" %}
+{% block title %}
+        404 Not Found!
+{% endblock %}
+
+{% block main %}
+    <div class="torrent-def-div">
+    <p> We could not find the page you requested in our web space: </p>
+    <ul><li>{{url}}</li></ul>
+    <p> <a href="{{ url_for('main_view_page') }}">Click here to return home</a> </p>
+    </div>
+{% endblock %}

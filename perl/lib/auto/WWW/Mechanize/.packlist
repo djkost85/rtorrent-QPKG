@@ -1,0 +1,14 @@
+/usr/bin/rtorrent/perl/bin/mech-dump
+/usr/bin/rtorrent/perl/lib/WWW/Mechanize.pm
+/usr/bin/rtorrent/perl/lib/WWW/Mechanize/Cookbook.pod
+/usr/bin/rtorrent/perl/lib/WWW/Mechanize/Examples.pod
+/usr/bin/rtorrent/perl/lib/WWW/Mechanize/FAQ.pod
+/usr/bin/rtorrent/perl/lib/WWW/Mechanize/Image.pm
+/usr/bin/rtorrent/perl/lib/WWW/Mechanize/Link.pm
+/usr/bin/rtorrent/perl/man/man1/mech-dump.1
+/usr/bin/rtorrent/perl/man/man3/WWW::Mechanize.3
+/usr/bin/rtorrent/perl/man/man3/WWW::Mechanize::Cookbook.3
+/usr/bin/rtorrent/perl/man/man3/WWW::Mechanize::Examples.3
+/usr/bin/rtorrent/perl/man/man3/WWW::Mechanize::FAQ.3
+/usr/bin/rtorrent/perl/man/man3/WWW::Mechanize::Image.3
+/usr/bin/rtorrent/perl/man/man3/WWW::Mechanize::Link.3

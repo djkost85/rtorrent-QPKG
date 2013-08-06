@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2162/trunk/rutorrent/conf
+END
+plugins.ini
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/1880/trunk/rutorrent/conf/plugins.ini
+END
+access.ini
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2162/trunk/rutorrent/conf/access.ini
+END
+.htaccess
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/1434/trunk/rutorrent/conf/.htaccess
+END
+config.php
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2115/trunk/rutorrent/conf/config.php
+END

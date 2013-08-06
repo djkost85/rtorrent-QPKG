@@ -1,0 +1,46 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+_QLIBNAME="lbneeds" ; _QLIB_version="0.1.1"
+_QLIBDESC="QPX Commands and Dependencies Check Helper"
+
+[ "$DEBUG" != "0" ] && echo "[ $QPROJECT $_QLIBNAME ] Version ${_QLIB_version} is loading right now..."
+
+        
+
+include available
+include xcmdlog
+
+#
+# needs
+#
+
+# void needs (string <ap>, ...)
+#
+function needs {
+	local A
+
+	for A; do
+		if available "$A"; then
+			local _f_path="$PROGDIR/bin/$A"
+			#local _c_path="$(type -p $A)"
+			local _c_path="$(command -v $A)"
+			if [ -f "$_f_path" ] && [ -x "$_f_path" ]; then
+				alias $A="$_f_path"
+				#local _shorten_path="${_f_path%sh*re}"
+				#local _shorten_path="$(echo ${_f_path##*share})"
+				local _shorten_path="${_f_path##/share/*_DATA}"
+				[ "$A" != "log_tool" ] && [ "$A" != "write_log" ] && [ "$DEBUG" == "2" ] && msg_debug "[ $QPROJECT $_QLIBNAME ] $A ${cyan}aliased${nc} ..${bd}${white}$_shorten_path${nc}"
+			else
+				[ "$A" != "log_tool" ] && [ "$A" != "write_log" ] && [ "$DEBUG" == "2" ] && msg_debug "[ $QPROJECT $_QLIBNAME ] $A ${yellow}available${nc} ${bd}${white}$_c_path${nc}"
+			fi
+			continue
+		fi
+		echo "needed command was not found: $A"
+		msg_error "[ $QPROJECT $_QLIBNAME ] needed command was not found: $A" ||
+			echo "[ $QPROJECT $_QLIBNAME ] needed command was not found: $A"
+		exit 1
+	done
+}

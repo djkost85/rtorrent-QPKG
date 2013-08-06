@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="en-GB" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<title>QNAP Club Polska : /root/mag The Network Magazine</title>
+		<link href="styles/maintenance.css" rel="stylesheet" type="text/css">
+
+
+		<script src="scripts/jquery.js"></script>
+		<script src="scripts/jquery.videobackground.js"></script>
+		<script>
+			$(document).ready(function() {
+				$('body').prepend('<div class="video-background"');
+				$('.video-background').videobackground({
+					videoSource: [['videos/landing.mp4', 'video/mp4'],
+						['videos/landing.webm', 'video/webm']], 
+					controlPosition: '#main',
+					poster: 'videos/landing.jpg',
+					loadedCallback: function() {
+						$(this).videobackground('mute');
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div class="FooterView" style="width: 100%; height: 38px; bottom: 0px; z-index: 999999999;">
+			<div class="container" style="width: 100%; height: 38px; background-color: rgb(21, 21, 21);">
+				<div class="text" style="left: 18px; top: 12px; color: rgb(84, 84, 84); font-family: OpenSansItalic; font-size: 10px;">&copy; /root/mag: The Network Magazine & QNAP Club Polska </div>
+			</div>
+		</div>
+
+		<div id="Container" style="width: 100%; height: 100%; z-index: 1; background-size: 100% 100%;">
+			<div id="Header" style="width: 100%; height: 52px; display: none; z-index: 999;">
+				<div class="ines" style="width: 100%; height: 52px;">
+					<div class="full" style="width: 100%; height: 6px; background-color: rgb(255, 255, 255);"></div>
+					<div class="small" style="left: 54px; width: 395px; height: 10px; background-size: 395px 10px; background-color: rgb(255, 255, 255);"></div>
+					<div class="small" style="width: 221px; height: 10px; right: 44px; background-size: 221px 10px; background-color: rgb(255, 255, 255);"></div>
+				</div>
+				<div class="HeaderNav" style="left: 54px; top: 30px; width: 395px; height: 78px; background-size: 395px 78px;">
+					<div class="profile" style='top: -5px; width: 38px; height: 38px; background-image: url("images/maintenance-profile.png"); background-size: 38px 38px;'>
+						<div class="image" style="border-radius: 16px; left: 3px; top: 3px; width: 32px; height: 32px; background-size: 32px 32px;"></div>
+						<div class="hit" style="background: rgba(0, 0, 0, 0); width: 100%; height: 100%; z-index: 99999; cursor: pointer;"></div>
+					</div>
+				</div>
+
+			</div>
+			<div class="LandingView" style="width: 100%; height: 100%; z-index: 999999;">
+				<div class="container" style="left: 50%; top: 50%; width: 930px; height: 270px; margin-top: -200px; margin-left: -465px; z-index: 3; background-size: 930px 270px;">
+					<div class="text" style="width: 800px; height: 100px; color: rgb(35, 35, 35); letter-spacing: 14px; overflow: hidden; font-family: OpenSansBold; font-size: 31px;">
+						<div class="text" style="width: 800px; height: 100px;">WEB SERVICE MAINTENANCE</div>
+					</div>
+					<div class="text" style="left: -10px; top: 36px; width: 930px; height: 240px; color: rgb(35, 35, 35); letter-spacing: 23px; overflow: hidden; font-family: Bebas; font-size: 242px;">
+						<div class="text" style="width: 930px; height: 240px;">QNAPclub</div>
+					</div>
+					<div class="top" style='left: 50%; top: 480px; width: 840px; height: 10px; margin-left: -465px; background-image: url("images/maintenance-bottom-repeat.png");'></div>
+					<div class="top" style="top: -50px; width: 26px; height: 3px; background-size: 26px 3px; background-color: rgb(0, 0, 0);"></div>
+					<div class="top" style="top: 325px; width: 26px; height: 5px; background-size: 26px 5px; background-color: rgb(2, 119, 252);"></div>
+					<div class="LandingViewConnect" style="top: 374px; width: 300px; height: 70px; overflow: hidden; display: block; background-size: 300px 70px;">
+						<div class="normal" style="border: 2px solid rgb(0, 0, 0); width: 288px; height: 64px; background-size: 288px 64px;">
+						</div>
+						<div class="normal" style="width: 290px; height: 66px; overflow: hidden; background-size: 290px 66px; background-color: rgb(35, 35, 35);">
+							<div class="text" style="left: 31px; top: 20px; width: 210px; color: rgb(255, 255, 255); font-family: OpenSansBold; font-size: 20px;">BACK IN A MINUTE .. </div>
+						</div>
+					</div>
+				</div>
+				<div class="top" style='left: 50%; width: 840px; height: 31px; margin-left: -465px; background-image: url("images/maintenance-top-repeat.png");'></div>
+			</div>
+		</div>
+	</body>
+</html>

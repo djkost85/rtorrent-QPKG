@@ -1,0 +1,121 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::PI - XML::LibXML Processing Instructions</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::PI - XML::LibXML Processing Instructions</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::PI - XML::LibXML Processing Instructions</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML</span><span class="operator">;</span>
+  <span class="comment"># Only methods specific to Processing Instruction nodes are listed here,</span>
+  <span class="comment"># see XML::LibXML::Node manpage for other methods</span>
+</pre>
+<pre>
+  <span class="variable">$pinode</span><span class="operator">-&gt;</span><span class="variable">setData</span><span class="operator">(</span> <span class="variable">$data_string</span> <span class="operator">);</span>
+  <span class="variable">$pinode</span><span class="operator">-&gt;</span><span class="variable">setData</span><span class="operator">(</span> <span class="string">name</span><span class="operator">=&gt;</span><span class="variable">string_value</span> <span class="operator">[</span><span class="operator">...</span><span class="operator">]</span> <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>Processing instructions are implemented with XML::LibXML with read and write
+access. The PI data is the PI without the PI target (as specified in XML 1.0
+[17]) as a string. This string can be accessed with getData as implemented in <a href="../../../../.cpan/build/XML-LibXML-2.0019-zIu9KV/blib/lib/XML/LibXML/Node.html">the XML::LibXML::Node manpage</a>.</p>
+<p>The write access is aware about the fact, that many processing instructions
+have attribute like data. Therefore <a href="#setdata"><code>setData()</code></a> provides besides the DOM spec
+conform Interface to pass a set of named parameter. So the code segment</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$pi</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">createProcessingInstruction</span><span class="operator">(</span><span class="string">"abc"</span><span class="operator">);</span>
+  <span class="variable">$pi</span><span class="operator">-&gt;</span><span class="variable">setData</span><span class="operator">(</span><span class="string">foo</span><span class="operator">=&gt;</span><span class="string">'bar'</span><span class="operator">,</span> <span class="string">foobar</span><span class="operator">=&gt;</span><span class="string">'foobar'</span><span class="operator">);</span>
+  <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">appendChild</span><span class="operator">(</span> <span class="variable">$pi</span> <span class="operator">);</span>
+</pre>
+<p>will result the following PI in the DOM:</p>
+<pre>
+  &lt;?abc foo=&quot;bar&quot; foobar=&quot;foobar&quot;?&gt;</pre>
+<p>Which is how it is specified in the DOM specification. This three step
+interface creates temporary a node in perl space. This can be avoided while
+using the <code>insertProcessingInstruction()</code> method. Instead of the three calls
+described above, the call</p>
+<pre>
+  <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">insertProcessingInstruction</span><span class="operator">(</span><span class="string">"abc"</span><span class="operator">,</span><span class="string">'foo="bar" foobar="foobar"'</span><span class="operator">);</span>
+</pre>
+<p>will have the same result as above.</p>
+<p><a href="../../../../.cpan/build/XML-LibXML-2.0019-zIu9KV/blib/lib/XML/LibXML/PI.html">the XML::LibXML::PI manpage</a>'s implementation of <a href="#setdata"><code>setData()</code></a> documented below differs a bit from the standard
+version as available in <a href="../../../../.cpan/build/XML-LibXML-2.0019-zIu9KV/blib/lib/XML/LibXML/Node.html">the XML::LibXML::Node manpage</a>:</p>
+<dl>
+<dt><strong><a name="setdata" class="item">setData</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$pinode</span><span class="operator">-&gt;</span><span class="variable">setData</span><span class="operator">(</span> <span class="variable">$data_string</span> <span class="operator">);</span>
+  <span class="variable">$pinode</span><span class="operator">-&gt;</span><span class="variable">setData</span><span class="operator">(</span> <span class="string">name</span><span class="operator">=&gt;</span><span class="variable">string_value</span> <span class="operator">[</span><span class="operator">...</span><span class="operator">]</span> <span class="operator">);</span>
+</pre>
+<p>This method allows to change the content data of a PI. Additionally to the
+interface specified for DOM Level2, the method provides a named parameter
+interface to set the data. This parameter list is converted into a string
+before it is appended to the PI.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Matt Sergeant,
+Christian Glahn,
+Petr Pajas</p>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p>2.0019</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>2001-2007, AxKit.com Ltd.</p>
+<p>2002-2006, Christian Glahn.</p>
+<p>2006-2009, Petr Pajas.</p>
+
+</body>
+
+</html>

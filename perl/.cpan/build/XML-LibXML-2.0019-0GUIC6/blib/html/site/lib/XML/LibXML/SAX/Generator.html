@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../../scineplex.css">
+<title>XML::LibXML::SAX::Generator - Generate SAX events from a LibXML tree</title>
+<link rel="stylesheet" href="../../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',5);</script>
+<h1><a>XML::LibXML::SAX::Generator - Generate SAX events from a LibXML tree</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::SAX::Generator - Generate SAX events from a LibXML tree</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$handler</span> <span class="operator">=</span> <span class="variable">MySAXHandler</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">();</span>
+  <span class="keyword">my</span> <span class="variable">$generator</span> <span class="operator">=</span> <span class="variable">XML::LibXML::SAX::Generator</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="string">Handler</span> <span class="operator">=&gt;</span> <span class="variable">$handler</span><span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">-&gt;</span><span class="variable">parse_file</span><span class="operator">(</span><span class="string">"foo.xml"</span><span class="operator">);</span>
+</pre>
+<pre>
+  <span class="variable">$generator</span><span class="operator">-&gt;</span><span class="variable">generate</span><span class="operator">(</span><span class="variable">$dom</span><span class="operator">);</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>THIS CLASS IS DEPRECATED! Use XML::LibXML::SAX::Parser instead!</p>
+<p>This helper class allows you to generate SAX events from any XML::LibXML
+node, and all it's sub-nodes. This basically gives you interop from
+XML::LibXML to other modules that may implement SAX.</p>
+<p>It uses SAX2 style, but should be compatible with anything SAX1, by use
+of stringification overloading.</p>
+<p>There is nothing to really know about, beyond the synopsis above, and
+a general knowledge of how to use SAX, which is beyond the scope here.</p>
+
+</body>
+
+</html>

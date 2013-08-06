@@ -1,0 +1,148 @@
+8
+
+dir
+2335
+http://rutorrent.googlecode.com/svn/trunk/plugins
+http://rutorrent.googlecode.com/svn
+
+
+
+2013-08-02T12:33:46.262826Z
+2335
+novik65
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+f4b6cfda-67a8-11de-ba0c-230037762ff9
+
+unpack
+dir
+
+check_port
+dir
+
+rpc
+dir
+
+httprpc
+dir
+
+show_peers_like_wtorrent
+dir
+
+cpuload
+dir
+
+erasedata
+dir
+
+autotools
+dir
+
+mediainfo
+dir
+
+cookies
+dir
+
+rssurlrewrite
+dir
+
+seedingtime
+dir
+
+rutracker_check
+dir
+
+extratio
+dir
+
+geoip
+dir
+
+diskspace
+dir
+
+data
+dir
+
+ipad
+dir
+
+_getdir
+dir
+
+ratio
+dir
+
+loginmgr
+dir
+
+edit
+dir
+
+feeds
+dir
+
+extsearch
+dir
+
+tracklabels
+dir
+
+_noty
+dir
+
+chunks
+dir
+
+source
+dir
+
+screenshots
+dir
+
+_task
+dir
+
+history
+dir
+
+theme
+dir
+
+create
+dir
+
+filedrop
+dir
+
+throttle
+dir
+
+retrackers
+dir
+
+rss
+dir
+
+datadir
+dir
+
+trafic
+dir
+
+scheduler
+dir
+

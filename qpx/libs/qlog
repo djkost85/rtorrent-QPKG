@@ -1,0 +1,54 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+_QLIBNAME="logQNAP" ; _QLIB_version="0.1.1"
+_QLIBDESC="QPX Framework QNAP Logging Functions Caller"
+
+##### LOAD ONLY ONCE #####
+[ ! -z "$(eval echo \"\$QPX_l${_QLIBNAME}\")" ] && {
+	[ "$DEBUG" != "0" ] && echo "[ $QPROJECT $_QLIBNAME ] Version ${_QLIB_version} already started!"
+	return 1
+} || {
+	[ "$DEBUG" != "0" ] && echo "[ $QPROJECT $_QLIBNAME ] Version ${_QLIB_version} is loading right now..."
+	eval QPX_l${_QLIBNAME}="${_QLIB_version}"
+	#export QPX_l${_QLIBNAME}
+}
+
+
+
+include deps/log_tool
+include deps/write_log
+
+
+#alias stresc='sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K|A|B|C]//g"'
+alias stresc='sed -r "s/\x1B[\[|\(]([0-9]{1,2}(;[0-9]{1,2})?)?[m|K|A|B|C|E|J|S|Z|H]//g"'
+
+
+#####################################
+# Message to terminal and system log
+#####################################
+qlog() {
+        local write_msg="log_tool -t0 -uSystem -p127.0.0.1 -mlocalhost -a"
+        [ -n "$1" ] && local message="${1:-"$QPROJECT Unknown Error"}" && $write_msg "$(echo $message | stresc)"
+}
+
+#############################################
+# Warning message to terminal and system log
+#############################################
+warn_qlog() {
+        local write_warn="log_tool -t1 -uSystem -p127.0.0.1 -mlocalhost -a"
+        [ -n "$1" ] && local message="${1:-"$QPROJECT Unknown Error"}" && $write_warn "$(echo $message | stresc)"
+}
+
+###################################################################
+# Error message to terminal and system log. Also cleans up after a
+# failed installation. This function terminates the installation.
+###################################################################
+err_qlog(){
+        local write_err="log_tool -t2 -uSystem -p127.0.0.1 -mlocalhost -a"
+        [ -n "$1" ] && local message="${1:-"$QPROJECT Unknown Error"}" && $write_err "$(echo $message | stresc)"
+}
+

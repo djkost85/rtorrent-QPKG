@@ -1,0 +1,9 @@
+#!/bin/sh
+#export PATH="/usr/bin/rtorrent/bin:/usr/bin/rtorrent/sbin"
+export LD_LIBRARY_PATH="/usr/bin/rtorrent/lib"
+
+/usr/bin/rtorrent/bin/rtorrent -n -o import=/usr/bin/rtorrent/etc/rtorrent.conf | /usr/bin/rtorrent/bin/tee /share/Download/rtorrent/logs/rtorrent.out
+
+RETVAL=${PIPESTATUS[0]}
+exit $RETVAL
+

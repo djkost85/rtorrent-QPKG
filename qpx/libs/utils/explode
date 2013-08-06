@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+# void utils_explode (string, string avar, [string <separator> = $' \t'])
+#
+# Splits a string into an array.
+#
+function utils_explode {
+	local IFS=$' \t'
+	[[ $# -ge 3 ]] && IFS=$3
+	read -a "$2" <<< "$1"
+}

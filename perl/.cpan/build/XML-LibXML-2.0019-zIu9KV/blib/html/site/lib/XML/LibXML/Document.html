@@ -1,0 +1,727 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::Document - XML::LibXML DOM Document Class</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::Document - XML::LibXML DOM Document Class</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::Document - XML::LibXML DOM Document Class</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML</span><span class="operator">;</span>
+  <span class="comment"># Only methods specific to Document nodes are listed here,</span>
+  <span class="comment"># see XML::LibXML::Node manpage for other methods</span>
+</pre>
+<pre>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Document</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="variable">$version</span><span class="operator">,</span> <span class="variable">$encoding</span> <span class="operator">);</span>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Document</span><span class="operator">-&gt;</span><span class="variable">createDocument</span><span class="operator">(</span> <span class="variable">$version</span><span class="operator">,</span> <span class="variable">$encoding</span> <span class="operator">);</span>
+  <span class="variable">$strURI</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">URI</span><span class="operator">();</span>
+  <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">setURI</span><span class="operator">(</span><span class="variable">$strURI</span><span class="operator">);</span>
+  <span class="variable">$strEncoding</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">encoding</span><span class="operator">();</span>
+  <span class="variable">$strEncoding</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">actualEncoding</span><span class="operator">();</span>
+  <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">setEncoding</span><span class="operator">(</span><span class="variable">$new_encoding</span><span class="operator">);</span>
+  <span class="variable">$strVersion</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">version</span><span class="operator">();</span>
+  <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">standalone</span>
+  <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">setStandalone</span><span class="operator">(</span><span class="variable">$numvalue</span><span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">$compression</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">compression</span><span class="operator">;</span>
+  <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">setCompression</span><span class="operator">(</span><span class="variable">$ziplevel</span><span class="operator">);</span>
+  <span class="variable">$docstring</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">toString</span><span class="operator">(</span><span class="variable">$format</span><span class="operator">);</span>
+  <span class="variable">$c14nstr</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">toStringC14N</span><span class="operator">(</span><span class="variable">$comment_flag</span><span class="operator">,</span> <span class="variable">$xpath</span> <span class="operator">[</span><span class="operator">,</span> <span class="variable">$xpath_context</span> <span class="operator">]</span><span class="operator">);</span>
+  <span class="variable">$ec14nstr</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">toStringEC14N</span><span class="operator">(</span><span class="variable">$comment_flag</span><span class="operator">,</span> <span class="variable">$xpath</span> <span class="operator">[</span><span class="operator">,</span> <span class="variable">$xpath_context</span> <span class="operator">]</span><span class="operator">,</span> <span class="variable">$inclusive_prefix_list</span><span class="operator">);</span>
+  <span class="variable">$str</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">serialize</span><span class="operator">(</span><span class="variable">$format</span><span class="operator">);</span>
+  <span class="variable">$state</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">toFile</span><span class="operator">(</span><span class="variable">$filename</span><span class="operator">,</span> <span class="variable">$format</span><span class="operator">);</span>
+  <span class="variable">$state</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">toFH</span><span class="operator">(</span><span class="variable">$fh</span><span class="operator">,</span> <span class="variable">$format</span><span class="operator">);</span>
+  <span class="variable">$str</span> <span class="operator">=</span> <span class="variable">$document</span><span class="operator">-&gt;</span><span class="variable">toStringHTML</span><span class="operator">();</span>
+  <span class="variable">$str</span> <span class="operator">=</span> <span class="variable">$document</span><span class="operator">-&gt;</span><span class="variable">serialize_html</span><span class="operator">();</span>
+  <span class="variable">$bool</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">is_valid</span><span class="operator">();</span>
+  <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">validate</span><span class="operator">();</span>
+  <span class="variable">$root</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">documentElement</span><span class="operator">();</span>
+  <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">setDocumentElement</span><span class="operator">(</span> <span class="variable">$root</span> <span class="operator">);</span>
+  <span class="variable">$element</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">createElement</span><span class="operator">(</span> <span class="variable">$nodename</span> <span class="operator">);</span>
+  <span class="variable">$element</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">createElementNS</span><span class="operator">(</span> <span class="variable">$namespaceURI</span><span class="operator">,</span> <span class="variable">$qname</span> <span class="operator">);</span>
+  <span class="variable">$text</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">createTextNode</span><span class="operator">(</span> <span class="variable">$content_text</span> <span class="operator">);</span>
+  <span class="variable">$comment</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">createComment</span><span class="operator">(</span> <span class="variable">$comment_text</span> <span class="operator">);</span>
+  <span class="variable">$attrnode</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">createAttribute</span><span class="operator">(</span><span class="variable">$name</span> <span class="operator">[</span><span class="operator">,</span><span class="variable">$value</span><span class="operator">]</span><span class="operator">);</span>
+  <span class="variable">$attrnode</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">createAttributeNS</span><span class="operator">(</span> <span class="variable">namespaceURI</span><span class="operator">,</span> <span class="variable">$name</span> <span class="operator">[</span><span class="operator">,</span><span class="variable">$value</span><span class="operator">]</span> <span class="operator">);</span>
+  <span class="variable">$fragment</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">createDocumentFragment</span><span class="operator">();</span>
+  <span class="variable">$cdata</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">createCDATASection</span><span class="operator">(</span> <span class="variable">$cdata_content</span> <span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">$pi</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">createProcessingInstruction</span><span class="operator">(</span> <span class="variable">$target</span><span class="operator">,</span> <span class="variable">$data</span> <span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">$entref</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">createEntityReference</span><span class="operator">(</span><span class="variable">$refname</span><span class="operator">);</span>
+  <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">$document</span><span class="operator">-&gt;</span><span class="variable">createInternalSubset</span><span class="operator">(</span> <span class="variable">$rootnode</span><span class="operator">,</span> <span class="variable">$public</span><span class="operator">,</span> <span class="variable">$system</span><span class="operator">);</span>
+  <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">$document</span><span class="operator">-&gt;</span><span class="variable">createExternalSubset</span><span class="operator">(</span> <span class="variable">$rootnode_name</span><span class="operator">,</span> <span class="variable">$publicId</span><span class="operator">,</span> <span class="variable">$systemId</span><span class="operator">);</span>
+  <span class="variable">$document</span><span class="operator">-&gt;</span><span class="variable">importNode</span><span class="operator">(</span> <span class="variable">$node</span> <span class="operator">);</span>
+  <span class="variable">$document</span><span class="operator">-&gt;</span><span class="variable">adoptNode</span><span class="operator">(</span> <span class="variable">$node</span> <span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">externalSubset</span><span class="operator">;</span>
+  <span class="keyword">my</span> <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">internalSubset</span><span class="operator">;</span>
+  <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">setExternalSubset</span><span class="operator">(</span><span class="variable">$dtd</span><span class="operator">);</span>
+  <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">setInternalSubset</span><span class="operator">(</span><span class="variable">$dtd</span><span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">removeExternalSubset</span><span class="operator">();</span>
+  <span class="keyword">my</span> <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">removeInternalSubset</span><span class="operator">();</span>
+  <span class="keyword">my</span> <span class="variable">@nodelist</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">getElementsByTagName</span><span class="operator">(</span><span class="variable">$tagname</span><span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">@nodelist</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">getElementsByTagNameNS</span><span class="operator">(</span><span class="variable">$nsURI</span><span class="operator">,</span><span class="variable">$tagname</span><span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">@nodelist</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">getElementsByLocalName</span><span class="operator">(</span><span class="variable">$localname</span><span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">$node</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">getElementById</span><span class="operator">(</span><span class="variable">$id</span><span class="operator">);</span>
+  <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">indexElements</span><span class="operator">();</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The Document Class is in most cases the result of a parsing process. But
+sometimes it is necessary to create a Document from scratch. The DOM Document
+Class provides functions that conform to the DOM Core naming style.</p>
+<p>It inherits all functions from <a href="../../../../.cpan/build/XML-LibXML-2.0019-zIu9KV/blib/lib/XML/LibXML/Node.html">the XML::LibXML::Node manpage</a> as specified in the DOM specification. This enables access to the nodes besides
+the root element on document level - a <code>DTD</code> for example. The support for these nodes is limited at the moment.</p>
+<p>While generally nodes are bound to a document in the DOM concept it is
+suggested that one should always create a node not bound to any document. There
+is no need of really including the node to the document, but once the node is
+bound to a document, it is quite safe that all strings have the correct
+encoding. If an unbound text node with an ISO encoded string is created (e.g.
+with $CLASS-&gt;new()), the <a href="#tostring"><code>toString</code></a> function may not return the expected result.</p>
+<p>To prevent such problems, it is recommended to pass all data to XML::LibXML
+methods as character strings (i.e. UTF-8 encoded, with the UTF8 flag on).</p>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>Many functions listed here are extensively documented in the DOM Level 3 specification (<a href="http://www.w3.org/TR/DOM-Level-3-Core/">http://www.w3.org/TR/DOM-Level-3-Core/</a>). Please refer to the specification for extensive documentation.</p>
+<dl>
+<dt><strong><a name="new" class="item">new</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Document</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="variable">$version</span><span class="operator">,</span> <span class="variable">$encoding</span> <span class="operator">);</span>
+</pre>
+<p>alias for <a href="#createdocument"><code>createDocument()</code></a></p>
+</dd>
+<dt><strong><a name="createdocument" class="item">createDocument</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Document</span><span class="operator">-&gt;</span><span class="variable">createDocument</span><span class="operator">(</span> <span class="variable">$version</span><span class="operator">,</span> <span class="variable">$encoding</span> <span class="operator">);</span>
+</pre>
+<p>The constructor for the document class. As Parameter it takes the version
+string and (optionally) the encoding string. Simply calling <em>createDocument </em>&gt;&gt;&gt;&gt;&gt;() will create the document:</p>
+<pre>
+  &lt;?xml version=&quot;your version&quot; encoding=&quot;your encoding&quot;?&gt;</pre>
+<p>Both parameter are optional. The default value for <em>$version </em>&gt;&gt;&gt;&gt;&gt; is <code>1.0</code>, of course. If the <em>$encoding </em>&gt;&gt;&gt;&gt;&gt; parameter is not set, the encoding will be left unset, which means UTF-8 is
+implied.</p>
+<p>The call of <em>createDocument </em>&gt;&gt;&gt;&gt;&gt;() without any parameter will result the following code:</p>
+<pre>
+  &lt;?xml version=&quot;1.0&quot;?&gt;</pre>
+<p>Alternatively one can call this constructor directly from the XML::LibXML class
+level, to avoid some typing. This will not have any effect on the class
+instance, which is always XML::LibXML::Document.</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$document</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">createDocument</span><span class="operator">(</span> <span class="string">"1.0"</span><span class="operator">,</span> <span class="string">"UTF-8"</span> <span class="operator">);</span>
+</pre>
+<p>is therefore a shortcut for</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$document</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Document</span><span class="operator">-&gt;</span><span class="variable">createDocument</span><span class="operator">(</span> <span class="string">"1.0"</span><span class="operator">,</span> <span class="string">"UTF-8"</span> <span class="operator">);</span>
+</pre>
+</dd>
+<dt><strong><a name="uri" class="item">URI</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$strURI</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">URI</span><span class="operator">();</span>
+</pre>
+<p>Returns the URI (or filename) of the original document. For documents obtained
+by parsing a string of a FH without using the URI parsing argument of the
+corresponding <code>parse_*</code> function, the result is a generated string unknown-XYZ where XYZ is some
+number; for documents created with the constructor <a href="#new"><code>new</code></a>, the URI is undefined.</p>
+<p>The value can be modified by calling <a href="#seturi"><code>setURI</code></a> method on the document node.</p>
+</dd>
+<dt><strong><a name="seturi" class="item">setURI</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">setURI</span><span class="operator">(</span><span class="variable">$strURI</span><span class="operator">);</span>
+</pre>
+<p>Sets the URI of the document reported by the method URI (see also the URI
+argument to the various <code>parse_*</code> functions).</p>
+</dd>
+<dt><strong><a name="encoding" class="item">encoding</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$strEncoding</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">encoding</span><span class="operator">();</span>
+</pre>
+<p>returns the encoding string of the document.</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">createDocument</span><span class="operator">(</span> <span class="string">"1.0"</span><span class="operator">,</span> <span class="string">"ISO-8859-15"</span> <span class="operator">);</span>
+  <span class="keyword">print</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">encoding</span><span class="operator">;</span> <span class="comment"># prints ISO-8859-15</span>
+</pre>
+</dd>
+<dt><strong><a name="actualencoding" class="item">actualEncoding</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$strEncoding</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">actualEncoding</span><span class="operator">();</span>
+</pre>
+<p>returns the encoding in which the XML will be returned by $doc-&gt;<a href="#tostring"><code>toString()</code></a>.
+This is usually the original encoding of the document as declared in the XML
+declaration and returned by $doc-&gt;encoding. If the original encoding is not
+known (e.g. if created in memory or parsed from a XML without a declared
+encoding), 'UTF-8' is returned.</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">createDocument</span><span class="operator">(</span> <span class="string">"1.0"</span><span class="operator">,</span> <span class="string">"ISO-8859-15"</span> <span class="operator">);</span>
+  <span class="keyword">print</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">encoding</span><span class="operator">;</span> <span class="comment"># prints ISO-8859-15</span>
+</pre>
+</dd>
+<dt><strong><a name="setencoding" class="item">setEncoding</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">setEncoding</span><span class="operator">(</span><span class="variable">$new_encoding</span><span class="operator">);</span>
+</pre>
+<p>This method allows to change the declaration of encoding in the XML declaration
+of the document. The value also affects the encoding in which the document is
+serialized to XML by $doc-&gt;<a href="#tostring"><code>toString()</code></a>. Use <a href="#setencoding"><code>setEncoding()</code></a> to remove the encoding
+declaration.</p>
+</dd>
+<dt><strong><a name="version" class="item">version</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$strVersion</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">version</span><span class="operator">();</span>
+</pre>
+<p>returns the version string of the document</p>
+<p><em>getVersion() </em>&gt;&gt;&gt;&gt;&gt; is an alternative form of this function.</p>
+</dd>
+<dt><strong><a name="standalone" class="item">standalone</a></strong></dt>
+
+<dd>
+<pre>
+  $doc-&gt;standalone</pre>
+<p>This function returns the Numerical value of a documents XML declarations
+standalone attribute. It returns <em>1 </em>&gt;&gt;&gt;&gt;&gt; if standalone=&quot;yes&quot; was found, <em>0 </em>&gt;&gt;&gt;&gt;&gt; if standalone=&quot;no&quot; was found and <em>-1 </em>&gt;&gt;&gt;&gt;&gt; if standalone was not specified (default on creation).</p>
+</dd>
+<dt><strong><a name="setstandalone" class="item">setStandalone</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">setStandalone</span><span class="operator">(</span><span class="variable">$numvalue</span><span class="operator">);</span>
+</pre>
+<p>Through this method it is possible to alter the value of a documents standalone
+attribute. Set it to <em>1 </em>&gt;&gt;&gt;&gt;&gt; to set standalone=&quot;yes&quot;, to <em>0 </em>&gt;&gt;&gt;&gt;&gt; to set standalone=&quot;no&quot; or set it to <em>-1 </em>&gt;&gt;&gt;&gt;&gt; to remove the standalone attribute from the XML declaration.</p>
+</dd>
+<dt><strong><a name="compression" class="item">compression</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$compression</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">compression</span><span class="operator">;</span>
+</pre>
+<p>libxml2 allows reading of documents directly from gzipped files. In this case
+the compression variable is set to the compression level of that file (0-8). If
+XML::LibXML parsed a different source or the file wasn't compressed, the
+returned value will be <em>-1 </em>&gt;&gt;&gt;&gt;&gt;.</p>
+</dd>
+<dt><strong><a name="setcompression" class="item">setCompression</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">setCompression</span><span class="operator">(</span><span class="variable">$ziplevel</span><span class="operator">);</span>
+</pre>
+<p>If one intends to write the document directly to a file, it is possible to set
+the compression level for a given document. This level can be in the range from
+0 to 8. If XML::LibXML should not try to compress use <em>-1 </em>&gt;&gt;&gt;&gt;&gt; (default).</p>
+<p>Note that this feature will <em>only </em>&gt;&gt;&gt;&gt;&gt; work if libxml2 is compiled with zlib support and <a href="#tofile"><code>toFile()</code></a> is used for output.</p>
+</dd>
+<dt><strong><a name="tostring" class="item">toString</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$docstring</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">toString</span><span class="operator">(</span><span class="variable">$format</span><span class="operator">);</span>
+</pre>
+<p><em>toString </em>&gt;&gt;&gt;&gt;&gt; is a DOM serializing function, so the DOM Tree is serialized into an XML
+string, ready for output.</p>
+<p>IMPORTANT: unlike toString for other nodes, on document nodes this function
+returns the XML as a byte string in the original encoding of the document (see
+the <a href="#actualencoding"><code>actualEncoding()</code></a> method)! This means you can simply do:</p>
+<pre>
+  <span class="keyword">open</span> <span class="keyword">my</span> <span class="variable">$out_fh</span><span class="operator">,</span> <span class="string">'&gt;'</span><span class="operator">,</span> <span class="variable">$file</span><span class="operator">;</span>
+  <span class="keyword">print</span> <span class="operator">{</span><span class="variable">$out_fh</span><span class="operator">}</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">toString</span><span class="operator">;</span>
+</pre>
+<p>regardless of the actual encoding of the document. See the section on encodings
+in <a href="../../../../.cpan/build/XML-LibXML-2.0019-zIu9KV/blib/html/site/lib/XML/LibXML.html">the XML::LibXML manpage</a> for more details.</p>
+<p>The optional <em>$format </em>&gt;&gt;&gt;&gt;&gt; parameter sets the indenting of the output. This parameter is expected to be an <code>integer</code> value, that specifies that indentation should be used. The format parameter can
+have three different values if it is used:</p>
+<p>If $format is 0, than the document is dumped as it was originally parsed</p>
+<p>If $format is 1, libxml2 will add ignorable white spaces, so the nodes content
+is easier to read. Existing text nodes will not be altered</p>
+<p>If $format is 2 (or higher), libxml2 will act as $format == 1 but it add a
+leading and a trailing line break to each text node.</p>
+<p>libxml2 uses a hard-coded indentation of 2 space characters per indentation
+level. This value can not be altered on run-time.</p>
+</dd>
+<dt><strong><a name="tostringc14n" class="item">toStringC14N</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$c14nstr</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">toStringC14N</span><span class="operator">(</span><span class="variable">$comment_flag</span><span class="operator">,</span> <span class="variable">$xpath</span> <span class="operator">[</span><span class="operator">,</span> <span class="variable">$xpath_context</span> <span class="operator">]</span><span class="operator">);</span>
+</pre>
+<p>See the documentation in <a href="../../../../.cpan/build/XML-LibXML-2.0019-zIu9KV/blib/lib/XML/LibXML/Node.html">the XML::LibXML::Node manpage</a>.</p>
+</dd>
+<dt><strong><a name="tostringec14n" class="item">toStringEC14N</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$ec14nstr</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">toStringEC14N</span><span class="operator">(</span><span class="variable">$comment_flag</span><span class="operator">,</span> <span class="variable">$xpath</span> <span class="operator">[</span><span class="operator">,</span> <span class="variable">$xpath_context</span> <span class="operator">]</span><span class="operator">,</span> <span class="variable">$inclusive_prefix_list</span><span class="operator">);</span>
+</pre>
+<p>See the documentation in <a href="../../../../.cpan/build/XML-LibXML-2.0019-zIu9KV/blib/lib/XML/LibXML/Node.html">the XML::LibXML::Node manpage</a>.</p>
+</dd>
+<dt><strong><a name="serialize" class="item">serialize</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$str</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">serialize</span><span class="operator">(</span><span class="variable">$format</span><span class="operator">);</span>
+</pre>
+<p>An alias for <a href="#tostring"><code>toString()</code></a>. This function was name added to be more consistent
+with libxml2.</p>
+</dd>
+<dt><strong><a name="serialize_c14n" class="item">serialize_c14n</a></strong></dt>
+
+<dd>
+<p>An alias for toStringC14N().</p>
+</dd>
+<dt><strong><a name="serialize_exc_c14n" class="item">serialize_exc_c14n</a></strong></dt>
+
+<dd>
+<p>An alias for toStringEC14N().</p>
+</dd>
+<dt><strong><a name="tofile" class="item">toFile</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$state</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">toFile</span><span class="operator">(</span><span class="variable">$filename</span><span class="operator">,</span> <span class="variable">$format</span><span class="operator">);</span>
+</pre>
+<p>This function is similar to <a href="#tostring"><code>toString()</code></a>, but it writes the document directly
+into a filesystem. This function is very useful, if one needs to store large
+documents.</p>
+<p>The format parameter has the same behaviour as in <a href="#tostring"><code>toString()</code></a>.</p>
+</dd>
+<dt><strong><a name="tofh" class="item">toFH</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$state</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">toFH</span><span class="operator">(</span><span class="variable">$fh</span><span class="operator">,</span> <span class="variable">$format</span><span class="operator">);</span>
+</pre>
+<p>This function is similar to <a href="#tostring"><code>toString()</code></a>, but it writes the document directly to
+a filehandle or a stream. A byte stream in the document encoding is passed to
+the file handle. Do NOT apply any <a href="#encoding"><code>:encoding(...)</code></a> or <a href="../../../../lib/pod/perlrun.html#utf8"><code>:utf8</code></a> PerlIO layer to the filehandle! See the section on encodings in <a href="../../../../.cpan/build/XML-LibXML-2.0019-zIu9KV/blib/html/site/lib/XML/LibXML.html">the XML::LibXML manpage</a> for more details.</p>
+<p>The format parameter has the same behaviour as in <a href="#tostring"><code>toString()</code></a>.</p>
+</dd>
+<dt><strong><a name="tostringhtml" class="item">toStringHTML</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$str</span> <span class="operator">=</span> <span class="variable">$document</span><span class="operator">-&gt;</span><span class="variable">toStringHTML</span><span class="operator">();</span>
+</pre>
+<p><em>toStringHTML </em>&gt;&gt;&gt;&gt;&gt; serialize the tree to a byte string in the document encoding as HTML. With this
+method indenting is automatic and managed by libxml2 internally.</p>
+</dd>
+<dt><strong><a name="serialize_html" class="item">serialize_html</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$str</span> <span class="operator">=</span> <span class="variable">$document</span><span class="operator">-&gt;</span><span class="variable">serialize_html</span><span class="operator">();</span>
+</pre>
+<p>An alias for <a href="#tostringhtml"><code>toStringHTML()</code></a>.</p>
+</dd>
+<dt><strong><a name="is_valid" class="item">is_valid</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$bool</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">is_valid</span><span class="operator">();</span>
+</pre>
+<p>Returns either TRUE or FALSE depending on whether the DOM Tree is a valid
+Document or not.</p>
+<p>You may also pass in a <a href="../../../../.cpan/build/XML-LibXML-2.0019-zIu9KV/blib/lib/XML/LibXML/Dtd.html">the XML::LibXML::Dtd manpage</a> object, to validate against an external DTD:</p>
+<pre>
+  <span class="keyword">if</span> <span class="operator">(!</span><span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">is_valid</span><span class="operator">(</span><span class="variable">$dtd</span><span class="operator">))</span> <span class="operator">{</span>
+       <span class="keyword">warn</span><span class="operator">(</span><span class="string">"document is not valid!"</span><span class="operator">);</span>
+   <span class="operator">}</span>
+</pre>
+</dd>
+<dt><strong><a name="validate" class="item">validate</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">validate</span><span class="operator">();</span>
+</pre>
+<p>This is an exception throwing equivalent of is_valid. If the document is not
+valid it will throw an exception containing the error. This allows you much
+better error reporting than simply is_valid or not.</p>
+<p>Again, you may pass in a DTD object</p>
+</dd>
+<dt><strong><a name="documentelement" class="item">documentElement</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$root</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">documentElement</span><span class="operator">();</span>
+</pre>
+<p>Returns the root element of the Document. A document can have just one root
+element to contain the documents data.</p>
+<p>Optionally one can use <em>getDocumentElement </em>&gt;&gt;&gt;&gt;&gt;.</p>
+</dd>
+<dt><strong><a name="setdocumentelement" class="item">setDocumentElement</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">setDocumentElement</span><span class="operator">(</span> <span class="variable">$root</span> <span class="operator">);</span>
+</pre>
+<p>This function enables you to set the root element for a document. The function
+supports the import of a node from a different document tree, but does not
+support a document fragment as $root.</p>
+</dd>
+<dt><strong><a name="createelement" class="item">createElement</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$element</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">createElement</span><span class="operator">(</span> <span class="variable">$nodename</span> <span class="operator">);</span>
+</pre>
+<p>This function creates a new Element Node bound to the DOM with the name <code>$nodename</code>.</p>
+</dd>
+<dt><strong><a name="createelementns" class="item">createElementNS</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$element</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">createElementNS</span><span class="operator">(</span> <span class="variable">$namespaceURI</span><span class="operator">,</span> <span class="variable">$qname</span> <span class="operator">);</span>
+</pre>
+<p>This function creates a new Element Node bound to the DOM with the name <code>$nodename</code> and placed in the given namespace.</p>
+</dd>
+<dt><strong><a name="createtextnode" class="item">createTextNode</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$text</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">createTextNode</span><span class="operator">(</span> <span class="variable">$content_text</span> <span class="operator">);</span>
+</pre>
+<p>As an equivalent of <em>createElement </em>&gt;&gt;&gt;&gt;&gt;, but it creates a <em>Text Node </em>&gt;&gt;&gt;&gt;&gt; bound to the DOM.</p>
+</dd>
+<dt><strong><a name="createcomment" class="item">createComment</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$comment</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">createComment</span><span class="operator">(</span> <span class="variable">$comment_text</span> <span class="operator">);</span>
+</pre>
+<p>As an equivalent of <em>createElement </em>&gt;&gt;&gt;&gt;&gt;, but it creates a <em>Comment Node </em>&gt;&gt;&gt;&gt;&gt; bound to the DOM.</p>
+</dd>
+<dt><strong><a name="createattribute" class="item">createAttribute</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$attrnode</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">createAttribute</span><span class="operator">(</span><span class="variable">$name</span> <span class="operator">[</span><span class="operator">,</span><span class="variable">$value</span><span class="operator">]</span><span class="operator">);</span>
+</pre>
+<p>Creates a new Attribute node.</p>
+</dd>
+<dt><strong><a name="createattributens" class="item">createAttributeNS</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$attrnode</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">createAttributeNS</span><span class="operator">(</span> <span class="variable">namespaceURI</span><span class="operator">,</span> <span class="variable">$name</span> <span class="operator">[</span><span class="operator">,</span><span class="variable">$value</span><span class="operator">]</span> <span class="operator">);</span>
+</pre>
+<p>Creates an Attribute bound to a namespace.</p>
+</dd>
+<dt><strong><a name="createdocumentfragment" class="item">createDocumentFragment</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$fragment</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">createDocumentFragment</span><span class="operator">();</span>
+</pre>
+<p>This function creates a DocumentFragment.</p>
+</dd>
+<dt><strong><a name="createcdatasection" class="item">createCDATASection</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$cdata</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">createCDATASection</span><span class="operator">(</span> <span class="variable">$cdata_content</span> <span class="operator">);</span>
+</pre>
+<p>Similar to createTextNode and createComment, this function creates a
+CDataSection bound to the current DOM.</p>
+</dd>
+<dt><strong><a name="createprocessinginstruction" class="item">createProcessingInstruction</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$pi</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">createProcessingInstruction</span><span class="operator">(</span> <span class="variable">$target</span><span class="operator">,</span> <span class="variable">$data</span> <span class="operator">);</span>
+</pre>
+<p>create a processing instruction node.</p>
+<p>Since this method is quite long one may use its short form <em>createPI() </em>&gt;&gt;&gt;&gt;&gt;.</p>
+</dd>
+<dt><strong><a name="createentityreference" class="item">createEntityReference</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$entref</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">createEntityReference</span><span class="operator">(</span><span class="variable">$refname</span><span class="operator">);</span>
+</pre>
+<p>If a document has a DTD specified, one can create entity references by using
+this function. If one wants to add a entity reference to the document, this
+reference has to be created by this function.</p>
+<p>An entity reference is unique to a document and cannot be passed to other
+documents as other nodes can be passed.</p>
+<p><em>NOTE: </em>&gt;&gt;&gt;&gt;&gt; A text content containing something that looks like an entity reference, will
+not be expanded to a real entity reference unless it is a predefined entity</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$string</span> <span class="operator">=</span> <span class="string">"&amp;foo;"</span><span class="operator">;</span>
+   <span class="variable">$some_element</span><span class="operator">-&gt;</span><span class="variable">appendText</span><span class="operator">(</span> <span class="variable">$string</span> <span class="operator">);</span>
+   <span class="keyword">print</span> <span class="variable">$some_element</span><span class="operator">-&gt;</span><span class="variable">textContent</span><span class="operator">;</span> <span class="comment"># prints "&amp;amp;foo;"</span>
+</pre>
+</dd>
+<dt><strong><a name="createinternalsubset" class="item">createInternalSubset</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">$document</span><span class="operator">-&gt;</span><span class="variable">createInternalSubset</span><span class="operator">(</span> <span class="variable">$rootnode</span><span class="operator">,</span> <span class="variable">$public</span><span class="operator">,</span> <span class="variable">$system</span><span class="operator">);</span>
+</pre>
+<p>This function creates and adds an internal subset to the given document.
+Because the function automatically adds the DTD to the document there is no
+need to add the created node explicitly to the document.</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$document</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Document</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">();</span>
+   <span class="keyword">my</span> <span class="variable">$dtd</span>      <span class="operator">=</span> <span class="variable">$document</span><span class="operator">-&gt;</span><span class="variable">createInternalSubset</span><span class="operator">(</span> <span class="string">"foo"</span><span class="operator">,</span> <span class="keyword">undef</span><span class="operator">,</span> <span class="string">"foo.dtd"</span> <span class="operator">);</span>
+</pre>
+<p>will result in the following XML document:</p>
+<pre>
+  &lt;?xml version=&quot;1.0&quot;?&gt;
+   &lt;!DOCTYPE foo SYSTEM &quot;foo.dtd&quot;&gt;</pre>
+<p>By setting the public parameter it is possible to set PUBLIC DTDs to a given
+document. So</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$document</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Document</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">();</span>
+  <span class="keyword">my</span> <span class="variable">$dtd</span>      <span class="operator">=</span> <span class="variable">$document</span><span class="operator">-&gt;</span><span class="variable">createInternalSubset</span><span class="operator">(</span> <span class="string">"foo"</span><span class="operator">,</span> <span class="string">"-//FOO//DTD FOO 0.1//EN"</span><span class="operator">,</span> <span class="keyword">undef</span> <span class="operator">);</span>
+</pre>
+<p>will cause the following declaration to be created on the document:</p>
+<pre>
+  &lt;?xml version=&quot;1.0&quot;?&gt;
+  &lt;!DOCTYPE foo PUBLIC &quot;-//FOO//DTD FOO 0.1//EN&quot;&gt;</pre>
+</dd>
+<dt><strong><a name="createexternalsubset" class="item">createExternalSubset</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">$document</span><span class="operator">-&gt;</span><span class="variable">createExternalSubset</span><span class="operator">(</span> <span class="variable">$rootnode_name</span><span class="operator">,</span> <span class="variable">$publicId</span><span class="operator">,</span> <span class="variable">$systemId</span><span class="operator">);</span>
+</pre>
+<p>This function is similar to <a href="#createinternalsubset"><code>createInternalSubset()</code></a> but this DTD is considered to be external and is therefore not added to the
+document itself. Nevertheless it can be used for validation purposes.</p>
+</dd>
+<dt><strong><a name="importnode" class="item">importNode</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$document</span><span class="operator">-&gt;</span><span class="variable">importNode</span><span class="operator">(</span> <span class="variable">$node</span> <span class="operator">);</span>
+</pre>
+<p>If a node is not part of a document, it can be imported to another document. As
+specified in DOM Level 2 Specification the Node will not be altered or removed
+from its original document (<code>$node-&gt;cloneNode(1)</code> will get called implicitly).</p>
+<p><em>NOTE: </em>&gt;&gt;&gt;&gt;&gt; Don't try to use <a href="#importnode"><code>importNode()</code></a> to import sub-trees that contain an entity
+reference - even if the entity reference is the root node of the sub-tree. This
+will cause serious problems to your program. This is a limitation of libxml2
+and not of XML::LibXML itself.</p>
+</dd>
+<dt><strong><a name="adoptnode" class="item">adoptNode</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$document</span><span class="operator">-&gt;</span><span class="variable">adoptNode</span><span class="operator">(</span> <span class="variable">$node</span> <span class="operator">);</span>
+</pre>
+<p>If a node is not part of a document, it can be imported to another document. As
+specified in DOM Level 3 Specification the Node will not be altered but it will
+removed from its original document.</p>
+<p>After a document adopted a node, the node, its attributes and all its
+descendants belong to the new document. Because the node does not belong to the
+old document, it will be unlinked from its old location first.</p>
+<p><em>NOTE: </em>&gt;&gt;&gt;&gt;&gt; Don't try to <a href="#adoptnode"><code>adoptNode()</code></a> to import sub-trees that contain entity references -
+even if the entity reference is the root node of the sub-tree. This will cause
+serious problems to your program. This is a limitation of libxml2 and not of
+XML::LibXML itself.</p>
+</dd>
+<dt><strong><a name="externalsubset" class="item">externalSubset</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">externalSubset</span><span class="operator">;</span>
+</pre>
+<p>If a document has an external subset defined it will be returned by this
+function.</p>
+<p><em>NOTE </em>&gt;&gt;&gt;&gt;&gt; Dtd nodes are no ordinary nodes in libxml2. The support for these nodes in
+XML::LibXML is still limited. In particular one may not want use common node
+function on doctype declaration nodes!</p>
+</dd>
+<dt><strong><a name="internalsubset" class="item">internalSubset</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">internalSubset</span><span class="operator">;</span>
+</pre>
+<p>If a document has an internal subset defined it will be returned by this
+function.</p>
+<p><em>NOTE </em>&gt;&gt;&gt;&gt;&gt; Dtd nodes are no ordinary nodes in libxml2. The support for these nodes in
+XML::LibXML is still limited. In particular one may not want use common node
+function on doctype declaration nodes!</p>
+</dd>
+<dt><strong><a name="setexternalsubset" class="item">setExternalSubset</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">setExternalSubset</span><span class="operator">(</span><span class="variable">$dtd</span><span class="operator">);</span>
+</pre>
+<p><em>EXPERIMENTAL! </em>&gt;&gt;&gt;&gt;&gt;</p>
+<p>This method sets a DTD node as an external subset of the given document.</p>
+</dd>
+<dt><strong><a name="setinternalsubset" class="item">setInternalSubset</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">setInternalSubset</span><span class="operator">(</span><span class="variable">$dtd</span><span class="operator">);</span>
+</pre>
+<p><em>EXPERIMENTAL! </em>&gt;&gt;&gt;&gt;&gt;</p>
+<p>This method sets a DTD node as an internal subset of the given document.</p>
+</dd>
+<dt><strong><a name="removeexternalsubset" class="item">removeExternalSubset</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">removeExternalSubset</span><span class="operator">();</span>
+</pre>
+<p><em>EXPERIMENTAL! </em>&gt;&gt;&gt;&gt;&gt;</p>
+<p>If a document has an external subset defined it can be removed from the
+document by using this function. The removed dtd node will be returned.</p>
+</dd>
+<dt><strong><a name="removeinternalsubset" class="item">removeInternalSubset</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">removeInternalSubset</span><span class="operator">();</span>
+</pre>
+<p><em>EXPERIMENTAL! </em>&gt;&gt;&gt;&gt;&gt;</p>
+<p>If a document has an internal subset defined it can be removed from the
+document by using this function. The removed dtd node will be returned.</p>
+</dd>
+<dt><strong><a name="getelementsbytagname" class="item">getElementsByTagName</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="keyword">my</span> <span class="variable">@nodelist</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">getElementsByTagName</span><span class="operator">(</span><span class="variable">$tagname</span><span class="operator">);</span>
+</pre>
+<p>Implements the DOM Level 2 function</p>
+<p>In SCALAR context this function returns an <a href="../../../../.cpan/build/XML-LibXML-2.0019-zIu9KV/blib/lib/XML/LibXML/NodeList.html">the XML::LibXML::NodeList manpage</a> object.</p>
+</dd>
+<dt><strong><a name="getelementsbytagnamens" class="item">getElementsByTagNameNS</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="keyword">my</span> <span class="variable">@nodelist</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">getElementsByTagNameNS</span><span class="operator">(</span><span class="variable">$nsURI</span><span class="operator">,</span><span class="variable">$tagname</span><span class="operator">);</span>
+</pre>
+<p>Implements the DOM Level 2 function</p>
+<p>In SCALAR context this function returns an <a href="../../../../.cpan/build/XML-LibXML-2.0019-zIu9KV/blib/lib/XML/LibXML/NodeList.html">the XML::LibXML::NodeList manpage</a> object.</p>
+</dd>
+<dt><strong><a name="getelementsbylocalname" class="item">getElementsByLocalName</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="keyword">my</span> <span class="variable">@nodelist</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">getElementsByLocalName</span><span class="operator">(</span><span class="variable">$localname</span><span class="operator">);</span>
+</pre>
+<p>This allows the fetching of all nodes from a given document with the given
+Localname.</p>
+<p>In SCALAR context this function returns an <a href="../../../../.cpan/build/XML-LibXML-2.0019-zIu9KV/blib/lib/XML/LibXML/NodeList.html">the XML::LibXML::NodeList manpage</a> object.</p>
+</dd>
+<dt><strong><a name="getelementbyid" class="item">getElementById</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$node</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">getElementById</span><span class="operator">(</span><span class="variable">$id</span><span class="operator">);</span>
+</pre>
+<p>Returns the element that has an ID attribute with the given value. If no such
+element exists, this returns undef.</p>
+<p>Note: the ID of an element may change while manipulating the document. For
+documents with a DTD, the information about ID attributes is only available if
+DTD loading/validation has been requested. For HTML documents parsed with the
+HTML parser ID detection is done automatically. In XML documents, all &quot;xml:id&quot;
+attributes are considered to be of type ID. You can test ID-ness of an
+attribute node with $attr-&gt;<code>isId()</code>.</p>
+<p>In versions 1.59 and earlier this method was called <code>getElementsById()</code> (plural)
+by mistake. Starting from 1.60 this name is maintained as an alias only for
+backward compatibility.</p>
+</dd>
+<dt><strong><a name="indexelements" class="item">indexElements</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">indexElements</span><span class="operator">();</span>
+</pre>
+<p>This function causes libxml2 to stamp all elements in a document with their
+document position index which considerably speeds up XPath queries for large
+documents. It should only be used with static documents that won't be further
+changed by any DOM methods, because once a document is indexed, XPath will
+always prefer the index to other methods of determining the document order of
+nodes. XPath could therefore return improperly ordered node-lists when applied
+on a document that has been changed after being indexed. It is of course
+possible to use this method to re-index a modified document before using it
+with XPath again. This function is not a part of the DOM specification.</p>
+<p>This function returns number of elements indexed, -1 if error occurred, or -2
+if this feature is not available in the running libxml2.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Matt Sergeant,
+Christian Glahn,
+Petr Pajas</p>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p>2.0019</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>2001-2007, AxKit.com Ltd.</p>
+<p>2002-2006, Christian Glahn.</p>
+<p>2006-2009, Petr Pajas.</p>
+
+</body>
+
+</html>

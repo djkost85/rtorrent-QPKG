@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/2325/trunk/plugins/_task
+END
+action.php
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/2115/trunk/plugins/_task/action.php
+END
+_task.css
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/1831/trunk/plugins/_task/_task.css
+END
+plugin.info
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2255/trunk/plugins/_task/plugin.info
+END
+task.php
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2316/trunk/plugins/_task/task.php
+END
+init.js
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2162/trunk/plugins/_task/init.js
+END

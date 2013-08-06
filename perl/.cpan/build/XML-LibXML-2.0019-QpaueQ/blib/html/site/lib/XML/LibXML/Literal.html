@@ -1,0 +1,82 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::Literal - Simple string values.</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::Literal - Simple string values.</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#api">API</a></li>
+	<ul>
+
+		<li><a href="#new__string_"><code>new($string)</code></a></li>
+		<li><a href="#value__"><code>value()</code></a></li>
+		<li><a href="#cmp__literal_"><code>cmp($literal)</code></a></li>
+	</ul>
+
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::Literal - Simple string values.</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>In XPath terms a Literal is what we know as a string.</p>
+<p>
+</p>
+<hr />
+<h1><a name="api">API</a></h1>
+<p>
+</p>
+<h2><a name="new__string_"><code>new($string)</code></a></h2>
+<p>Create a new Literal object with the value in $string. Note that &amp;quot; and
+&amp;apos; will be converted to &quot; and ' respectively. That is not part of the XPath
+specification, but I consider it useful. Note though that you have to go
+to extraordinary lengths in an XML template file (be it XSLT or whatever) to
+make use of this:</p>
+<pre>
+        <span class="operator">&lt;</span><span class="variable">xsl</span><span class="operator">:</span><span class="variable">value</span><span class="operator">-</span><span class="variable">of</span> <span class="keyword">select</span><span class="operator">=</span><span class="string">"&amp;quot;I'm feeling &amp;amp;quot;sad&amp;amp;quot;&amp;quot;"</span><span class="operator">/&gt;</span>
+</pre>
+<p>Which produces a Literal of:</p>
+<pre>
+        I'm feeling &quot;sad&quot;</pre>
+<p>
+</p>
+<h2><a name="value__"><code>value()</code></a></h2>
+<p>Also overloaded as stringification, simply returns the literal string value.</p>
+<p>
+</p>
+<h2><a name="cmp__literal_"><code>cmp($literal)</code></a></h2>
+<p>Returns the equivalent of perl's cmp operator against the given $literal.</p>
+
+</body>
+
+</html>

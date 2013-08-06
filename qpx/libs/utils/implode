@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+# void utils_implode (string avar, string var, [string <separator> = ''])
+#
+# Combines the contents of an array variable to a variable.
+#
+function utils_implode {
+	local IFS=''
+	[[ $# -ge 3 ]] && IFS=$3
+	eval "$2=\"\${$1[*]}\""
+}

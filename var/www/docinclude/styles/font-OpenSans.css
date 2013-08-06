@@ -1,0 +1,89 @@
+
+strong {
+	font-family: 'OpenSansSemiBoldItalic';
+}
+
+em {
+	font-family: 'OpenSansItalic';
+}
+	
+@font-face {
+    font-family: 'OpenSansItalic';
+    src: url('http://pool.qnapclub.pl/docinclude/fonts/opensans-italic.eot');
+    src: url('http://pool.qnapclub.pl/docinclude/fonts/opensans-italic.eot?#iefix') format('embedded-opentype'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-italic.woff') format('woff'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-italic.ttf') format('truetype'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-italic.svg#open_sansitalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+/*
+@font-face {
+    font-family: 'OpenSansLightRegular';
+    src: url('http://pool.qnapclub.pl/docinclude/fonts/opensans-light.eot');
+    src: url('http://pool.qnapclub.pl/docinclude/fonts/opensans-light.eot?#iefix') format('embedded-opentype'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-light.woff') format('woff'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-light.ttf') format('truetype'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-light.svg#open_sans_lightregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+*/
+@font-face {
+    font-family: 'OpenSansBold';
+    src: url('http://pool.qnapclub.pl/docinclude/fonts/opensans-bold-webfont.eot');
+    src: url('http://pool.qnapclub.pl/docinclude/fonts/opensans-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-bold-webfont.woff') format('woff'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-bold-webfont.ttf') format('truetype'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-bold-webfont.svg#open_sansbold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+/*
+@font-face {
+    font-family: 'OpenSansLightItalic';
+    src: url('http://pool.qnapclub.pl/docinclude/fonts/opensans-lightitalic.eot');
+    src: url('http://pool.qnapclub.pl/docinclude/fonts/opensans-lightitalic.eot?#iefix') format('embedded-opentype'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-lightitalic.woff') format('woff'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-lightitalic.ttf') format('truetype'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-lightitalic.svg#open_sans_lightitalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenSansRegular';
+    src: url('http://pool.qnapclub.pl/docinclude/fonts/opensans-regular-webfont.eot');
+    src: url('http://pool.qnapclub.pl/docinclude/fonts/opensans-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-regular-webfont.woff') format('woff'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-regular-webfont.ttf') format('truetype'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-regular-webfont.svg#open_sansregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'OpenSansSemiBold';
+    src: url('http://pool.qnapclub.pl/docinclude/fonts/opensans-semibold-webfont.eot');
+    src: url('http://pool.qnapclub.pl/docinclude/fonts/opensans-semibold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-semibold-webfont.woff') format('woff'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-semibold-webfont.ttf') format('truetype'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-semibold-webfont.svg#open_sans_semiboldregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+*/
+@font-face {
+    font-family: 'OpenSansSemiBoldItalic';
+    src: url('http://pool.qnapclub.pl/docinclude/fonts/opensans-semibolditalic-webfont.eot');
+    src: url('http://pool.qnapclub.pl/docinclude/fonts/opensans-semibolditalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-semibolditalic-webfont.woff') format('woff'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-semibolditalic-webfont.ttf') format('truetype'),
+         url('http://pool.qnapclub.pl/docinclude/fonts/opensans-semibolditalic-webfont.svg#open_sans_semibolditalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+

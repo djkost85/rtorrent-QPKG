@@ -1,0 +1,177 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../displayToc.js"></script>
+<script language="JavaScript" src="../tocParas.js"></script>
+<script language="JavaScript" src="../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../scineplex.css">
+<title>json_xs - JSON::XS commandline utility</title>
+<link rel="stylesheet" href="../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',1);</script>
+<h1><a>json_xs - JSON::XS commandline utility</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>json_xs - JSON::XS commandline utility</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+   json_xs [-v] [-f inputformat] [-t outputformat]</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><em class="file">json_xs</em> converts between some input and output formats (one of them is
+JSON).</p>
+<p>The default input format is <code>json</code> and the default output format is
+<code>json-pretty</code>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<dl>
+<dt><strong><a name="v" class="item">-v</a></strong></dt>
+
+<dd>
+<p>Be slightly more verbose.</p>
+</dd>
+<dt><strong><a name="f_fromformat" class="item">-f fromformat</a></strong></dt>
+
+<dd>
+<p>Read a file in the given format from STDIN.</p>
+<p><code>fromformat</code> can be one of:</p>
+<dl>
+<dt><strong><a name="json_a_json_text_encoded_either_utf_8_utf16_be_le_utf32_be_le" class="item">json - a json text encoded, either utf-8, utf16-be/le, utf32-be/le</a></strong></dt>
+
+<dt><strong><a name="storable_a_storable_frozen_value" class="item">storable - a Storable frozen value</a></strong></dt>
+
+<dt><strong><a name="file" class="item">storable-file - a Storable file (Storable has two incompatible formats)</a></strong></dt>
+
+<dt><strong><a name="available" class="item">bencode - use Convert::Bencode, if available (used by torrent files, among others)</a></strong></dt>
+
+<dt><strong><a name="format" class="item">clzf - Compress::LZF format (requires that module to be installed)</a></strong></dt>
+
+<dt><strong><a name="as" class="item">eval - evaluate the given code as (non-utf-8) Perl, basically the reverse of &quot;-t dump&quot;</a></strong></dt>
+
+<dt><strong><a name="yaml" class="item">yaml - YAML (avoid at all costs, requires the YAML module :)</a></strong></dt>
+
+<dt><strong><a name="string_do_not_attempt_to_decode_te_file_data" class="item">string - do not attempt to decode te file data</a></strong></dt>
+
+<dt><strong><a name="none_nothing_is_read_creates_an_undef_scalar_mainly_useful_with_e" class="item">none - nothing is read, creates an <a href="../lib/pod/perlfunc.html#undef"><code>undef</code></a> scalar - mainly useful with <code>-e</code></a></strong></dt>
+
+</dl>
+</dd>
+<dt><strong><a name="t_toformat" class="item">-t toformat</a></strong></dt>
+
+<dd>
+<p>Write the file in the given format to STDOUT.</p>
+<p><code>toformat</code> can be one of:</p>
+<dl>
+<dt><strong><a name="json_json_utf_8_json_utf_8_encoded" class="item">json, json-utf-8 - json, utf-8 encoded</a></strong></dt>
+
+<dt><strong><a name="json_pretty_as_above_but_pretty_printed" class="item">json-pretty - as above, but pretty-printed</a></strong></dt>
+
+<dt><strong><a name="json_utf_16le_json_utf_16be_little_endian_big_endian_utf_16" class="item">json-utf-16le, json-utf-16be - little endian/big endian utf-16</a></strong></dt>
+
+<dt><strong><a name="json_utf_32le_json_utf_32be_little_endian_big_endian_utf_32" class="item">json-utf-32le, json-utf-32be - little endian/big endian utf-32</a></strong></dt>
+
+<dt><strong><a name="storable_a_storable_frozen_value_in_network_format" class="item">storable - a Storable frozen value in network format</a></strong></dt>
+
+<dt><strong>storable-file - a Storable file in network format (Storable has two incompatible formats)</strong></dt>
+
+<dt><strong>bencode - use Convert::Bencode, if available (used by torrent files, among others)</strong></dt>
+
+<dt><strong><a name="clzf_compress_lzf_format" class="item">clzf - Compress::LZF format</a></strong></dt>
+
+<dt><strong><a name="yaml_yaml" class="item">yaml - YAML</a></strong></dt>
+
+<dt><strong><a name="dump_data_dump" class="item">dump - Data::Dump</a></strong></dt>
+
+<dt><strong><a name="dumper_data_dumper" class="item">dumper - Data::Dumper</a></strong></dt>
+
+<dt><strong><a name="string_writes_the_data_out_as_if_it_were_a_string" class="item">string - writes the data out as if it were a string</a></strong></dt>
+
+<dt><strong><a name="none_nothing_gets_written_mainly_useful_together_with_e" class="item">none - nothing gets written, mainly useful together with <code>-e</code></a></strong></dt>
+
+<dd>
+<p>Note that Data::Dumper doesn't handle self-referential data structures
+correctly - use &quot;dump&quot; instead.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong><a name="e_code" class="item">-e code</a></strong></dt>
+
+<dd>
+<p>Evaluate perl code after reading the data and before writing it out again
+- can be used to filter, create or extract data. The data that has been
+written is in <a href="../lib/pod/perlvar.html#__"><code>$_</code></a>, and whatever is in there is written out afterwards.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<pre>
+   json_xs -t none &lt;isitreally.json</pre>
+<p>&quot;JSON Lint&quot; - tries to parse the file <em class="file">isitreally.json</em> as JSON - if it
+is valid JSON, the command outputs nothing, otherwise it will print an
+error message and exit with non-zero exit status.</p>
+<pre>
+   &lt;src.json json_xs &gt;pretty.json</pre>
+<p>Prettify the JSON file <em class="file">src.json</em> to <em class="file">dst.json</em>.</p>
+<pre>
+   json_xs -f storable-file &lt;file</pre>
+<p>Read the serialised Storable file <em class="file">file</em> and print a human-readable JSON
+version of it to STDOUT.</p>
+<pre>
+   json_xs -f storable-file -t yaml &lt;file</pre>
+<p>Same as above, but write YAML instead (not using JSON at all :)</p>
+<pre>
+   json_xs -f none -e '$_ = [1, 2, 3]'</pre>
+<p>Dump the perl array as UTF-8 encoded JSON text.</p>
+<pre>
+   <span class="operator">&lt;</span><span class="variable">torrentfile</span> <span class="variable">json_xs</span> <span class="keyword">-f</span> <span class="variable">bencode</span> <span class="keyword">-e</span> <span class="string">'$_ = join "\n", map @$_, @{$_-&gt;{"announce-list"}}'</span> <span class="keyword">-t</span> <span class="variable">string</span>
+</pre>
+<p>Print the tracker list inside a torrent file.</p>
+<pre>
+   lwp-request <a href="http://cpantesters.perl.org/show/JSON-XS.json">http://cpantesters.perl.org/show/JSON-XS.json</a> | json_xs</pre>
+<p>Fetch the cpan-testers result summary <code>JSON::XS</code> and pretty-print it.</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Copyright (C) 2008 Marc Lehmann &lt;<a href="mailto:json@schmorp.de">json@schmorp.de</a>&gt;</p>
+
+</body>
+
+</html>

@@ -1,0 +1,148 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::Dtd - XML::LibXML DTD Handling</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::Dtd - XML::LibXML DTD Handling</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::Dtd - XML::LibXML DTD Handling</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML</span><span class="operator">;</span>
+</pre>
+<pre>
+  <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Dtd</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="variable">$public_id</span><span class="operator">,</span> <span class="variable">$system_id</span><span class="operator">);</span>
+  <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Dtd</span><span class="operator">-&gt;</span><span class="variable">parse_string</span><span class="operator">(</span><span class="variable">$dtd_str</span><span class="operator">);</span>
+  <span class="variable">$publicId</span> <span class="operator">=</span> <span class="variable">$dtd</span><span class="operator">-&gt;</span><span class="variable">getName</span><span class="operator">();</span>
+  <span class="variable">$publicId</span> <span class="operator">=</span> <span class="variable">$dtd</span><span class="operator">-&gt;</span><span class="variable">publicId</span><span class="operator">();</span>
+  <span class="variable">$systemId</span> <span class="operator">=</span> <span class="variable">$dtd</span><span class="operator">-&gt;</span><span class="variable">systemId</span><span class="operator">();</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This class holds a DTD. You may parse a DTD from either a string, or from an
+external SYSTEM identifier.</p>
+<p>No support is available as yet for parsing from a filehandle.</p>
+<p>XML::LibXML::Dtd is a sub-class of <a href="../../../../.cpan/build/XML-LibXML-2.0019-zIu9KV/blib/lib/XML/LibXML/Node.html">the XML::LibXML::Node manpage</a>, so all the methods available to nodes (particularly toString()) are available
+to Dtd objects.</p>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<dl>
+<dt><strong><a name="new" class="item">new</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Dtd</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="variable">$public_id</span><span class="operator">,</span> <span class="variable">$system_id</span><span class="operator">);</span>
+</pre>
+<p>Parse a DTD from the system identifier, and return a DTD object that you can
+pass to $doc-&gt;<code>is_valid()</code> or $doc-&gt;<code>validate()</code>.</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Dtd</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span>
+                        <span class="string">"SOME // Public / ID / 1.0"</span><span class="operator">,</span>
+                        <span class="string">"test.dtd"</span>
+                                  <span class="operator">);</span>
+   <span class="keyword">my</span> <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">-&gt;</span><span class="variable">parse_file</span><span class="operator">(</span><span class="string">"test.xml"</span><span class="operator">);</span>
+   <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">validate</span><span class="operator">(</span><span class="variable">$dtd</span><span class="operator">);</span>
+</pre>
+</dd>
+<dt><strong><a name="parse_string" class="item">parse_string</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$dtd</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Dtd</span><span class="operator">-&gt;</span><span class="variable">parse_string</span><span class="operator">(</span><span class="variable">$dtd_str</span><span class="operator">);</span>
+</pre>
+<p>The same as <a href="#new"><code>new()</code></a> above, except you can parse a DTD from a string. Note that
+parsing from string may fail if the DTD contains external parametric-entity
+references with relative URLs.</p>
+</dd>
+<dt><strong><a name="getname" class="item">getName</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$publicId</span> <span class="operator">=</span> <span class="variable">$dtd</span><span class="operator">-&gt;</span><span class="variable">getName</span><span class="operator">();</span>
+</pre>
+<p>Returns the name of DTD; i.e., the name immediately following the DOCTYPE
+keyword.</p>
+</dd>
+<dt><strong><a name="publicid" class="item">publicId</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$publicId</span> <span class="operator">=</span> <span class="variable">$dtd</span><span class="operator">-&gt;</span><span class="variable">publicId</span><span class="operator">();</span>
+</pre>
+<p>Returns the public identifier of the external subset.</p>
+</dd>
+<dt><strong><a name="systemid" class="item">systemId</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$systemId</span> <span class="operator">=</span> <span class="variable">$dtd</span><span class="operator">-&gt;</span><span class="variable">systemId</span><span class="operator">();</span>
+</pre>
+<p>Returns the system identifier of the external subset.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Matt Sergeant,
+Christian Glahn,
+Petr Pajas</p>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p>2.0019</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>2001-2007, AxKit.com Ltd.</p>
+<p>2002-2006, Christian Glahn.</p>
+<p>2006-2009, Petr Pajas.</p>
+
+</body>
+
+</html>

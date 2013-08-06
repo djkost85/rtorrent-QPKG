@@ -1,0 +1,4 @@
+#!/bin/sh
+
+export PERL5LIB="/usr/bin/rtorrent/perl/lib"
+export PATH=$PATH:/usr/bin/rtorrent/perl/bin:/usr/bin/rtorrent/perl/site/bin

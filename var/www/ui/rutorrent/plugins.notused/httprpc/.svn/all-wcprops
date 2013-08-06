@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/2255/trunk/plugins/httprpc
+END
+action.php
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/2203/trunk/plugins/httprpc/action.php
+END
+plugin.info
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/2255/trunk/plugins/httprpc/plugin.info
+END
+init.js
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2162/trunk/plugins/httprpc/init.js
+END
+rpccache.php
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/2115/trunk/plugins/httprpc/rpccache.php
+END

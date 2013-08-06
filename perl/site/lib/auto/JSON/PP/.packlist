@@ -1,0 +1,6 @@
+/usr/bin/rtorrent/perl/site/bin/json_pp
+/usr/bin/rtorrent/perl/site/lib/JSON/PP.pm
+/usr/bin/rtorrent/perl/site/lib/JSON/PP/Boolean.pm
+/usr/bin/rtorrent/perl/site/man/man1/json_pp.1
+/usr/bin/rtorrent/perl/site/man/man3/JSON::PP.3
+/usr/bin/rtorrent/perl/site/man/man3/JSON::PP::Boolean.3

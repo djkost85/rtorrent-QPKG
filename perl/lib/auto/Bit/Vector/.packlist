@@ -1,0 +1,11 @@
+/usr/bin/rtorrent/perl/lib/Bit/Vector.pm
+/usr/bin/rtorrent/perl/lib/Bit/Vector.pod
+/usr/bin/rtorrent/perl/lib/Bit/Vector/Overload.pm
+/usr/bin/rtorrent/perl/lib/Bit/Vector/Overload.pod
+/usr/bin/rtorrent/perl/lib/Bit/Vector/String.pm
+/usr/bin/rtorrent/perl/lib/Bit/Vector/String.pod
+/usr/bin/rtorrent/perl/lib/auto/Bit/Vector/Vector.bs
+/usr/bin/rtorrent/perl/lib/auto/Bit/Vector/Vector.so
+/usr/bin/rtorrent/perl/man/man3/Bit::Vector.3
+/usr/bin/rtorrent/perl/man/man3/Bit::Vector::Overload.3
+/usr/bin/rtorrent/perl/man/man3/Bit::Vector::String.3

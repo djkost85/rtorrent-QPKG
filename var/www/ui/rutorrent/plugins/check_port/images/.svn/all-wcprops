@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/1885/trunk/plugins/check_port/images
+END
+green.png
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/1885/trunk/plugins/check_port/images/green.png
+END
+red.png
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/1885/trunk/plugins/check_port/images/red.png
+END
+yellow.png
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1885/trunk/plugins/check_port/images/yellow.png
+END

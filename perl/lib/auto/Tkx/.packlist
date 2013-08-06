@@ -1,0 +1,11 @@
+/usr/bin/rtorrent/perl/bin/tkx-ed
+/usr/bin/rtorrent/perl/bin/tkx-prove
+/usr/bin/rtorrent/perl/lib/Tkx.pm
+/usr/bin/rtorrent/perl/lib/Tkx/LabEntry.pm
+/usr/bin/rtorrent/perl/lib/Tkx/MegaConfig.pm
+/usr/bin/rtorrent/perl/lib/Tkx/Tutorial.pod
+/usr/bin/rtorrent/perl/man/man1/tkx-ed.1
+/usr/bin/rtorrent/perl/man/man3/Tkx.3
+/usr/bin/rtorrent/perl/man/man3/Tkx::LabEntry.3
+/usr/bin/rtorrent/perl/man/man3/Tkx::MegaConfig.3
+/usr/bin/rtorrent/perl/man/man3/Tkx::Tutorial.3

@@ -1,0 +1,13 @@
+/usr/bin/rtorrent/perl/bin/ap-update-html
+/usr/bin/rtorrent/perl/bin/ap-user-guide
+/usr/bin/rtorrent/perl/lib/ActivePerl/DocTools.pm
+/usr/bin/rtorrent/perl/lib/ActivePerl/DocTools/Pod.pm
+/usr/bin/rtorrent/perl/lib/ActivePerl/DocTools/TOC.pm
+/usr/bin/rtorrent/perl/lib/ActivePerl/DocTools/TOC/HTML.pm
+/usr/bin/rtorrent/perl/lib/ActivePerl/DocTools/TOC/RDF.pm
+/usr/bin/rtorrent/perl/lib/ActivePerl/DocTools/TOC/tocTab.pm
+/usr/bin/rtorrent/perl/lib/ActivePerl/DocTools/TOC/tocxml.pm
+/usr/bin/rtorrent/perl/lib/ActivePerl/DocTools/Tree/HTML.pm
+/usr/bin/rtorrent/perl/man/man1/ap-update-html.1
+/usr/bin/rtorrent/perl/man/man1/ap-user-guide.1
+/usr/bin/rtorrent/perl/man/man3/ActivePerl::DocTools::Pod.3

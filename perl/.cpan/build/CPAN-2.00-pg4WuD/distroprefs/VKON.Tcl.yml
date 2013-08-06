@@ -1,0 +1,5 @@
+--- 
+match:
+  distribution: '^VKON/Tcl-\d'
+pl:
+  args: ["--include", "-I/usr/include/tcl8.5", "--library", "-ltcl8.5" ]

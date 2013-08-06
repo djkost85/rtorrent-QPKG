@@ -1,0 +1,32 @@
+#!/bin/sh
+
+source /usr/bin/rtorrent/bin/rtorrent.env
+
+### CODE HERE ###
+
+/bin/rm -f ${RT_INFOFILE}
+echo "Current Process ID: $$
+Parent Process ID: $PPID
+
+  PID  Uid     VmSize Stat Command
+`ps | grep $$ | grep -v grep`
+`ps | grep $PPID | grep -v grep`" > ${RT_INFOFILE}
+
+screen -S $PPID -p rtorrent -X width 132
+screen -S $PPID -p rtorrent -X height 800
+
+# execute screen dumper
+while true; do
+    sleep 1;
+    screen -S $PPID -p rtorrent -X hardcopy ${RT_DUMPFILE};
+    screen -S $PPID -p rtorrent -X hardcopy ${RT_DUMPFILE};
+    sleep ${RT_DUMPINTERVAL};
+done &
+	    
+# execute rtorrent [custom config] | no output to logfile
+#/${RT_INSTALLDIR}/bin/rtorrent -n -o import=/root/.rtorrent/rtorrent.conf
+
+# exectue rtorrent [custom config] | with output to logfile [default]
+/${RT_INSTALLDIR}/bin/rtorrent -n -o import=/root/.rtorrent++/rtorrent.conf | tee ${RT_LOGFILE}
+
+

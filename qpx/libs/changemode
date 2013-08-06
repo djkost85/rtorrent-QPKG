@@ -1,0 +1,35 @@
+#!/usr/bin/env sh
+: ${DEBUG:=1}
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include globals
+
+# void changemode (["normal"|"verbose"|"debug"|"quiet"|"silent"])
+#
+function changemode {
+	log_fcall "$@"
+
+	assume "$# -eq 0 || ($# -eq 1 && \$2 == @(normal|verbose|debug|quiet|silent))" "$1"
+
+	[[ $# -eq 1 ]] && GLOBALS_MODE=$1
+
+	log_configure mode=$GLOBALS_MODE
+
+	case "$GLOBALS_MODE" in
+	debug)
+		GLOBALS_DEBUGMODE=true
+		GLOBALS_VERBOSEMODE=true
+		;;
+	verbose)
+		GLOBALS_DEBUGMODE=false
+		GLOBALS_VERBOSEMODE=true
+		;;
+	*)
+		GLOBALS_DEBUGMODE=false
+		GLOBALS_VERBOSEMODE=false
+		;;
+	esac
+}

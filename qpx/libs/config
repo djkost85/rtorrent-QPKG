@@ -1,0 +1,123 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include array
+include getabspath
+include readtokens
+include useextglob
+
+CONFIG_KEYS=()
+CONFIG_FILES=()
+
+# void config_register (string <key>, avar <variable_name>)
+#
+function config_register {
+	local KEY=$1 VAR=$2
+	[[ $KEY != [[:alpha:]_]*([[:alnum:]_]) ]] && config_error "Key is not valid: $KEY"
+	[[ $VAR != [[:alpha:]_]*([[:alnum:]_]) ]] && config_error "Variable name is not valid: $VAR"
+	array_has_value "CONFIG_KEYS__${KEY}" "$VAR" && config_error "Key \"$KEY\" was already registered with variable \"$VAR\"."
+	array_has_value CONFIG_KEYS "$KEY" || array_push CONFIG_KEYS "$KEY"
+	array_push "CONFIG_KEYS__${KEY}" "$VAR"
+}
+
+
+# void config_unregister (string <key>, [avar <variable_name>])
+#
+function config_unregister {
+	case "$#" in
+	1)
+		local KEY=$1
+		array_has_value CONFIG_KEYS "$KEY" || config_error "Key was not yet registered: $KEY"
+		array_remove_values CONIG_KEYS "$KEY"
+		unset "CONFIG_KEYS__${KEY}"
+		;;
+	2)
+		local KEY=$1 VAR=$2
+		array_has_value CONFIG_KEYS "$KEY" || config_error "Key was not yet registered: $KEY"
+		array_has_value "CONFIG_KEYS__${KEY}" "$VAR" || config_error "Variable \"$VAR\" was not yet registered with key \"$KEY\"."
+		array_remove_values "CONFIG_KEYS__${KEY}" "$VAR"
+		array_isempty "CONFIG_KEYS__${KEY}" && {
+			array_remove_values CONIG_KEYS "$KEY"
+			unset "CONFIG_KEYS__${KEY}"
+		}
+		;;
+	esac
+}
+
+
+# void config_files_add (string <filepath>, ...)
+#
+function config_files_add {
+	for __; do
+		getabspath "$__"
+		array_push CONFIG_FILES "$__"
+	done
+}
+
+
+# void config_files_remove (string <filepath>, ...)
+#
+function config_files_remove {
+	for __; do
+		getabspath "$__"
+		array_remove_values CONFIG_FILES "$__"
+	done
+}
+
+
+# void config_parse (void)
+#
+function config_parse {
+	for __ in "${CONFIG_FILES[@]}"; do
+		config_parse_file "$__"
+	done
+}
+
+
+# void config_parse_file (string <filepath>)
+#
+function config_parse_file {
+	local FILE=$1
+
+	[[ -f $FILE ]] || config_error "File not found: $FILE."
+	[[ -r $FILE ]] || config_error "File not readable: $FILE."
+
+	local -i LN=0 KL=0
+	local PATTERN
+	local -a AVARS
+
+	array_join CONFIG_KEYS PATTERN '|'
+
+	while readtokens config_error "$LN"; do
+		(( KL = LN + 1, LN += __I1 ))
+
+		[[ __I0 -eq 0 ]] && continue
+
+		KEY=${__A0[0]}
+
+		case "$KEY" in
+		@($PATTERN))
+			;;
+		*)
+			config_error "Invalid key in line $KL of file $FILE: $KEY"
+			;;
+		esac
+
+		array_get_values "CONFIG_KEYS__${KEY}" AVARS
+
+		for __ in "${AVARS[@]}"; do
+			array_set_values "$__" "${__A0[@]:2}"
+		done
+	done < "$FILE"
+}
+
+
+# void config_error (string <error_message>)
+#
+function config_error {
+	echo "Configuration error: $1"
+	exit 1
+}

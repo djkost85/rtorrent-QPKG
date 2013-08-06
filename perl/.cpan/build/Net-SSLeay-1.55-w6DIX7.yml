@@ -1,0 +1,55 @@
+---
+distribution: !!perl/hash:CPAN::Distribution
+  CALLED_FOR: Net::SSLeay
+  CHECKSUM_STATUS: OK
+  ID: M/MI/MIKEM/Net-SSLeay-1.55.tar.gz
+  RO:
+    CPAN_COMMENT: ~
+    CPAN_USERID: MIKEM
+  archived: tar
+  build_dir: /usr/bin/rtorrent/perl/.cpan/build/Net-SSLeay-1.55-w6DIX7
+  incommandcolor: 1
+  install: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 1
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581156
+  localfile: /usr/bin/rtorrent/perl/.cpan/sources/authors/id/M/MI/MIKEM/Net-SSLeay-1.55.tar.gz
+  make: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 1
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581142
+  make_test: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 1
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581154
+  negative_prefs_cache: 1
+  prefs:
+    install: {}
+  prereq_pm:
+    build_requires:
+      ExtUtils::MakeMaker: '6.36'
+    requires:
+      MIME::Base64: '0'
+      Test::More: 0.60_01
+      perl: '5.005'
+  reqtype: c
+  sponsored_mods: {}
+  unwrapped: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 1
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581106
+  writemakefile: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 1
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581116
+perl:
+  $^X: /usr/bin/rtorrent/perl/bin/perl-static
+  mtime_$^X: 1375581022
+  mtime_dll: 0
+  sitearchexp: /usr/bin/rtorrent/perl/site/lib
+time: 1375581156

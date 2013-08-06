@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+
+include deps/tr
+
+# void utils_tolower (string, string var)
+#
+# Converts uppercase characters to lowercase.
+#
+if [[ BASH_VERSINFO -ge 4 ]]; then
+	function utils_tolower {
+		eval "$2=${1,,}"
+	}
+else
+	function utils_tolower {
+		eval "$2=\$(echo \"\$1\" | tr '[:upper:]' '[:lower:]')"
+	}
+fi

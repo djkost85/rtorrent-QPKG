@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+# bool getfileext (string <filepath>)
+#
+# Gets the file extension in a file path string.
+# Returns true if it gets an extension.
+#
+# > string __ = extension
+#
+function utils_getfileext {
+	local FN=${1##*/}
+	if [[ $FN == *.* ]]; then
+		__=${FN##*.}
+		return 0
+	else
+		__=''
+		return 1
+	fi
+}

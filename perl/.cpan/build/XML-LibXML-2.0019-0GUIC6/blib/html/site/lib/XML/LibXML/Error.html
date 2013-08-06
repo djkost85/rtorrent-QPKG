@@ -1,0 +1,301 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::Error - Structured Errors</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::Error - Structured Errors</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::Error - Structured Errors</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">eval</span> <span class="operator">{</span> <span class="operator">...</span> <span class="operator">};</span>
+          <span class="keyword">if</span> <span class="operator">(</span><span class="keyword">ref</span><span class="operator">(</span><span class="variable">$@</span><span class="operator">))</span> <span class="operator">{</span>
+            <span class="comment"># handle a structured error (XML::LibXML::Error object)</span>
+          <span class="operator">}</span> <span class="keyword">elsif</span> <span class="operator">(</span><span class="variable">$@</span><span class="operator">)</span> <span class="operator">{</span>
+            <span class="comment"># error, but not an XML::LibXML::Error object</span>
+          <span class="operator">}</span> <span class="keyword">else</span> <span class="operator">{</span>
+            <span class="comment"># no error</span>
+          <span class="operator">}</span>
+</pre>
+<pre>
+  <span class="variable">$XML::LibXML::Error::WARNINGS</span><span class="operator">=</span><span class="number">1</span><span class="operator">;</span>
+  <span class="variable">$message</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">as_string</span><span class="operator">();</span>
+  <span class="keyword">print</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">dump</span><span class="operator">();</span>
+  <span class="variable">$error_domain</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">domain</span><span class="operator">();</span>
+  <span class="variable">$error_code</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">code</span><span class="operator">();</span>
+  <span class="variable">$error_message</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">message</span><span class="operator">();</span>
+  <span class="variable">$error_level</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">level</span><span class="operator">();</span>
+  <span class="variable">$filename</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">file</span><span class="operator">();</span>
+  <span class="variable">$line</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">line</span><span class="operator">();</span>
+  <span class="variable">$nodename</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">nodename</span><span class="operator">();</span>
+  <span class="variable">$error_str1</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">str1</span><span class="operator">();</span>
+  <span class="variable">$error_str2</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">str2</span><span class="operator">();</span>
+  <span class="variable">$error_str3</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">str3</span><span class="operator">();</span>
+  <span class="variable">$error_num1</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">num1</span><span class="operator">();</span>
+  <span class="variable">$error_num2</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">num2</span><span class="operator">();</span>
+  <span class="variable">$string</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">context</span><span class="operator">();</span>
+  <span class="variable">$offset</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">column</span><span class="operator">();</span>
+  <span class="variable">$previous_error</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">_prev</span><span class="operator">();</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The XML::LibXML::Error class is a tiny frontend to <em>libxml2 </em>&gt;&gt;&gt;&gt;&gt;'s structured error support. If XML::LibXML is compiled with structured error
+support, all errors reported by libxml2 are transformed to XML::LibXML::Error
+objects. These objects automatically serialize to the corresponding error
+messages when printed or used in a string operation, but as objects, can also
+be used to get a detailed and structured information about the error that
+occurred.</p>
+<p>Unlike most other XML::LibXML objects, XML::LibXML::Error doesn't wrap an
+underlying <em>libxml2 </em>&gt;&gt;&gt;&gt;&gt; structure directly, but rather transforms it to a blessed Perl hash reference
+containing the individual fields of the structured error information as hash
+key-value pairs. Individual items (fields) of a structured error can either be
+obtained directly as $@-&gt;{field}, or using autoloaded methods such as
+$@-&gt;<code>field()</code> (where field is the field name). XML::LibXML::Error objects have
+the following fields: domain, code, level, file, line, nodename, message, str1,
+str2, str3, num1, num2, and _prev (some of them may be undefined).</p>
+<dl>
+<dt><strong><a name="_xml__libxml__error__warnings" class="item">$XML::LibXML::Error::WARNINGS</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$XML::LibXML::Error::WARNINGS</span><span class="operator">=</span><span class="number">1</span><span class="operator">;</span>
+</pre>
+<p>Traditionally, XML::LibXML was suppressing parser warnings by setting libxml2's
+global variable xmlGetWarningsDefaultValue to 0. Since 1.70 we do not change
+libxml2's global variables anymore; for backward compatibility, XML::LibXML
+suppresses warnings. This variable can be set to 1 to enable reporting of these
+warnings via Perl <a href="../../../../lib/pod/perlfunc.html#warn"><code>warn</code></a> and to 2 to report hem via <a href="../../../../lib/pod/perlfunc.html#die"><code>die</code></a>.</p>
+</dd>
+<dt><strong><a name="as_string" class="item">as_string</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$message</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">as_string</span><span class="operator">();</span>
+</pre>
+<p>This function serializes an XML::LibXML::Error object to a string containing
+the full error message close to the message produced by <em>libxml2 </em>&gt;&gt;&gt;&gt;&gt; default error handlers and tools like xmllint. This method is also used to
+overload &quot;&quot; operator on XML::LibXML::Error, so it is automatically called
+whenever XML::LibXML::Error object is treated as a string (e.g. in print $@).</p>
+</dd>
+<dt><strong><a name="dump" class="item">dump</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="keyword">print</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">dump</span><span class="operator">();</span>
+</pre>
+<p>This function serializes an XML::LibXML::Error to a string displaying all
+fields of the error structure individually on separate lines of the form 'name'
+=&gt; 'value'.</p>
+</dd>
+<dt><strong><a name="domain" class="item">domain</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$error_domain</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">domain</span><span class="operator">();</span>
+</pre>
+<p>Returns string containing information about what part of the library raised the
+error. Can be one of: &quot;parser&quot;, &quot;tree&quot;, &quot;namespace&quot;, &quot;validity&quot;, &quot;HTML parser&quot;,
+&quot;memory&quot;, &quot;output&quot;, &quot;I/O&quot;, &quot;ftp&quot;, &quot;http&quot;, &quot;XInclude&quot;, &quot;XPath&quot;, &quot;xpointer&quot;,
+&quot;regexp&quot;, &quot;Schemas datatype&quot;, &quot;Schemas parser&quot;, &quot;Schemas validity&quot;, &quot;Relax-NG
+parser&quot;, &quot;Relax-NG validity&quot;, &quot;Catalog&quot;, &quot;C14N&quot;, &quot;XSLT&quot;, &quot;validity&quot;.</p>
+</dd>
+<dt><strong><a name="code" class="item">code</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$error_code</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">code</span><span class="operator">();</span>
+</pre>
+<p>Returns the actual libxml2 error code. The XML::LibXML::ErrNo module defines
+constants for individual error codes. Currently libxml2 uses over 480 different
+error codes.</p>
+</dd>
+<dt><strong><a name="message" class="item">message</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$error_message</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">message</span><span class="operator">();</span>
+</pre>
+<p>Returns a human-readable informative error message.</p>
+</dd>
+<dt><strong><a name="level" class="item">level</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$error_level</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">level</span><span class="operator">();</span>
+</pre>
+<p>Returns an integer value describing how consequent is the error.
+XML::LibXML::Error defines the following constants:</p>
+<ul>
+<li>
+<p>XML_ERR_NONE = 0</p>
+</li>
+<li>
+<p>XML_ERR_WARNING = 1 : A simple warning.</p>
+</li>
+<li>
+<p>XML_ERR_ERROR = 2 : A recoverable error.</p>
+</li>
+<li>
+<p>XML_ERR_FATAL = 3 : A fatal error.</p>
+</li>
+</ul>
+</dd>
+<dt><strong><a name="file" class="item">file</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$filename</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">file</span><span class="operator">();</span>
+</pre>
+<p>Returns the filename of the file being processed while the error occurred.</p>
+</dd>
+<dt><strong><a name="line" class="item">line</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$line</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">line</span><span class="operator">();</span>
+</pre>
+<p>The line number, if available.</p>
+</dd>
+<dt><strong><a name="nodename" class="item">nodename</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$nodename</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">nodename</span><span class="operator">();</span>
+</pre>
+<p>Name of the node where error occurred, if available. When this field is
+non-empty, libxml2 actually returned a physical pointer to the specified node.
+Due to memory management issues, it is very difficult to implement a way to
+expose the pointer to the Perl level as a XML::LibXML::Node. For this reason,
+XML::LibXML::Error currently only exposes the name the node.</p>
+</dd>
+<dt><strong><a name="str1" class="item">str1</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$error_str1</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">str1</span><span class="operator">();</span>
+</pre>
+<p>Error specific. Extra string information.</p>
+</dd>
+<dt><strong><a name="str2" class="item">str2</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$error_str2</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">str2</span><span class="operator">();</span>
+</pre>
+<p>Error specific. Extra string information.</p>
+</dd>
+<dt><strong><a name="str3" class="item">str3</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$error_str3</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">str3</span><span class="operator">();</span>
+</pre>
+<p>Error specific. Extra string information.</p>
+</dd>
+<dt><strong><a name="num1" class="item">num1</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$error_num1</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">num1</span><span class="operator">();</span>
+</pre>
+<p>Error specific. Extra numeric information.</p>
+</dd>
+<dt><strong><a name="num2" class="item">num2</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$error_num2</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">num2</span><span class="operator">();</span>
+</pre>
+<p>In recent libxml2 versions, this value contains a column number of the error or
+0 if N/A.</p>
+</dd>
+<dt><strong><a name="context" class="item">context</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$string</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">context</span><span class="operator">();</span>
+</pre>
+<p>For parsing errors, this field contains about 80 characters of the XML near the
+place where the error occurred. The field <a href="#column"><code>$@-&gt;column()</code></a> contains the corresponding offset. Where N/A, the field is undefined.</p>
+</dd>
+<dt><strong><a name="column" class="item">column</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$offset</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">column</span><span class="operator">();</span>
+</pre>
+<p>See <a href="#column"><code>$@-&gt;column()</code></a> above.</p>
+</dd>
+<dt><strong><a name="_prev" class="item">_prev</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$previous_error</span> <span class="operator">=</span> <span class="variable">$@</span><span class="operator">-&gt;</span><span class="variable">_prev</span><span class="operator">();</span>
+</pre>
+<p>This field can possibly hold a reference to another XML::LibXML::Error object
+representing an error which occurred just before this error.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Matt Sergeant,
+Christian Glahn,
+Petr Pajas</p>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p>2.0019</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>2001-2007, AxKit.com Ltd.</p>
+<p>2002-2006, Christian Glahn.</p>
+<p>2006-2009, Petr Pajas.</p>
+
+</body>
+
+</html>

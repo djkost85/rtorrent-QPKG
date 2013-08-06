@@ -1,0 +1,279 @@
+body {
+/*    background-image: url('/torrent/static/space1.png');*/
+    background-color: rgb(68, 68 ,68); 
+    color: #fff;
+    font: 12px/18px "Liberation Sans", Arial, Verdana, Sans;
+    margin: 0;
+    padding: 0;
+}
+
+img.bg {
+    background-size: 100%;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: -1;
+    margin-top: -20px;
+}
+
+header {
+    background-color: rgba(85, 85, 85, {{ trans }});
+    color: #fff;
+    font-weight: bold;
+
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+
+    margin: 1em;
+    padding-left: 1em;
+}
+
+span.logo {
+    font-size: 22px;
+    line-height: 33px;
+    margin-right: 10px;
+}
+
+#torrent_list {
+/*    margin: 20px 0 0 0; */
+    margin: 1em;
+    padding: 0;
+
+}
+
+div.torrent_list_wiz {
+    background-color: rgba(102, 102, 102, {{trans}});
+    padding: 1em;
+
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+#torrent_list ul {
+    margin: 0em;
+    padding: 0;
+
+}
+
+#torrent_list li {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding: 2px 6px;
+    list-style: none;
+
+
+    /*
+    border: 2em;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    */
+}
+
+
+span.up {
+    color: #0CC;
+}
+
+span.down {
+    color: #C90;
+}
+
+h1.target_header {
+    padding-top: 1em;
+}
+
+div.target_header_bottom {
+    padding-bottom: 1em;
+}
+
+span.ip {
+    color: #fff;
+    font-weight: bold;
+}
+
+span.upload_rate, span.download_rate, span.progress {
+    clear: none;
+    display: inline-block;
+    right: 0%;
+    text-align: right;
+    float: right;
+}
+
+span.progress {
+    border: 1px solid #272;
+    width: 140px;
+    height: 14px;
+    line-height: 16px;
+
+    /*
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    */
+
+    /*color: #000; #aaa; */
+    margin-right: 0px;
+
+    color: #eee;
+}
+
+span.progress_text {
+    /*
+    position: absolute;
+    right: 30px;
+    */
+    display: clear;
+    /*text-align: right;*/
+    width: 100%;
+    /* z-index: 2; */
+
+    /* meridion adds */
+    float: right;
+    min-width: 100%;
+    z-index: -1;
+
+    color: #eee;
+}
+
+span.progress_bar {
+    position: absolute;
+    max-width: 140px;
+    background-color: rgba(50, 200, 60, {{trans}});
+    /*width: 10px; */
+    height: 14px;
+    /* float: left; */
+    /*z-index: 1; */
+    /* z-index: 1; */
+}
+
+a {
+    color: #fff;
+    text-decoration: none;
+    /* meridion adds */
+    z-index: 100;
+}
+
+a:link {
+    color: #fff;
+}
+
+a:hover {
+    color: #888;
+    text-decoration: underline;
+}
+
+div.target_info {
+    background-color: rgba(34, 34, 34, 0.2);
+    color: #fff;
+
+    border: 2em;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    
+    margin-bottom: 2em;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 1em;
+}
+
+div.inner_target_info {
+    margin: 2em;
+
+    font-size: 14px;
+    font-weight: bold;
+
+}
+
+li.torrent_complete {
+    background-color: rgba(183, 74, 74, {{trans}});
+    /*background-color: rgba(34, 153, 34, {{trans}});*/
+
+    border: 0;
+    padding: 1px 5px;
+}
+
+li.torrent_incomplete {
+    background-color: rgba(190, 190, 240, {{trans}});
+
+    border: 0;
+    z-index: 2;
+}
+
+li.torrent_incomplete:hover, li.torrent_complete:hover {
+    background-color: rgba(0, 0, 0, 0.0); /* Fully transparent background */
+}
+
+
+span.download_icon, span.upload_icon {
+    float: right;
+    height: 16px;
+    width: 16px;
+    margin-left: 0em;
+    margin-right: 1em;
+}
+
+span.download_icon {
+    background: transparent url({{ url_for('static', filename='icons/arrow_down.png') }} );
+}
+span.upload_icon {
+    background: transparent url({{ url_for('static', filename='icons/arrow_up.png') }} );
+}
+
+span.add_torrent_icon {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+
+    background: transparent url({{ url_for('static', filename='icons/add.png') }} );
+}
+
+div.torrent-def-div {
+    background-color: rgba(100, 100, 100, {{trans}});
+   /* background-color: rgba(34, 34, 34, {{trans}});*/
+    color: #fff;
+
+    margin-top: 2em;
+    padding: 1em;
+    border: 2em;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+div.flashes {
+    background-color: rgba(240, 240, 240, {{trans}});
+
+    margin: 1em;
+    padding: 1em;
+    border: 2em;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+
+}
+
+div.torrentfile-div {
+    background-color: rgba(150, 150, 150, 0.1);
+   /* background-color: rgba(34, 34, 34, {{trans}});*/
+    color: #fff;
+
+    margin-top: 2em;
+    padding: 1em;
+    border: 2em;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+/* Form styling */
+
+input, input.file {
+    background-color: rgba(0, 0, 0, 0.0);
+    color: #FFFFFF;
+}
+
+/* Hack from
+http://www.dreamincode.net/forums/topic/15621-styling-a-file-browse-button/
+*/
+input.hide {
+    position: absolute;
+    left: -137px;
+    opacity: 0;
+    z-index: 2;
+}

@@ -1,0 +1,44 @@
+#!/usr/bin/env sh
+: ${DEBUG:=1}
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include defined
+include xcmdlog
+
+#
+# Replace some text inside a string.
+#
+function utils_str_replace () {
+    local ORIG="$1"
+    local DEST="$2"
+    local DATA="$3"
+
+    echo "$DATA" | sed "s/$ORIG/$DEST/g"
+}
+
+#
+# Replace string of text in file.
+# Uses the ed editor to replace the string.
+#
+# arg1 = string to be matched
+# arg2 = new string that replaces matched string
+# arg3 = file to operate on.
+#
+function utils_str_replace_in_file () {
+    local ORIG="$1"
+    local DEST="$2"
+    local FILE="$3"
+
+    has_value FILE.
+    die_if_false $? "Empty argument 'file'"
+    file_exists "$FILE"
+    die_if_false $? "File does not exist"
+
+    printf ",s/$ORIG/$DEST/g\nw\nQ" | ed -s "$FILE" > /dev/null 2>&1
+    return "$?"
+}
+
+

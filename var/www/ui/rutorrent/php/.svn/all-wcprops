@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/2332/trunk/rutorrent/php
+END
+Torrent.php
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2288/trunk/rutorrent/php/Torrent.php
+END
+getsettings.php
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/2285/trunk/rutorrent/php/getsettings.php
+END
+settings.php
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/2115/trunk/rutorrent/php/settings.php
+END
+test.sh
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2189/trunk/rutorrent/php/test.sh
+END
+cache.php
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2115/trunk/rutorrent/php/cache.php
+END
+initplugins.php
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/2115/trunk/rutorrent/php/initplugins.php
+END
+xmlrpc.php
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/2115/trunk/rutorrent/php/xmlrpc.php
+END
+addtorrent.php
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/2332/trunk/rutorrent/php/addtorrent.php
+END
+setsettings.php
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/2285/trunk/rutorrent/php/setsettings.php
+END
+Snoopy.class.inc
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/2211/trunk/rutorrent/php/Snoopy.class.inc
+END
+util.php
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2308/trunk/rutorrent/php/util.php
+END
+rtorrent.php
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/2300/trunk/rutorrent/php/rtorrent.php
+END
+getplugins.php
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/2115/trunk/rutorrent/php/getplugins.php
+END
+lfs.php
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2115/trunk/rutorrent/php/lfs.php
+END
+doneplugins.php
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/2305/trunk/rutorrent/php/doneplugins.php
+END
+lock.php
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2115/trunk/rutorrent/php/lock.php
+END

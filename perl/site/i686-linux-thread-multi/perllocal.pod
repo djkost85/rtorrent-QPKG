@@ -1,0 +1,352 @@
+=head2 Tue Sep 13 06:48:55 2011: C<Module> L<Irssi|Irssi>
+
+=over 4
+
+=item *
+
+C<installed into: /usr/bin/rtorrent/perl/site>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.9>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 13 06:48:55 2011: C<Module> L<Irssi::Irc|Irssi::Irc>
+
+=over 4
+
+=item *
+
+C<installed into: /usr/bin/rtorrent/perl/site>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.9>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 13 06:48:56 2011: C<Module> L<Irssi::UI|Irssi::UI>
+
+=over 4
+
+=item *
+
+C<installed into: /usr/bin/rtorrent/perl/site>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.9>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 13 06:48:56 2011: C<Module> L<Irssi::TextUI|Irssi::TextUI>
+
+=over 4
+
+=item *
+
+C<installed into: /usr/bin/rtorrent/perl/site>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.9>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 13 06:54:41 2011: C<Module> L<Irssi|Irssi>
+
+=over 4
+
+=item *
+
+C<installed into: /usr/bin/rtorrent/perl/site>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.9>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 13 06:54:41 2011: C<Module> L<Irssi::Irc|Irssi::Irc>
+
+=over 4
+
+=item *
+
+C<installed into: /usr/bin/rtorrent/perl/site>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.9>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 13 06:54:41 2011: C<Module> L<Irssi::UI|Irssi::UI>
+
+=over 4
+
+=item *
+
+C<installed into: /usr/bin/rtorrent/perl/site>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.9>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 13 06:54:41 2011: C<Module> L<Irssi::TextUI|Irssi::TextUI>
+
+=over 4
+
+=item *
+
+C<installed into: /usr/bin/rtorrent/perl/site>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.9>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 13 07:05:53 2011: C<Module> L<Irssi|Irssi>
+
+=over 4
+
+=item *
+
+C<installed into: /usr/bin/rtorrent/perl/site>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.9>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 13 07:05:53 2011: C<Module> L<Irssi::Irc|Irssi::Irc>
+
+=over 4
+
+=item *
+
+C<installed into: /usr/bin/rtorrent/perl/site>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.9>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 13 07:05:54 2011: C<Module> L<Irssi::UI|Irssi::UI>
+
+=over 4
+
+=item *
+
+C<installed into: /usr/bin/rtorrent/perl/site>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.9>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 13 07:05:54 2011: C<Module> L<Irssi::TextUI|Irssi::TextUI>
+
+=over 4
+
+=item *
+
+C<installed into: /usr/bin/rtorrent/perl/site>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.9>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 13 07:39:52 2011: C<Module> L<Irssi|Irssi>
+
+=over 4
+
+=item *
+
+C<installed into: /usr/bin/rtorrent/perl/site>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.9>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 13 07:39:52 2011: C<Module> L<Irssi::Irc|Irssi::Irc>
+
+=over 4
+
+=item *
+
+C<installed into: /usr/bin/rtorrent/perl/site>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.9>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 13 07:39:52 2011: C<Module> L<Irssi::UI|Irssi::UI>
+
+=over 4
+
+=item *
+
+C<installed into: /usr/bin/rtorrent/perl/site>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.9>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 13 07:39:53 2011: C<Module> L<Irssi::TextUI|Irssi::TextUI>
+
+=over 4
+
+=item *
+
+C<installed into: /usr/bin/rtorrent/perl/site>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.9>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+

@@ -1,0 +1,11 @@
+/usr/bin/rtorrent/perl/html/bin/json_xs.html
+/usr/bin/rtorrent/perl/html/site/lib/JSON/XS.html
+/usr/bin/rtorrent/perl/html/site/lib/JSON/XS/Boolean.html
+/usr/bin/rtorrent/perl/site/bin/json_xs
+/usr/bin/rtorrent/perl/site/lib/JSON/XS.pm
+/usr/bin/rtorrent/perl/site/lib/JSON/XS/Boolean.pm
+/usr/bin/rtorrent/perl/site/lib/auto/JSON/XS/XS.bs
+/usr/bin/rtorrent/perl/site/lib/auto/JSON/XS/XS.so
+/usr/bin/rtorrent/perl/site/man/man1/json_xs.1
+/usr/bin/rtorrent/perl/site/man/man3/JSON::XS.3
+/usr/bin/rtorrent/perl/site/man/man3/JSON::XS::Boolean.3

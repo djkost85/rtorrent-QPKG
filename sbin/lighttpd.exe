@@ -1,0 +1,23 @@
+#!/bin/sh
+
+export PATH="/usr/bin/rtorrent/bin:/usr/bin/rtorrent/sbin:$PATH"
+export LD_RUN_PATH="/usr/bin/rtorrent/lib"
+export LD_LIBRARY_PATH="/usr/bin/rtorrent/lib"
+
+BASEROOT=/usr/bin/rtorrent
+LOG_PATH=/share/Download/rtorrent/logs
+
+export > $LOG_PATH/httpd.export
+env > $LOG_PATH/httpd.env
+
+CMD_TEE=$BASEROOT/bin/tee
+if [ ! -f "$BASEROOT/bin/tee" ] || [ ! -x "$BASEROOT/bin/tee" ];
+then
+	CMD_TEE=tee
+fi
+
+$BASEROOT/sbin/lighttpd -f $BASEROOT/etc/lighttpd/lighttpd.conf 2>&1 | $CMD_TEE $LOG_PATH/httpd.out
+RETVAL=${PIPESTATUS[0]}
+exit $RETVAL
+
+

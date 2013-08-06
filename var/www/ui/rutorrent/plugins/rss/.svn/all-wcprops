@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/2325/trunk/plugins/rss
+END
+action.php
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2119/trunk/plugins/rss/action.php
+END
+ie.css
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2162/trunk/plugins/rss/ie.css
+END
+update.php
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2115/trunk/plugins/rss/update.php
+END
+plugin.info
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2255/trunk/plugins/rss/plugin.info
+END
+init.php
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/2115/trunk/plugins/rss/init.php
+END
+conf.php
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/2306/trunk/plugins/rss/conf.php
+END
+done.php
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/2115/trunk/plugins/rss/done.php
+END
+rss.php
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/2306/trunk/plugins/rss/rss.php
+END
+init.js
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/2261/trunk/plugins/rss/init.js
+END
+rss.css
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/2162/trunk/plugins/rss/rss.css
+END

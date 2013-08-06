@@ -1,0 +1,184 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::Attr - XML::LibXML Attribute Class</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::Attr - XML::LibXML Attribute Class</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::Attr - XML::LibXML Attribute Class</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML</span><span class="operator">;</span>
+  <span class="comment"># Only methods specific to Attribute nodes are listed here,</span>
+  <span class="comment"># see XML::LibXML::Node manpage for other methods</span>
+</pre>
+<pre>
+  <span class="variable">$attr</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Attr</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="variable">$name</span> <span class="operator">[</span><span class="operator">,</span><span class="variable">$value</span><span class="operator">]</span><span class="operator">);</span>
+  <span class="variable">$string</span> <span class="operator">=</span> <span class="variable">$attr</span><span class="operator">-&gt;</span><span class="variable">getValue</span><span class="operator">();</span>
+  <span class="variable">$string</span> <span class="operator">=</span> <span class="variable">$attr</span><span class="operator">-&gt;</span><span class="variable">value</span><span class="operator">;</span>
+  <span class="variable">$attr</span><span class="operator">-&gt;</span><span class="variable">setValue</span><span class="operator">(</span> <span class="variable">$string</span> <span class="operator">);</span>
+  <span class="variable">$node</span> <span class="operator">=</span> <span class="variable">$attr</span><span class="operator">-&gt;</span><span class="variable">getOwnerElement</span><span class="operator">();</span>
+  <span class="variable">$attr</span><span class="operator">-&gt;</span><span class="variable">setNamespace</span><span class="operator">(</span><span class="variable">$nsURI</span><span class="operator">,</span> <span class="variable">$prefix</span><span class="operator">);</span>
+  <span class="variable">$bool</span> <span class="operator">=</span> <span class="variable">$attr</span><span class="operator">-&gt;</span><span class="variable">isId</span><span class="operator">;</span>
+  <span class="variable">$string</span> <span class="operator">=</span> <span class="variable">$attr</span><span class="operator">-&gt;</span><span class="variable">serializeContent</span><span class="operator">;</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This is the interface to handle Attributes like ordinary nodes. The naming of
+the class relies on the W3C DOM documentation.</p>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>The class inherits from <a href="../../../../.cpan/build/XML-LibXML-2.0019-zIu9KV/blib/lib/XML/LibXML/Node.html">the XML::LibXML::Node manpage</a>. The documentation for Inherited methods is not listed here.</p>
+<p>Many functions listed here are extensively documented in the DOM Level 3 specification (<a href="http://www.w3.org/TR/DOM-Level-3-Core/">http://www.w3.org/TR/DOM-Level-3-Core/</a>). Please refer to the specification for extensive documentation.</p>
+<dl>
+<dt><strong><a name="new" class="item">new</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$attr</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Attr</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="variable">$name</span> <span class="operator">[</span><span class="operator">,</span><span class="variable">$value</span><span class="operator">]</span><span class="operator">);</span>
+</pre>
+<p>Class constructor. If you need to work with ISO encoded strings, you should <em>always </em>&gt;&gt;&gt;&gt;&gt; use the <code>createAttribute</code> of <a href="../../../../.cpan/build/XML-LibXML-2.0019-zIu9KV/blib/lib/XML/LibXML/Document.html">the XML::LibXML::Document manpage</a>.</p>
+</dd>
+<dt><strong><a name="getvalue" class="item">getValue</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$string</span> <span class="operator">=</span> <span class="variable">$attr</span><span class="operator">-&gt;</span><span class="variable">getValue</span><span class="operator">();</span>
+</pre>
+<p>Returns the value stored for the attribute. If undef is returned, the attribute
+has no value, which is different of being <code>not specified</code>.</p>
+</dd>
+<dt><strong><a name="value" class="item">value</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$string</span> <span class="operator">=</span> <span class="variable">$attr</span><span class="operator">-&gt;</span><span class="variable">value</span><span class="operator">;</span>
+</pre>
+<p>Alias for <em>getValue() </em>&gt;&gt;&gt;&gt;&gt;</p>
+</dd>
+<dt><strong><a name="setvalue" class="item">setValue</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$attr</span><span class="operator">-&gt;</span><span class="variable">setValue</span><span class="operator">(</span> <span class="variable">$string</span> <span class="operator">);</span>
+</pre>
+<p>This is needed to set a new attribute value. If ISO encoded strings are passed
+as parameter, the node has to be bound to a document, otherwise the encoding
+might be done incorrectly.</p>
+</dd>
+<dt><strong><a name="getownerelement" class="item">getOwnerElement</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$node</span> <span class="operator">=</span> <span class="variable">$attr</span><span class="operator">-&gt;</span><span class="variable">getOwnerElement</span><span class="operator">();</span>
+</pre>
+<p>returns the node the attribute belongs to. If the attribute is not bound to a
+node, undef will be returned. Overwriting the underlying implementation, the <em>parentNode </em>&gt;&gt;&gt;&gt;&gt; function will return undef, instead of the owner element.</p>
+</dd>
+<dt><strong><a name="setnamespace" class="item">setNamespace</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$attr</span><span class="operator">-&gt;</span><span class="variable">setNamespace</span><span class="operator">(</span><span class="variable">$nsURI</span><span class="operator">,</span> <span class="variable">$prefix</span><span class="operator">);</span>
+</pre>
+<p>This function tries to bound the attribute to a given namespace. If <code>$nsURI</code> is undefined or empty, the function discards any previous association of the
+attribute with a namespace. If the namespace was not previously declared in the
+context of the attribute, this function will fail. In this case you may wish to
+call <a href="#setnamespace"><code>setNamespace()</code></a> on the ownerElement. If the namespace URI is non-empty and
+declared in the context of the attribute, but only with a different (non-empty)
+prefix, then the attribute is still bound to the namespace but gets a different
+prefix than <code>$prefix</code>. The function also fails if the prefix is empty but the namespace URI is not
+(because unprefixed attributes should by definition belong to no namespace).
+This function returns 1 on success, 0 otherwise.</p>
+</dd>
+<dt><strong><a name="isid" class="item">isId</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$bool</span> <span class="operator">=</span> <span class="variable">$attr</span><span class="operator">-&gt;</span><span class="variable">isId</span><span class="operator">;</span>
+</pre>
+<p>Determine whether an attribute is of type ID. For documents with a DTD, this
+information is only available if DTD loading/validation has been requested. For
+HTML documents parsed with the HTML parser ID detection is done automatically.
+In XML documents, all &quot;xml:id&quot; attributes are considered to be of type ID.</p>
+</dd>
+<dt><strong><a name="serializecontent" class="item"><code>serializeContent($docencoding)</code></a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$string</span> <span class="operator">=</span> <span class="variable">$attr</span><span class="operator">-&gt;</span><span class="variable">serializeContent</span><span class="operator">;</span>
+</pre>
+<p>This function is not part of DOM API. It returns attribute content in the form
+in which it serializes into XML, that is with all meta-characters properly
+quoted and with raw entity references (except for entities expanded during
+parse time). Setting the optional $docencoding flag to 1 enforces document
+encoding for the output string (which is then passed to Perl as a byte string).
+Otherwise the string is passed to Perl as (UTF-8 encoded) characters.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Matt Sergeant,
+Christian Glahn,
+Petr Pajas</p>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p>2.0019</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>2001-2007, AxKit.com Ltd.</p>
+<p>2002-2006, Christian Glahn.</p>
+<p>2006-2009, Petr Pajas.</p>
+
+</body>
+
+</html>

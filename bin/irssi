@@ -1,0 +1,12 @@
+#!/bin/sh
+
+#source /usr/bin/rtorrent/bin/rtorrent.env
+
+EXEC="/${RT_INSTALLDIR}/bin/irssi-main --home=/usr/bin/rtorrent/root/.irssi $*"
+
+echo "--irssi-exec: $EXEC"
+$EXEC
+
+
+
+

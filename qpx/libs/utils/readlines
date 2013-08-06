@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+
+# void utils_readlines (string avar, [uint <starting index>])
+#
+# Reads lines from input and save it to an array.
+#
+if [[ BASH_VERSINFO[0] -ge 4 ]]; then
+	function utils_readlines {
+		if [[ -n $2 && $2 -gt 0 ]]; then
+			readarray -t -O "$2" "$1"
+		else
+			readarray -t "$1"
+		fi
+	}
+else
+	function utils_readlines {
+		local REPLY
+		local -i I=${2:-0}
+		eval "while read; do $1[I++]=\$REPLY; done"
+	}
+fi
+
+
+# Notes:
+#
+# * Return of readarray does not depend on lines read; there's also no
+#   way we can directly tell the total lines read in any of readarray's
+#   features (options).
+#
+# * It seems that "eval "while read $1\\[I++\\]; do ...; done"" does not
+#   work properly with non-delimited lines (no '\n').
+#   e.g. 'echo -n ... | read VAR\[I++\]'

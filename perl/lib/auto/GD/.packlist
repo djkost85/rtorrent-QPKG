@@ -1,0 +1,14 @@
+/usr/bin/rtorrent/perl/lib/GD.pm
+/usr/bin/rtorrent/perl/lib/GD/Group.pm
+/usr/bin/rtorrent/perl/lib/GD/Image.pm
+/usr/bin/rtorrent/perl/lib/GD/Polygon.pm
+/usr/bin/rtorrent/perl/lib/GD/Polyline.pm
+/usr/bin/rtorrent/perl/lib/GD/Simple.pm
+/usr/bin/rtorrent/perl/lib/auto/GD/GD.bs
+/usr/bin/rtorrent/perl/lib/auto/GD/GD.so
+/usr/bin/rtorrent/perl/lib/auto/GD/autosplit.ix
+/usr/bin/rtorrent/perl/man/man3/GD.3
+/usr/bin/rtorrent/perl/man/man3/GD::Image.3
+/usr/bin/rtorrent/perl/man/man3/GD::Polygon.3
+/usr/bin/rtorrent/perl/man/man3/GD::Polyline.3
+/usr/bin/rtorrent/perl/man/man3/GD::Simple.3

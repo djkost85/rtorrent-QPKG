@@ -1,0 +1,1060 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include array.sort
+include defaults
+include globals
+include patterns
+include useextglob
+include utils/parawrap
+
+# A portable command-line arguments handler.
+
+# NEXT FEATURE: Add support for the '--long-options=*' format.
+
+CL_OPTIONS=()
+CL_OPTIONS_EXPR=()
+CL_OPTIONS_VAR=()
+CL_OPTIONS_VAR_VALUE=()
+CL_OPTIONS_VAR_DEFAULTVALUE=true
+CL_OPTIONS_HASARGS=()
+CL_OPTIONS_HASARGS_OPTIONAL=()
+CL_OPTIONS_HASARGS_AVAR=()
+CL_OPTIONS_HASARGS_TYPE_I=()
+CL_OPTIONS_HASARGS_TYPE_U=()
+CL_OPTIONS_HASARGS_TYPE_F=()
+CL_OPTIONS_HASARGS_TYPE_D=()
+CL_OPTIONS_HASARGS_TYPE_E=()
+CL_OPTIONS_HASARGS_QUANT=()
+CL_OPTIONS_HASARGS_MIN=()
+CL_OPTIONS_HASARGS_MAX=()
+CL_OPTIONS_HASARGS_APPENDONRPEAT=()
+CL_OPTIONS_PARSER=()
+CL_OPTIONS_ALLOWREPEAT=()
+CL_OPTIONS_HELP_SYNTAX=()
+CL_OPTIONS_HELP_DESC=()
+CL_OPTIONS_FOUND=()
+CL_OPTIONS_COUNT=0
+
+CL_COMMANDS=()
+CL_COMMANDS_EXPR=()
+CL_COMMANDS_FUNCTION=()
+CL_COMMANDS_HELP_SYNTAX=()
+CL_COMMANDS_HELP_DESC=()
+CL_COMMANDS_COUNT=0
+
+CL_FILESANDDIRS_ARRAYVAR=''
+CL_FILESANDDIRS_FOUND=()
+
+CL_HELPINFO=''
+CL_HELPINFO_COLUMNS=78
+CL_HELPINFO_OPTIONS_LEFTMARGINSIZE=3
+CL_HELPINFO_OPTIONS_DIVIDERSIZE=2
+CL_HELPINFO_OPTIONS_RIGHTMARGINSIZE=2
+CL_HELPINFO_OPTIONS_SORT=true
+CL_HELPINFO_COMMANDS_SYNTAXMARGINSIZE=0
+CL_HELPINFO_COMMANDS_DESCMARGINSIZE=3
+CL_HELPINFO_COMMANDS_SORT=true
+CL_HELPINFO_PROGRAMINFO=()
+
+
+####  Registrations  ####
+
+
+# cl_options_register
+# (
+# 	EXPR,
+# 	["-var:", VARIABLE, ["value=" (VALUE = "true")]],
+# 	["-hasargs[":", ["avar=" ARRAYVARIABLE], ["optional"], ["type=<[i],[u],[f],[d],[e]>"], [RANGE = 1], "appendonrepeat"]],
+# 	["-parser:", PARSERFUNCTION],
+# 	["-allowrepeat"],
+# 	["-help:", SYNTAX, DESC]
+# )
+#
+# Registers the options.
+#
+function cl_options_register {
+	local -i ID=CL_OPTIONS_COUNT++
+	CL_OPTIONS[ID]=$ID
+	CL_OPTIONS_EXPR[ID]=$1
+	shift
+
+	local TYPES TYPE
+	local -i I J
+
+	while [[ $# -ge 1 ]]; do
+		case "$1" in
+		-var:)
+			CL_OPTIONS_VAR[ID]=$2
+			shift 2
+			if [[ $1 == @(value=*) ]]; then
+				CL_OPTIONS_VAR_VALUE[ID]=${1#value=}
+				shift
+			fi
+			;;
+		-hasargs)
+			CL_OPTIONS_HASARGS[ID]=true
+			CL_OPTIONS_HASARGS_QUANT[ID]=1
+			shift
+			;;
+		-hasargs:)
+			CL_OPTIONS_HASARGS[ID]=true
+			CL_OPTIONS_HASARGS_QUANT[ID]=1
+			while shift; do
+				case "$1" in
+				optional)
+					CL_OPTIONS_HASARGS_OPTIONAL[ID]=true
+					continue
+					;;
+				avar=*)
+					CL_OPTIONS_HASARGS_AVAR[ID]=${1#avar=}
+					;;
+				type=*)
+					TYPES=${1#type=}
+					if [[ -z $TYPES ]]; then
+						echo "cl_options_register: Option \"-hasargs: type\" has no argument."
+						exit 1
+					fi
+					for (( I = 0, J = ${#TYPES}; I < J; I++ )); do
+						case "${TYPES:I:1}" in
+						i)
+							CL_OPTIONS_HASARGS_TYPE_I[ID]=true
+							;;
+						u)
+							CL_OPTIONS_HASARGS_TYPE_U[ID]=true
+							;;
+						f)
+							CL_OPTIONS_HASARGS_TYPE_F[ID]=true
+							;;
+						d)
+							CL_OPTIONS_HASARGS_TYPE_D[ID]=true
+							;;
+						e)
+							CL_OPTIONS_HASARGS_TYPE_E[ID]=true
+							;;
+						*)
+							echo "cl_options_register: Invalid argument for \"-hasargs type\": ${TYPES:I:1}"
+							exit 1
+							;;
+						esac
+					done
+					continue
+					;;
+				$PATTERNS_NUMBER)
+					if [[ $1 -eq 0 ]]; then
+						echo "cl_options_register: Number of option's arguments cannot be 0."
+						exit 1
+					fi
+					CL_OPTIONS_HASARGS_QUANT[ID]=$1
+					continue
+					;;
+				$PATTERNS_NUMBER-$PATTERNS_NUMBER)
+					MIN=${1#*-} MAX=${1%-*}
+					[[ MIN -gt MAX ]] && (( MIN=$MAX, MAX=$MIN ))
+					if [[ MAX -eq 0 ]]; then
+						echo "cl_options_register: Maximum number of option's arguments cannot be 0."
+						exit 1
+					fi
+					[[ MIN -eq MAX ]] && QUANT=$MIN
+					;;
+				appendonrepeat)
+					CL_OPTIONS_HASARGS_APPENDONRPEAT[ID]=true
+					;;
+				*)
+					echo "cl_options_register: Invalid argument for \"-hasargs\": $1"
+					;;
+				esac
+				break
+			done
+			;;
+		-parser:)
+			CL_OPTIONS_PARSER[ID]=$2
+			shift 2
+			;;
+		-allowrepeat)
+			CL_OPTIONS_ALLOWREPEAT[ID]=true
+			shift
+			;;
+		-help:)
+			CL_OPTIONS_HELP_SYNTAX[ID]=$2
+			CL_OPTIONS_HELP_DESC[ID]=$3
+			shift && shift && shift
+			;;
+		*)
+			echo "cl_options_register: Invalid argument: $1"
+			exit 1
+			;;
+		esac
+	done
+}
+
+
+# cl_commands_register (EXPR, FUNCTION, [HELPINFOSYNTAX, [HELPINFODESC]])
+#
+# Registers the commands.
+#
+function cl_commands_register {
+	assume "$# -ge 2 && $# -le 4"
+
+	local -i ID
+	(( ID = CL_COMMANDS_COUNT++ ))
+	CL_COMMANDS[ID]=$ID
+	CL_COMMANDS_EXPR[ID]=$1
+	CL_COMMANDS_FUNCTION[ID]=$2
+	[[ $# -ge 3 ]] && CL_COMMANDS_HELP_SYNTAX[ID]=$3
+	[[ $# -ge 4 ]] && CL_COMMANDS_HELP_DESC[ID]=$4
+}
+
+
+# cl_filesanddirs_useavar (string avar)
+#
+# Sets the array variable that will be used for saving found files and directories.
+#
+function cl_filesanddirs_useavar {
+	assume "\$2 == $PATTERNS_ARRAYVARNAME" "$1" -- "Not a valid array variable name: $1"
+	CL_FILESANDDIRS_ARRAYVAR=$1
+}
+
+
+####  Command-line parsing ####
+
+
+# void cl_parse (...)
+#
+# The main command-line parsing function.
+#
+function cl_parse {
+	local PARSER
+
+	cl_generateparser
+
+	[[ $DEBUG = true ]] && echo "$__" > "${GLOBALS_USERDEBUGDIR:-.}/cl-parser.sh"
+
+	eval "function cl_parse $__"
+
+	cl_parse "$@"
+}
+
+
+# void cl_generateparser (void)
+#
+# Generates the parser.
+#
+# > string __ = generated parser
+#
+function cl_generateparser {
+	local -a TEXT
+	local -i T=0
+
+	# Start
+
+	TEXT[T++]="{"
+
+	# Variables
+
+	TEXT[T++]='	local -i I J K FOUNDARGS FD=0'
+	TEXT[T++]='	local KEY VALID'
+
+	# Sub-Functions
+
+	local HASOPTIONS HASCOMMANDS
+
+	[[ ${#CL_OPTIONS[@]} -gt 0 ]] && HASOPTIONS=true || HASOPTIONS=false
+	[[ ${#CL_COMMANDS[@]} -gt 0 ]] && HASCOMMANDS=true || HASCOMMANDS=false
+
+	local IFS=$DEFAULTS_IFS
+
+	if [[ $HASOPTIONS = true ]]; then
+		if [[ $HASCOMMANDS = true ]]; then
+			IFS=\|
+			TEXT[T++]='	function cl_isavalidcommand { [[ $1 == @('"${CL_COMMANDS_EXPR[*]}"') ]]; return; }'
+			IFS=$DEFAULTS_IFS
+		else
+			TEXT[T++]='	function cl_isavalidcommand { return 1; }'
+		fi
+	fi
+
+	# Loop Start
+
+	TEXT[T++]='	for (( I = 1; I <= $#; I++ )); do'
+	TEXT[T++]='		KEY=${!I}'
+
+	# Options
+
+	if [[ $HASOPTIONS = true ]]; then
+
+		TEXT[T++]='		if [[ ${KEY:0:1} = - ]]; then'
+		TEXT[T++]='			case "$KEY" in'
+
+		local -i ID
+
+		for ID in "${!CL_OPTIONS[@]}"; do
+
+			# VAR
+
+			local OPTION_VAR OPTION_HASVAR
+
+			OPTION_VAR=${CL_OPTIONS_VAR[ID]}
+
+			[[ -n $OPTION_VAR ]] && OPTION_HASVAR=true || OPTION_HASVAR=false
+
+			# VALUE
+
+			local OPTION_VAR_VALUE OPTION_VAR_HASVALUE
+
+			OPTION_VAR_VALUE=${CL_OPTIONS_VAR_VALUE[ID]}
+
+			[[ -n $OPTION_VAR_VALUE ]] && OPTION_VAR_HASVALUE=true || OPTION_VAR_HASVALUE=false
+
+			# HASARGS
+
+			local OPTION_HASARGS
+
+			OPTION_HASARGS=${CL_OPTIONS_HASARGS[ID]:-'false'}
+
+			# HASARGS_OPTIONAL
+
+			local OPTION_ARGS_OPTIONAL
+
+			OPTION_ARGS_OPTIONAL=${CL_OPTIONS_HASARGS_OPTIONAL[ID]:-'false'}
+
+			# HASARGS_AVAR
+
+			local OPTION_ARGS_AVAR
+
+			OPTION_ARGS_AVAR=${CL_OPTIONS_HASARGS_AVAR[ID]}
+
+			[[ -n $OPTION_ARGS_AVAR ]] && OPTION_ARGS_HASAVAR=true || OPTION_ARGS_HASAVAR=false
+
+			# HASARGS_QUANT, HASARGS_MIN and HASARGS_MAX
+
+			local OPTION_ARGS_QUANT OPTION_ARGS_MIN OPTION_ARGS_MAX
+
+			OPTION_ARGS_QUANT=${CL_OPTIONS_HASARGS_QUANT[ID]}
+			OPTION_ARGS_MIN=${CL_OPTIONS_HASARGS_MIN[ID]}
+			OPTION_ARGS_MAX=${CL_OPTIONS_HASARGS_MAX[ID]}
+
+			# HASARGS_TYPE_<I|U|F|D|E>
+
+			local OPTION_ARGS_TYPES OPTION_ARGS_HASTYPES
+
+			OPTION_ARGS_TYPES=(${CL_OPTIONS_HASARGS_TYPE_I[ID]:+'i'} ${CL_OPTIONS_HASARGS_TYPE_U[ID]:+'u'} ${CL_OPTIONS_HASARGS_TYPE_F[ID]:+'f'} ${CL_OPTIONS_HASARGS_TYPE_D[ID]:+'d'} ${CL_OPTIONS_HASARGS_TYPE_E[ID]:+'e'})
+
+			[[ ${#OPTION_ARGS_TYPES[@]} -ne 0 ]] && OPTION_ARGS_HASTYPES=true || OPTION_ARGS_HASTYPES=false
+
+			# HASARGS_APPENDONREPEAT
+
+			OPTION_ARGS_APPENDONREPEAT=${CL_OPTIONS_HASARGS_APPENDONREPEAT[ID]:-'false'}
+
+			# PARSER
+
+			local OPTION_PARSER
+
+			OPTION_PARSER=${CL_OPTIONS_PARSER[ID]}
+
+			[[ -n $OPTION_PARSER ]] && OPTION_HASPARSER=true || OPTION_HASPARSER=false
+
+			# ALLOWREPEAT
+
+			OPTION_ALLOWREPEAT=${CL_OPTIONS_ALLOWREPEAT[ID]:-'false'}
+
+			# OPTION_ARGS_AVAR_AUTO
+
+			local OPTION_ARGS_AVAR_AUTO
+
+			OPTION_ARGS_AVAR_AUTO=false
+
+			# OPTION_VAR_SET
+
+			local OPTION_VAR_SET
+
+			OPTION_VAR_SET=false
+
+			# Expr
+
+			TEXT[T++]='			'${CL_OPTIONS_EXPR[ID]}')'
+
+			if [[ $OPTION_ALLOWREPEAT = false ]]; then
+				TEXT[T++]='				[[ ${CL_OPTIONS_FOUND['$ID']} = true ]] && cl_reportrepeated "$KEY"'
+				TEXT[T++]='				CL_OPTIONS_FOUND['$ID']=true'
+			fi
+
+			if [[ $OPTION_HASVAR = true && $OPTION_VAR_HASVALUE = true ]]; then
+				TEXT[T++]='				'$OPTION_VAR'='$OPTION_VAR_VALUE
+				OPTION_VAR_SET=true
+			fi
+
+			# Args
+
+			if [[ $OPTION_HASARGS = true ]]; then
+				if [[ $OPTION_ARGS_QUANT = 1 ]]; then
+					TEXT[T++]='				(( ++I ))'
+					TEXT[T++]='				if [[ I -le $# ]] && ! cl_islikelyanoption "${!I}" && ! cl_isavalidcommand "${!I}"; then'
+
+					if [[ $OPTION_ARGS_HASTYPES = true ]]; then
+						TEXT[T++]='					if cl_testoptargvalidity "${!I}" '${OPTION_ARGS_TYPES[*]}'; then'
+						TEXT[T++]='						VALID=true'
+						TEXT[T++]='					else'
+						TEXT[T++]='						cl_isafileordir "${!I}" || cl_reportinvalidoptarg "${!I}" "$KEY" '${OPTION_ARGS_TYPES[*]}
+						TEXT[T++]='						VALID=false'
+						TEXT[T++]='					fi'
+					else
+						TEXT[T++]='					VALID=true'
+					fi
+
+					TEXT[T++]='				else'
+					TEXT[T++]='					VALID=false'
+					TEXT[T++]='				fi'
+
+					TEXT[T++]='				if [[ $VALID = true ]]; then'
+
+					if [[ $OPTION_ARGS_HASAVAR = true ]]; then
+						if [[ $OPTION_ALLOWREPEAT = true && $OPTION_ARGS_APPENDONREPEAT = true ]]; then
+							TEXT[T++]='					'$OPTION_ARGS_AVAR'[${#'$OPTION_ARGS_AVAR'[@]}]=${!I}'
+						else
+							TEXT[T++]='					'$OPTION_ARGS_AVAR'=("${!I}")'
+						fi
+					elif [[ $OPTION_HASVAR = true && $OPTION_VAR_HASVALUE = false ]]; then
+						TEXT[T++]='					'$OPTION_VAR'=${!I}'
+						OPTION_VAR_SET=true
+					fi
+
+					if [[ $OPTION_ARGS_OPTIONAL = true ]]; then
+						if [[ $OPTION_HASPARSER = true ]]; then
+							TEXT[T++]='					FOUNDARGS=1'
+						fi
+
+						if [[ (($OPTION_ALLOWREPEAT = true && $OPTION_ARGS_APPENDONREPEAT = false) && ($OPTION_ARGS_HASAVAR = true || $OPTION_HASVAR = true)) || $OPTION_HASPARSER = true ]]; then
+							TEXT[T++]='				else'
+
+							if [[ $OPTION_ALLOWREPEAT = true && $OPTION_ARGS_APPENDONREPEAT = false ]]; then
+								if [[ $OPTION_ARGS_HASAVAR = true ]]; then
+									TEXT[T++]='					'$OPTION_ARGS_AVAR'=()'
+								elif [[ $OPTION_HASVAR = true && $OPTION_VAR_HASVALUE = false ]]; then
+									TEXT[T++]='					'$OPTION_VAR'='
+									OPTION_VAR_SET=true
+								fi
+							fi
+
+							if [[ $OPTION_HASPARSER = true ]]; then
+								TEXT[T++]='					FOUNDARGS=0'
+							fi
+						fi
+					else
+						TEXT[T++]='				else'
+						TEXT[T++]='					echo "Option \"$KEY\" requires an argument."'
+						TEXT[T++]='					exit 1'
+					fi
+
+					TEXT[T++]='				fi'
+
+				else
+
+					if [[ $OPTION_ARGS_HASAVAR = false && $OPTION_HASVAR = true && $OPTION_VAR_HASVALUE = false ]]; then
+						local V
+						until
+							V=CL_AUTOAVAR_$(( RANDOM % 10000 ))
+							eval "[[ -z \$${V}_FLAG ]]"
+						do
+							continue
+						done
+						eval "local ${V}_FLAG=."
+
+						OPTION_ARGS_AVAR=$V
+						OPTION_ARGS_AVAR_AUTO=true
+					fi
+
+					if [[ $OPTION_ALLOWREPEAT = true && $OPTION_ARGS_APPENDONREPEAT = false ]]; then
+						if [[ $OPTION_ARGS_HASAVAR = true || $OPTION_ARGS_AVAR_AUTO = true ]]; then
+							TEXT[T++]='				'$OPTION_ARGS_AVAR'=()'
+						fi
+						if [[ $OPTION_ARGS_AVAR_AUTO = true ]]; then
+							TEXT[T++]='				'$OPTION_VAR'='
+						fi
+					fi
+
+					TEXT[T++]='				FOUNDARGS=0'
+
+					if [[ -n $OPTION_ARGS_QUANT || -n $OPTION_ARGS_MAX ]]; then
+						if [[ -n $OPTION_ARGS_QUANT ]]; then
+							TEXT[T++]='				(( K = I + '$OPTION_ARGS_QUANT' ))'
+						elif [[ -n $OPTION_ARGS_MAX ]]; then
+							TEXT[T++]='				(( K = I + '$OPTION_ARGS_MAX' ))'
+						fi
+
+						TEXT[T++]='				[[ K -gt $# ]] && K=$#'
+						TEXT[T++]='				for (( J = I + 1; J <= K; J++ )); do'
+					else
+						TEXT[T++]='				for (( J = I + 1; J <= $#; J++ )); do'
+					fi
+
+					TEXT[T++]='					if ! cl_islikelyanoption "${!J}" && ! cl_isavalidcommand "${!J}"; then'
+
+					if [[ $OPTION_ARGS_HASTYPES = true ]]; then
+						TEXT[T++]='						if ! cl_testoptargvalidity "${!J}" '${OPTION_ARGS_TYPES[*]}'; then'
+						TEXT[T++]='							! cl_isafileordir "${!J}" && cl_reportinvalidoptarg "${!J}" "$KEY" '${OPTION_ARGS_TYPES[*]}
+						TEXT[T++]='							break'
+						TEXT[T++]='						fi'
+					fi
+
+					TEXT[T++]='						(( FOUNDARGS++ ))'
+
+					if [[ $OPTION_ARGS_HASAVAR = true || $OPTION_ARGS_AVAR_AUTO = true ]]; then
+						TEXT[T++]='						'$OPTION_ARGS_AVAR'[${#'$OPTION_ARGS_AVAR'[@]}]=${!J}'
+					fi
+
+					TEXT[T++]='					else'
+					TEXT[T++]='						break'
+					TEXT[T++]='					fi'
+					TEXT[T++]='				done'
+
+					if [[ $OPTION_ARGS_AVAR_AUTO = true ]]; then
+						TEXT[T++]='				[[ FOUNDARGS -gt 0 ]] && '$OPTION_VAR'='$OPTION_ARGS_AVAR
+						OPTION_VAR_SET=true
+					fi
+
+					if [[ $OPTION_ARGS_OPTIONAL = false ]]; then
+						if [[ -n $OPTION_ARGS_QUANT ]]; then
+							TEXT[T++]='				[[ FOUNDARGS -ne '$OPTION_ARGS_QUANT' ]] && cl_reportargsnotexact "$KEY" '$OPTION_ARGS_QUANT
+						else
+							if [[ -n $OPTION_ARGS_MIN ]]; then
+								TEXT[T++]='				[[ FOUNDARGS -lt '$OPTION_ARGS_MIN' ]] && cl_reportargstoofew "$KEY" '$OPTION_ARGS_MIN
+							fi
+							if [[ -n $OPTION_ARGS_MAX ]]; then
+								TEXT[T++]='				[[ FOUNDARGS -gt '$OPTION_ARGS_MAX' ]] && cl_reportargstoomany "$KEY" '$OPTION_ARGS_MAX
+							fi
+						fi
+					else
+						if [[ -n $OPTION_ARGS_QUANT ]]; then
+								TEXT[T++]='				[[ FOUNDARGS -lt '$OPTION_ARGS_QUANT' ]] && cl_reportoptlargsnotexact "$KEY" '$OPTION_ARGS_QUANT
+						else
+							if [[ -n $OPTION_ARGS_MIN ]]; then
+								TEXT[T++]='				[[ FOUNDARGS -lt '$OPTION_ARGS_MIN' ]] && cl_reportoptlargstoofew "$KEY" '$OPTION_ARGS_QUANT
+							fi
+							if [[ -n $OPTION_ARGS_MAX ]]; then
+								TEXT[T++]='				[[ FOUNDARGS -gt '$OPTION_ARGS_MAX' ]] && cl_reportoptlargstoomany "$KEY" '$OPTION_ARGS_QUANT
+							fi
+						fi
+					fi
+				fi
+			fi
+
+			if [[ $OPTION_HASVAR = true && $OPTION_VAR_SET = false ]]; then
+				TEXT[T++]='				'$OPTION_VAR'='${OPTION_VAR_VALUE:-${CL_OPTIONS_VAR_DEFAULTVALUE}}
+			fi
+
+			# Parser
+
+			if [[ $OPTION_HASPARSER = true ]]; then
+				if [[ $OPTION_HASARGS = true ]]; then
+					if [[ $OPTION_ARGS_QUANT = 1 && ! $OPTION_ARGS_OPTIONAL = true ]]; then
+						TEXT[T++]='				'$OPTION_PARSER' "${@:I:2}"'
+					else
+						TEXT[T++]='				(( J = 1 + FOUNDARGS ))'
+						TEXT[T++]='				'$OPTION_PARSER' "${@:I:J}"'
+					fi
+				else
+					TEXT[T++]='				'$OPTION_PARSER' "${@:I}"'
+				fi
+			fi
+
+			TEXT[T++]='				continue'
+			TEXT[T++]='				;;'
+		done
+
+		TEXT[T++]='			esac'
+		TEXT[T++]='		fi'
+
+	fi
+
+	# Commands
+
+	if [[ $HASCOMMANDS = true ]]; then
+		TEXT[T++]='		if cl_islikelyacommand "$KEY"; then'
+		TEXT[T++]='			(( J = I + 1 ))'
+		TEXT[T++]='			case "$KEY" in'
+
+		for ID in "${!CL_COMMANDS[@]}"; do
+			TEXT[T++]='			'${CL_COMMANDS_EXPR[ID]}')'
+			TEXT[T++]='				'${CL_COMMANDS_FUNCTION[ID]}' "${@:J}"'
+			TEXT[T++]='				continue'
+			TEXT[T++]='				;;'
+		done
+
+		TEXT[T++]='			esac'
+		TEXT[T++]='		fi'
+	fi
+
+	# Files and directories
+
+	TEXT[T++]='		if cl_isafileordir "$KEY"; then'
+	TEXT[T++]='			'${CL_FILESANDDIRS_ARRAYVAR:-'CL_FILESANDDIRS_FOUND'}'[FD++]=$KEY'
+	TEXT[T++]='			continue'
+	TEXT[T++]='		fi'
+
+	# Unknown
+
+	TEXT[T++]='		cl_reportinvalidordoesntexist "$KEY"'
+
+	# Loop Finish
+
+	TEXT[T++]='	done'
+
+	# Finish
+
+	TEXT[T++]='}'
+
+	# Save
+
+	local IFS=$'\n'
+
+	__="${TEXT[*]}"
+}
+
+
+# bool cl_islikelyanoption (string STRING)
+#
+function cl_islikelyanoption {
+	[[ $1 == @(-[[:alpha:]]?([[:alpha:]])|--[[:alpha:]][[:alpha:]][[:alpha:]-]*(?(-)+([[:alpha:]]))?(=*)) ]]
+}
+
+
+# bool cl_islikelyacommand (string STRING)
+#
+function cl_islikelyacommand {
+	[[ $1 == [[:lower:]]?(*([[:lower:]-_])[[:lower:]]) ]]
+}
+
+
+# bool cl_isafileorddir (string STRING)
+#
+function cl_isafileordir {
+	[[ -e $1 ]]
+}
+
+
+# bool cl_testoptargvalidity (string OPTARG, string TYPES[])
+#
+function cl_testoptargvalidity {
+	local A
+
+	for A in "${@:2}"; do
+		case "$A" in
+		i)
+			[[ $1 == $PATTERNS_SIGNEDINTEGERR ]] || return 1
+			;;
+		u)
+			[[ $1 == $PATTERNS_UNSIGNEDINTEGER ]] || return 1
+			;;
+		f)
+			[[ -f $1 ]] || return 1
+			;;
+		d)
+			[[ -d $1 ]] || return 1
+			;;
+		e)
+			[[ -e $1 ]] || return 1
+			;;
+		esac
+	done
+
+	return 0
+}
+
+
+# void cl_reportrepeated (string OPT)
+#
+function cl_reportrepeated {
+	echo "Option \"$1\" can only be used once."
+	exit 1
+}
+
+
+# void cl_reportinvalidoptarg (string OPT, string ARG, [string VALIDTYPES[]])
+#
+function cl_reportinvalidoptarg {
+	local ARG=$OPT OPT=$2 A
+	shift 2
+
+	for A; do
+		case "$A" in
+		"i")
+			if [[ $ARG != $PATTERNS_SIGNEDINTEGER ]]; then
+				echo "Argument \"$ARG\" for option \"$OPT\" is not an integer."
+				exit 1
+			fi
+			;;
+		"u")
+			if [[ $ARG != $PATTERNS_UNSIGNEDINTEGER ]]; then
+				echo "Argument \"$ARG\" for option \"$OPT\" is not an unsigned integer."
+				exit 1
+			fi
+			;;
+		"f")
+			if [[ ! -f $ARG ]]; then
+				echo "Argument \"$ARG\" for option \"$OPT\" is not an existing file."
+				exit 1
+			fi
+			;;
+		"d")
+			if [[ ! -d $ARG ]]; then
+				echo "Argument \"$ARG\" for option \"$OPT\" is not an existing directory."
+				exit 1
+			fi
+			;;
+		"e")
+			if [[ ! -e $ARG ]]; then
+				echo "Argument \"$ARG\" for option \"$OPT\" is not an existing file or directory."
+				exit 1
+			fi
+			;;
+		esac
+	done
+
+	echo "Argument \"$ARG\" is invalid for option \"$OPT\"."
+	exit 1
+}
+
+
+# void cl_reportargsnotexact (string OPT, uint EXACT)
+#
+function cl_reportargsnotexact {
+	local OPT=$1 EXACT=$2
+	echo "Option \"$OPT\" requires exactly $EXACT arguments."
+	exit 1
+}
+
+
+# void cl_reportargstoofew (string OPT, uint MIN)
+#
+function cl_reportargstoofew {
+	local OPT=$1 MIN=$2
+	echo "Option \"$OPT\" requires at least $MIN argument(s)."
+	exit 1
+}
+
+
+# void cl_reportargstoomany (string OPT, uint MAX)
+#
+function cl_reportargstoomany {
+	local OPT=$1 MAX=$2
+	echo "Arguments for \"$OPT\" cannot have more than $MOST argument(s)."
+	exit 1
+}
+
+
+# void cl_reportoptlargsnotexact (string OPT, uint EXACT)
+#
+function cl_reportoptlargsnotexact {
+	local OPT=$1 EXACT=$2
+	echo "Optional arguments for \"$OPT\" can only be exactly $EXACT argument(s)."
+	exit 1
+}
+
+
+# void cl_reportoptlargstoofew (string OPT, uint MIN)
+#
+function cl_reportoptlargstoofew {
+	local OPT=$1 MIN=$2
+	echo "Optional arguments for \"$OPT\" cannot be less than $MIN."
+	exit 1
+}
+
+
+# void cl_reportoptlargstoomany (string OPT, uint MAX)
+#
+function cl_reportoptlargstoomany {
+	local OPT=$1 MAX=$2
+	echo "Optional arguments for \"$OPT\" cannot be more than $MAX."
+	exit 1
+}
+
+
+# void cl_reportinvalidordoesntexist (string ARG)
+#
+function cl_reportinvalidordoesntexist {
+	local ARG=$1
+	echo "Invalid command-line argument or file or directory doesn't exist: $ARG"
+	exit 1
+}
+
+
+#### Help Info ####
+
+
+# void cl_helpinfo_setprograminfo (string PROGRAMNAME, string PROGRAMVERSION, string PROGRAMDESC, string PROGRAMUSAGE)
+#
+# Registers program info.
+#
+function cl_helpinfo_setprograminfo {
+	assume "$# -eq 4" -- "Invalid number of arguments."
+	assume "\${#CL_HELPINFO_PROGRAMINFO[@]} -eq 0" -- "Info has already been set."
+
+	CL_HELPINFO_PROGRAMINFO[0]=$1
+	CL_HELPINFO_PROGRAMINFO[1]=$2
+	CL_HELPINFO_PROGRAMINFO[2]=$3
+	CL_HELPINFO_PROGRAMINFO[3]=$4
+}
+
+
+# void cl_helpinfo_show (void)
+#
+function cl_helpinfo_show {
+	[[ -z $CL_HELPINFO ]] && cl_helpinfo_generate && CL_HELPINFO=$__
+	echo -n "$CL_HELPINFO"
+}
+
+
+# void cl_helpinfo_generate (void)
+#
+# Generates help info.
+#
+# > string __ = generated help info
+#
+function cl_helpinfo_generate {
+	local -a HELPINFO=()
+	local -i H=0
+
+	HELPINFO[H++]=${CL_HELPINFO_PROGRAMINFO[0]}' '${CL_HELPINFO_PROGRAMINFO[1]}
+	HELPINFO[H++]=${CL_HELPINFO_PROGRAMINFO[2]}
+	HELPINFO[H++]=''
+	HELPINFO[H++]='Usage: '${CL_HELPINFO_PROGRAMINFO[3]}
+	HELPINFO[H++]=''
+
+	local SPACES
+	local -i I
+
+	SPACES='          '
+	for (( I = ${#SPACES}; I < CL_HELPINFO_COLUMNS; I *= 2 )); do
+		SPACES=${SPACES}${SPACES}
+	done
+
+	if [[ CL_OPTIONS_COUNT -gt 0 ]]; then
+		HELPINFO[H++]='Options: '
+		HELPINFO[H++]=''
+
+		local -i LONGESTSYNTAX=0 L
+
+		for I in "${!CL_OPTIONS[@]}"; do
+			L=${#CL_OPTIONS_HELP_SYNTAX[I]}
+			[[ L -gt LONGESTSYNTAX ]] && LONGESTSYNTAX=$L
+		done
+
+		local -i DESCMARGINSIZE DESCSPACESIZE
+
+		(( DESCMARGINSIZE = CL_HELPINFO_OPTIONS_LEFTMARGINSIZE + LONGESTSYNTAX + CL_HELPINFO_OPTIONS_DIVIDERSIZE ))
+		(( DESCSPACESIZE  = CL_HELPINFO_COLUMNS - DESCMARGINSIZE - CL_HELPINFO_OPTIONS_RIGHTMARGINSIZE ))
+
+		local LEFTMARGIN DESCMARGIN
+
+		LEFTMARGIN=${SPACES:0:CL_HELPINFO_OPTIONS_LEFTMARGINSIZE}
+		DESCMARGIN=${SPACES:0:DESCMARGINSIZE}
+
+		local -a -i INDICES
+
+		if [[ $CL_HELPINFO_OPTIONS_SORT = true ]]; then
+			array_sort type=string to=INDICES as=indices -- \
+				$(echo "${CL_OPTIONS_EXPR[*]##+([^[:alnum:]])}" | tr '[[:upper:]]' '[[:lower:]]')
+		else
+			INDICES=("${!CL_OPTIONS[@]}")
+		fi
+
+		local SECTION SYNTAX DESC ADD
+		local -a PHRASES
+		local -i DL SL ADD
+
+		for I in "${INDICES[@]}"; do
+			SYNTAX=${CL_OPTIONS_HELP_SYNTAX[I]}
+			SL=${#SYNTAX}
+
+			if [[ SL -gt 0 ]]; then
+				SECTION=${LEFTMARGIN}${SYNTAX}
+
+				DESC=${CL_OPTIONS_HELP_DESC[I]}
+				DL=${#DESC}
+
+				if [[ DL -gt 0 ]]; then
+					(( ADD = LONGESTSYNTAX - SL + CL_HELPINFO_OPTIONS_DIVIDERSIZE ))
+
+					SECTION=${SECTION}${SPACES:0:ADD}
+
+					if [[ DL -le DESCSPACESIZE ]]; then
+						SECTION=${SECTION}${DESC}
+					else
+						utils_parawrap "$DESC" "$DESCSPACESIZE"
+
+
+						SECTION=${SECTION}${__A0[0]}; unset __A0\[0\]
+						for I in "${!__A0[@]}"; do
+							SECTION=${SECTION}$'\n'${DESCMARGIN}${__A0[I]}
+						done
+					fi
+				fi
+
+				HELPINFO[H++]=$SECTION
+			fi
+		done
+
+		HELPINFO[H++]=''
+	fi
+
+	if [[ CL_COMMANDS_COUNT -gt 0 ]]; then
+		HELPINFO[H++]='commands: '
+		HELPINFO[H++]=''
+
+		local -i SYNTAXSPACESIZE DESCSPACESIZE
+
+		(( SYNTAXSPACESIZE = CL_HELPINFO_COLUMNS - CL_HELPINFO_COMMANDS_SYNTAXMARGINSIZE - CL_HELPINFO_RIGHTMARGINSIZE ))
+		(( DESCSPACESIZE   = CL_HELPINFO_COLUMNS - CL_HELPINFO_COMMANDS_DESCMARGINSIZE   - CL_HELPINFO_RIGHTMARGINSIZE ))
+
+		local SYNTAXMARGIN DESCMARGIN
+
+		SYNTAXMARGIN=${SPACES:0:CL_HELPINFO_COMMANDS_SYNTAXMARGINSIZE}
+		DESCMARGIN=${SPACES:0:CL_HELPINFO_COMMANDS_DESCMARGINSIZE}
+
+		local -a -i INDICES
+
+		if [[ $CL_HELPINFO_COMMANDS_SORT = true ]]; then
+			array_sort type=string to=INDICES as=indices -- \
+				${CL_COMMANDS_EXPR[*]##+([^[:alpha:]-_])}
+		else
+			INDICES=("${!CL_COMMANDS[@]}")
+		fi
+
+		local SYNTAX SECTION DESC
+		local -i SL DL
+
+		for I in "${INDICES[@]}"; do
+			SYNTAX=${CL_COMMANDS_HELP_SYNTAX[I]}
+			SL=${#SYNTAX}
+
+			if [[ SL -gt 0 ]]; then
+				if [[ SL -le SYNTAXSPACESIZE ]]; then
+					HELPINFO[H++]=${SYNTAXMARGIN}${SYNTAX}
+				else
+					utils_parawrap "$SYNTAX" "$SYNTAXSPACESIZE"
+
+					for I in "${!__A0[@]}"; do
+						HELPINFO[H++]=${SYNTAXMARGIN}${__A0[I]}
+					done
+				fi
+
+				DESC=${CL_COMMANDS_HELP_DESC[I]}
+				DL=${#DESC}
+
+				if [[ DL -gt 0 ]]; then
+					if [[ DL -le DESCSPACESIZE ]]; then
+						HELPINFO[H++]=${DESCMARGIN}${DESC}
+					else
+						utils_parawrap "$DESC" "$DESCSPACESIZE"
+
+						for I in "${!__A0[@]}"; do
+							HELPINFO[H++]=${DESCMARGIN}${__A0[I]}
+						done
+					fi
+				fi
+
+				HELPINFO[H++]=''
+			fi
+		done
+
+		HELPINFO[H++]=''
+	fi
+
+	local IFS=$'\n'
+
+	__="${HELPINFO[*]}"
+}
+
+
+#### Dummy Mode ####
+
+
+# void cl_dummymode (void)
+#
+function cl_dummymode {
+	function cl_options_register { :; }
+	function cl_commands_register { :; }
+	function cl_filesanddirs_useavar { :; }
+	function cl_parse { :; }
+	function cl_helpinfo_show { :; }
+}
+
+
+#### Finish ####
+
+
+# void cl_finish (void)
+#
+function cl_finish {
+	unset \
+		CL_ARGS \
+		CL_OPTIONS \
+		CL_OPTIONS_EXPR \
+		CL_OPTIONS_VAR \
+		CL_OPTIONS_VAR_VALUE \
+		CL_OPTIONS_VAR_DEFAULTVALUE \
+		CL_OPTIONS_HASARGS \
+		CL_OPTIONS_HASARGS_OPTIONAL \
+		CL_OPTIONS_HASARGS_AVAR \
+		CL_OPTIONS_HASARGS_TYPE_I \
+		CL_OPTIONS_HASARGS_TYPE_U \
+		CL_OPTIONS_HASARGS_TYPE_F \
+		CL_OPTIONS_HASARGS_TYPE_D \
+		CL_OPTIONS_HASARGS_TYPE_E \
+		CL_OPTIONS_HASARGS_QUANT \
+		CL_OPTIONS_HASARGS_MIN \
+		CL_OPTIONS_HASARGS_MAX \
+		CL_OPTIONS_HASARGS_APPENDONRPEAT \
+		CL_OPTIONS_PARSER \
+		CL_OPTIONS_ALLOWREPEAT \
+		CL_OPTIONS_HELP_SYNTAX \
+		CL_OPTIONS_HELP_DESC \
+		CL_OPTIONS_FOUND \
+		CL_OPTIONS_COUNT \
+		CL_COMMANDS \
+		CL_COMMANDS_EXPR \
+		CL_COMMANDS_FUNCTION \
+		CL_COMMANDS_HELP_SYNTAX \
+		CL_COMMANDS_HELP_DESC \
+		CL_COMMANDS_COUNT \
+		CL_FILESANDDIRS_ARRAYVAR \
+		CL_FILESANDDIRS_FOUND \
+		CL_HELPINFO \
+		CL_HELPINFO_COLUMNS \
+		CL_HELPINFO_OPTIONS_LEFTMARGINSIZE \
+		CL_HELPINFO_OPTIONS_DIVIDERSIZE \
+		CL_HELPINFO_OPTIONS_RIGHTMARGINSIZE \
+		CL_HELPINFO_OPTIONS_SORT \
+		CL_HELPINFO_COMMANDS_SYNTAXMARGINSIZE \
+		CL_HELPINFO_COMMANDS_DESCMARGINSIZE \
+		CL_HELPINFO_COMMANDS_SORT \
+		CL_HELPINFO_PROGRAMINFO \
+		cl_options_register \
+		cl_commands_register \
+		cl_filesanddirs_useavar \
+		cl_parse \
+		cl_generateparser \
+		cl_islikelyanoption \
+		cl_islikelyacommand \
+		cl_isafileordir \
+		cl_testoptargvalidity \
+		cl_reportrepeated \
+		cl_reportinvalidoptarg \
+		cl_reportargsnotexact \
+		cl_reportargstoofew \
+		cl_reportargstoomany \
+		cl_reportoptlargsnotexact \
+		cl_reportoptlargstoofew \
+		cl_reportoptlargstoomany \
+		cl_reportinvalidordoesntexist \
+		cl_helpinfo_setprograminfo \
+		cl_helpinfo_show \
+		cl_helpinfo_generate \
+		cl_optimize \
+		cl_dummymode \
+		cl_finish
+}

@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+include null
+
+# stat utils_summon (string <filepath>)
+#
+# Summons a file (creates it if doesn't exist).
+#
+function utils_summon {
+	[[ -f $1 ]] || : > "$1" 2>&"$NULL"
+}

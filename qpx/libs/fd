@@ -1,0 +1,110 @@
+#!/usr/bin/env sh
+: ${DEBUG:=1}
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+FD_LIST=()
+FD_HIGHEST=63
+
+
+# uint fd_new (void)
+#
+function fd_new {
+	fd_getnextnew
+	local NEW=$?
+	[[ NEW -ge 0 ]] && FD_LIST[NEW]=$NEW
+	return "$NEW"
+}
+
+
+# uint fd_getnextnew (void)
+#
+function fd_getnextnew {
+	for (( I = FD_HIGHEST; I && FD_LIST[I]; --I )); do
+		continue
+	done
+	return "$I"
+}
+
+
+# void fd_reserve (uint <fd>, ...)
+#
+function fd_reserve {
+	local I
+	for I; do
+		FD_LIST[$I]=$I
+	done
+}
+
+
+# bool fd_islisted (uint <fd>)
+#
+function fd_islisted {
+	[[ -n ${FD_LIST[$1]} ]]
+}
+
+
+# void fd_free (uint <fd>)
+#
+function fd_free {
+	unset "FD_LIST[$1]"
+}
+
+
+# bool fd_open (uint <fd>, "r"|"w"|"a"|"rw", string <filepath>)
+#
+function fd_open  {
+	local FD=$1 TYPE=$2 FILE=$3
+	case "$TYPE" in
+	r)
+		eval "exec $FD<\"\$FILE\"" && return 0
+		;;
+	w)
+		eval "exec $FD>\"\$FILE\"" && return 0
+		;;
+	a)
+		eval "exec $FD>>\"\$FILE\"" && return 0
+		;;
+	rw)
+		eval "exec $FD<>\"\$FILE\"" && return 0
+		;;
+	esac
+	return 1
+}
+
+
+# stat fd_read (uint <fd>, uint <count>)
+#
+function fd_read {
+	read -rn "$2" -u "$1" __
+}
+
+
+# stat fd_write (uint <fd>, string <string>)
+#
+function fd_write {
+	echo -n "$2" > "$1"
+}
+
+
+# stat fd_readline (uint <fd>)
+#
+function fd_readline {
+	read -ru "$1" __
+}
+
+
+# stat fd_writeline (uint <fd>, string <string>)
+#
+function fd_writeline {
+	echo "$2" >&"$1"
+}
+
+
+# stat fd_close (uint <fd>)
+#
+function fd_close {
+	eval "exec $1>&-"
+}

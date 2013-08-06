@@ -1,0 +1,106 @@
+8
+
+dir
+2335
+http://rutorrent.googlecode.com/svn/trunk/plugins/diskspace
+http://rutorrent.googlecode.com/svn
+
+
+
+2013-07-25T08:53:10.302042Z
+2325
+holmen@brasse.se
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+f4b6cfda-67a8-11de-ba0c-230037762ff9
+
+lang
+dir
+
+action.php
+file
+
+
+
+
+2013-08-03T18:18:01.000000Z
+636927c07d4537736cdbd563fa5398b3
+2012-09-03T11:21:08.009356Z
+2115
+novik65
+
+images
+dir
+
+plugin.info
+file
+
+
+
+
+2013-08-03T18:18:01.000000Z
+e0f6ba48339880715ac67d2464c36724
+2012-12-07T12:55:51.715399Z
+2255
+novik65
+
+init.php
+file
+
+
+
+
+2013-08-03T18:18:01.000000Z
+ad2387fa40a0a758f9a4b6420ba49474
+2012-09-03T11:21:08.009356Z
+2115
+novik65
+
+conf.php
+file
+
+
+
+
+2013-08-03T18:18:01.000000Z
+3570c96a3136238e1a04869b8ca5ec1b
+2012-09-03T11:21:08.009356Z
+2115
+novik65
+
+diskspace.css
+file
+
+
+
+
+2013-08-03T18:18:01.000000Z
+9157d06df2e64789e95a0008945aa2ba
+2012-09-08T14:31:59.360696Z
+2162
+serge.6401
+
+init.js
+file
+
+
+
+
+2013-08-03T18:18:01.000000Z
+7536c560685a02744d684892a5d36a74
+2012-09-08T14:31:59.360696Z
+2162
+serge.6401
+

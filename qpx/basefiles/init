@@ -1,0 +1,309 @@
+#!/usr/bin/env sh
+: ${DEBUG:="0"}
+
+## ###########################################################################
+## Version: 0.1.7
+## Author: Silas Mariusz <silas@qnap.....pl>
+## --anitspam mail part: <      qnapclub.pl>
+## Web: http://qnapclub.pl | http://forum.qnap.com
+## ###########################################################################
+
+_PLIBNAME="wrapper" ; _QDESC="QPX Init Program Wrapper"
+QPX_LOG_DIR="var/log"
+QPX_LOG_PATH=
+QPX_LOG_NAME=
+QPX_LOG_FILE=
+
+## get NOW time
+## ###########################################################################
+NOW="date +%Y.%m.%d-%H:%M:%S.%N" # out:2013.03.07-05:22:10.417747339
+NYW="date +%H:%M:%S.%N" # out:05:22:43.187654705
+NOW_LOG="date +%Y%m%d-%H%M%S.%N" # out:20130307-052210.417747339
+RUNTIME="$($NOW_LOG)"
+CUR_TIME="date +%s"
+START=$($CUR_TIME)
+
+## find my name and real current directory
+## ###########################################################################
+PROGNAME=`type $0 | awk '{print $3}'`  # search for executable on path
+
+PROGDIR=`dirname $PROGNAME`            # extract directory of program
+PROGNAME=`basename $PROGNAME`          # base name of program
+
+[ "$PROGDIR" == "." ] && PROGDIR=`cd $PROGDIR && pwd || echo $PROGDIR`
+[[ "$PROGDIR" == *qpx/basefiles* ]] && {
+	_PROGDIR=`cd $PROGDIR && cd ../../ && pwd`
+	[ -n "$_PROGDIR" ] && PROGDIR=$_PROGDIR
+}
+
+setLogFileName(){
+	[ -z "$QPX_LOG_DIR" ]  &&  QPX_LOG_DIR="var/log"
+	[ -z "$QPX_LOG_PATH" ] && QPX_LOG_PATH="$PROGDIR/$QPX_LOG_DIR"
+
+	QPX_LOG_NAME="$RUNTIME-$PROGNAME.log"
+	QPX_LOG_FILE="$QPX_LOG_PATH/$QPX_LOG_NAME"
+
+#	if [ ! -z "$OLD_QPX_LOG_FILE" ] && [ ! -z "$OLD_QPX_LOG_FILE" ]; then
+#		if [ "$QPX_LOG_FILE" != "$OLD_QPX_LOG_FILE" ]; then
+#			[ -f "$OLD_QPX_LOG_FILE" ] && mv "$OLD_QPX_LOG_FILE" "$QPX_LOG_FILE"
+#		fi
+#	fi
+
+#	OLD_QPX_LOG_DIR="$QPX_LOG_DIR"
+#	OLD_QPX_LOG_PATH="$QPX_LOG_PATH"
+#	OLD_QPX_LOG_NAME="$QPX_LOG_NAME"
+#	OLD_QPX_LOG_FILE="$QPX_LOG_FILE"
+}
+
+Int_dPWD=`cd $PROGDIR && pwd || echo $PROGDIR`
+if [ "${Int_dPWD}" = "/etc/init.d" ] || [ "${Int_dPWD}" = "/etc/rcS.d" ] || [ "${Int_dPWD}" = "/etc/rcK.d" ]; then
+	[ -L "${PROGDIR}/${PROGNAME}" ] && {
+		_SLINK=$(readlink ${PROGDIR}/${PROGNAME})
+		PROGDIR=`dirname ${_SLINK}`
+		PROGNAME=`basename ${_SLINK}`
+
+		setLogFileName
+
+		: ${QPROJECT:="$PROGNAME"}
+		_QPXNAME="${QPROJECT} ${_PLIBNAME}" ; _QPXPNAME="${_QPXNAME}"
+
+		D_MSG="[ ${_QPXNAME} ]--(execution from @Symbolic Link)"
+		[ "$DEBUG" != "0" ] && {
+			echo -e "$D_MSG"
+			echo "$D_MSG" >> "$QPX_LOG_FILE"
+		}
+}
+fi
+# Fully qualify directory path (remove relative components and symlinks)
+# WARNING: The "bash" "pwd" builtin does not resolve symbolic links
+# "sh" (as a link to "bash") also does not,   but "csh" does handle it.
+# Symbolic link removal however is not critical.
+ORIGDIR=`pwd`                                 # original directory (builtin)
+PROGDIR=`cd $PROGDIR && pwd || echo $PROGDIR` # program directory
+
+# Results...
+#    $ORIGDIR    -- where the users was when called
+#    $PROGDIR    -- script directory location (and now current directory)
+#    $PROGNAME   -- This scripts executable name
+
+#export ORIGDIR ; export PROGDIR ; export PROGNAME
+setLogFileName
+
+## QPX internals
+## ###########################################################################
+: ${QPROJECT:="$PROGNAME"}
+
+_PATH="/usr/bin/rtorrent/bin:/usr/bin/rtorrent/sbin:/usr/bin/rtorrent/perl/bin:$PROGDIR/bin:$PROGDIR/sbin:$PROGDIR/perl/bin"
+#_OPT="/opt/bin:/opt/sbin"
+PATH="${_PATH}:/bin:/sbin:/usr/bin:/usr/sbin:/usr/bin/X11:/usr/local/sbin:${_OPT}:${_PATH}"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$PROGDIR/lib"
+
+source "$PROGDIR/package"
+BINDIR="$PROGDIR/bin"
+
+_QPXNAME="${QPROJECT} ${_PLIBNAME}" ; _QPXPNAME="${_QPXNAME}"
+#TEE_PATH=`type -p tee`
+TEE_PATH="$BINDIR/tee"
+alias stresc='$BINDIR/sed -r "s/\x1B[\[|\(]([0-9]{1,2}(;[0-9]{1,2})?)?[m|K|A|B|C|E|J|S|Z|H]//g"'
+## ###########################################################################
+
+## Say Hello (DEBUG=1)
+## ###########################################################################
+D_MSG="------------------------------------------------------------------------------
+[ ${_QPXNAME} ] $_QDESC
+[ ${_QPXNAME} ] ($PROGNAME) PID: $$; (parent:$PPID)
+[ ${_QPXNAME} ] Exec args >>-- $@ --<<
+[ ${_QPXNAME} ] Current time: $($NYW)
+[ ${_QPXNAME} ] Int_dPWD: $Int_dPWD
+[ ${_QPXNAME} ] ORIGDIR: $ORIGDIR
+[ ${_QPXNAME} ] PROGDIR: $PROGDIR
+[ ${_QPXNAME} ] Log directory: $PROGDIR/$QPX_LOG_DIR
+[ ${_QPXNAME} ] Log file: $QPX_LOG_NAME
+[ ${_QPXNAME} ] Command 'tee': $TEE_PATH
+------------------------------------------------------------------------------"
+if [ "$DEBUG" != "0" ]; then
+	if [ -z "$TEE_PATH" ]; then
+		echo "$D_MSG" >> "$QPX_LOG_FILE"
+	else
+		echo "$D_MSG" | tee -a "$QPX_LOG_FILE"
+	fi
+fi
+
+## Check dependencies
+## ###########################################################################
+if [ -z "$TEE_PATH" ]; then
+	D_MSG="[ ${_QPXNAME} ] [ERROR!] Command 'tee' not found! Sequence aborted."
+	echo -e "$D_MSG" ; echo "$D_MSG" >> "$QPX_LOG_FILE" ; echo "$D_MSG" >> "${QPX_LOG_FILE}.critical"
+	exit 1
+fi
+
+
+
+## functions #################################################################
+
+## func: Elapsed Time (calculate diff)
+## ###########################################################################
+Elapsed () {
+        START="$1" ; STOP="$2"
+        #echo "scale=3; $STOP - $START" | bc
+        echo "$(($STOP - $START))"
+}
+
+## func: Display All Environment Variables/Sets
+## ###########################################################################
+GetEnvs () {
+#echo "--------------------------------------------------------------------------------
+#- PRINTENV ---------------------------------------------------------------------
+#`printenv`"
+echo "--------------------------------------------------------------------------------
+- ENV --------------------------------------------------------------------------
+`env`"
+echo "--------------------------------------------------------------------------------
+- EXPORT -----------------------------------------------------------------------
+`export`"
+echo "--------------------------------------------------------------------------------
+- SET --------------------------------------------------------------------------
+`set`
+--------------------------------------------------------------------------------"
+}
+
+## func: Display Execution Code description
+## ###########################################################################
+ExitDesc () {
+        case $1 in
+                0)      echo "Successful termination." ;;
+                1)      echo "Miscellaneous errors or impermissible operation." ;;
+                2)      echo "Missing keyword or command." ;;
+                4)      echo "Device undef'd or not present." ;;
+                #8)      echo "User <BREAK>" ;;
+                #16)     echo "File write or lock /etc/mtab not permitted." ;;
+                32)     echo "Device mount failed." ;;
+                64)     echo "(Command line usage error) ?SYNTAX ERROR: A statement is unrecognizable." ;;
+                65)     echo "Data format error." ;;
+                66)     echo "Cannot open input." ;;
+                67)     echo "Unknown or empty addressee." ;;
+                68)     echo "Host name undef'd." ;;
+                69)     echo "Service unavailable." ;;
+                70)     echo "Internal program error." ;;
+                71)     echo "System error (e.g., can't fork)." ;;
+                72)     echo "Critical OS file missing." ;;
+                73)     echo "Can't create (user) output file." ;;
+                74)     echo "Input/Output error." ;;
+                75)     echo "Temp failure/Undef'd fail; user is invited to retry!" ;;
+                76)     echo "Illegal operation over/in remote protocol." ;;
+                77)     echo "Permission denied." ;;
+                78)     echo "Configuration error." ;;
+                126)    echo "Command invoked cannot execute." ;;
+                127)    echo "Command not found." ;;
+                128)    echo "Invalid argument to exit." ;;
+                129)    echo "Fatal error. Terminated SIGHUP 1" ;;
+                130)    echo "Fatal error. Terminated SIGINT 2 (Control-C)" ;;
+                131)    echo "Fatal error. Terminated SIGQUIT 3" ;;
+                132)    echo "Fatal error. Terminated SIGILL 4" ;;
+                133)    echo "Fatal error. Terminated SIGTRAP 5" ;;
+                134)    echo "Fatal error. Terminated SIGABRT 6" ;;
+                135)    echo "Fatal error. Terminated SIGBUS 7" ;;
+                136)    echo "Fatal error. Terminated SIGFPE 8" ;;
+                137)    echo "Fatal error. Terminated SIGKILL 9" ;;
+                138)    echo "Fatal error. Terminated SIGUSR1 10" ;;
+                139)    echo "Fatal error. Terminated SIGSEGV 11" ;;
+                140)    echo "Fatal error. Terminated SIGUSR2 12" ;;
+                141)    echo "Fatal error. Terminated SIGPIPE 13" ;;
+                142)    echo "Fatal error. Terminated SIGALRM 14" ;;
+                143)    echo "Fatal error. Terminated SIGTERM 15" ;;
+                144)    echo "Fatal error. Terminated SIGSTKFLT 16" ;;
+                145)    echo "Fatal error. Terminated SIGCHLD 17" ;;
+                146)    echo "Fatal error. Terminated SIGCONT 18" ;;
+                147)    echo "Fatal error. Terminated SIGSTOP 19" ;;
+                148)    echo "Fatal error. Terminated SIGTSTP 20" ;;
+                149)    echo "Fatal error. Terminated SIGTTIN 21" ;;
+                150)    echo "Fatal error. Terminated SIGTTOU 22" ;;
+                151)    echo "Fatal error. Terminated SIGURG 23" ;;
+                152)    echo "Fatal error. Terminated SIGXCPU 24" ;;
+                153)    echo "Fatal error. Terminated SIGXFSZ 25" ;;
+                154)    echo "Fatal error. Terminated SIGVTALRM 26" ;;
+                155)    echo "Fatal error. Terminated SIGPROF 27" ;;
+                156)    echo "Fatal error. Terminated SIGWINCH 28" ;;
+                157)    echo "Fatal error. Terminated SIGIO 29" ;;
+                158)    echo "Fatal error. Terminated SIGPWR 30" ;;
+                159)    echo "Fatal error. Terminated SIGSYS 31" ;;
+                255*)   echo "Exit status out of range." ;;
+                *)      echo "Undef'd error" ;;
+        esac
+}
+
+## func: Apply package icons
+## ###########################################################################
+link_Qicons() {
+	ICO_DST="/home/httpd/RSS/images/${QPROJECT}.gif" ; ICO=".qpkg_icon.gif"
+	[ -L "$ICO_DST" ] && rm -rf "$ICO_DST"
+	[ ! -f "$ICO_DST" ] && cp -af "${PROGDIR}/${ICO}" "$ICO_DST"
+
+	ICO_DST="/home/httpd/RSS/images/${QPROJECT}_80.gif" ; ICO=".qpkg_icon_80.gif"
+	[ -L "$ICO_DST" ] && rm -rf "$ICO_DST"
+	[ ! -f "$ICO_DST" ] && cp -af "${PROGDIR}/${ICO}" "$ICO_DST"
+
+	ICO_DST="/home/httpd/RSS/images/${QPROJECT}_gray.gif" ; ICO=".qpkg_icon_gray.gif"
+	[ -L "$ICO_DST" ] && rm -rf "$ICO_DST"
+	[ ! -f "$ICO_DST" ] && cp -af "${PROGDIR}/${ICO}" "$ICO_DST"
+}
+
+
+## program execution #########################################################
+## .. we are ready to go with basic sets in environment
+
+## ###########################################################################
+## Wrapper sequence starts from here... Let's dance!
+## ###########################################################################
+RETVAL=0 ; EXDESC=""
+
+[ "$DEBUG" != "0" ] && GetEnvs 2>&1 >> "$QPX_LOG_FILE"
+
+link_Qicons
+
+
+## ###########################################################################
+## Load libraries and Start QPX Preloader which will load the framework
+## ..and then service program (main APP code)
+## ###########################################################################
+source "${PROGDIR}/qpx/libs/ansi"        ## Load color codes (using framework later ANSI lib)
+#source "${PROGDIR}/qpx/launcher/xtrap"  ## Load code execution trap (seems to be not working properly under QPX)
+## Load QPX Preloader
+. "${PROGDIR}/qpx/launcher/preloader" "$@" | tee -a "$QPX_LOG_FILE"
+## ###########################################################################
+## Done :) Exiting...
+## ###########################################################################
+
+
+
+## Get exit code and elapsed time
+## ###########################################################################
+RETVAL=${PIPESTATUS[0]}                  ## Get PROPER Exit Code
+EXDESC=$(ExitDesc $RETVAL)               ## Get Exit Description
+
+STOP=$($CUR_TIME)
+DIFF=$(Elapsed $START $STOP)             ## Calculate Exec elapsed time
+echo -e "[ ${bd}${white}${_QPXNAME}${nc} ] Elapsed time: ${yellow}${DIFF}${nc} seconds.";
+
+
+## Display Exit Code and it's status...
+if [[ RETVAL -ne 0 ]]; then
+        echo -e "[${bred} ${white}${_QPXNAME} ${nc}] ${red}${PROGNAME}${nc}: LINENO:${bd}${red}$LINENO${nc}"
+        echo -en "[${bred} ${white}${_QPXNAME} ${nc}] (${bd}${red}$RETVAL${nc})" ; [ -n "$EXDESC" ] && echo -n ": ${white}$EXDESC${nc}" ; echo ;
+else
+        echo -en "[ ${_QPXNAME} ] ($RETVAL)" ; [ -n "$EXDESC" ] && echo -n ": $EXDESC" ; echo ;
+fi
+
+## Strip ANSI color codes from the log...
+sync
+_log=$QPX_LOG_FILE
+if [ -f "$QPX_LOG_FILE" ]; then
+	cat "$QPX_LOG_FILE" | stresc > "${QPX_LOG_FILE}.stripped"
+	rm -rf "$QPX_LOG_FILE"
+	mv -f "${QPX_LOG_FILE}.stripped" "$QPX_LOG_FILE"
+fi
+
+
+## Bye bye, baby
+## ###########################################################################
+exit $RETVAL

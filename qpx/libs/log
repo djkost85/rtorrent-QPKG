@@ -1,0 +1,722 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include available
+include assume
+include console
+include debug
+include env
+include misc
+include useextglob
+
+
+#
+# log.sh
+#
+# Provides the logging framework
+#
+
+LOG_LEVELS_SILENT=0    ## No output even warnings and errors
+LOG_LEVELS_QUIET=1     ## Output only warnings and errors
+LOG_LEVELS_NORMAL=2    ## Normal
+LOG_LEVELS_VERBOSE=3   ## Include verbose messages
+LOG_LEVELS_DEBUG=4     ## Include debug messages and all other messages
+
+LOG_ID_MSG=0
+LOG_ID_MS2=1
+LOG_ID_SMG=2
+LOG_ID_SM2=3
+LOG_ID_WRN=4
+LOG_ID_ERR=5
+LOG_ID_VER=6
+LOG_ID_DBG=7
+
+LOG_FUNCTIONS=(
+	[LOG_ID_MSG]=log_message
+	[LOG_ID_MS2]=log_message2
+	[LOG_ID_SMG]=log_supermessage
+	[LOG_ID_SM2]=log_supermessage2
+	[LOG_ID_WRN]=log_warning
+	[LOG_ID_ERR]=log_error
+	[LOG_ID_VER]=log_verbose
+	[LOG_ID_DBG]=log_debug
+)
+
+LOG_FUNCTIONS_LEVELS=(
+	[LOG_ID_MSG]=$LOG_LEVELS_NORMAL
+	[LOG_ID_MS2]=$LOG_LEVELS_NORMAL
+	[LOG_ID_SMG]=$LOG_LEVELS_SILENT
+	[LOG_ID_SM2]=$LOG_LEVELS_SILENT
+	[LOG_ID_WRN]=$LOG_LEVELS_QUIET
+	[LOG_ID_ERR]=$LOG_LEVELS_QUIET
+	[LOG_ID_VER]=$LOG_LEVELS_VERBOSE
+	[LOG_ID_DBG]=$LOG_LEVELS_DEBUG
+)
+
+LOG_FUNCTIONS_COLORS_GREEN_B=(
+	[LOG_ID_MSG]=$CONSOLE_HI_GREEN
+	[LOG_ID_MS2]=$CONSOLE_HI_WHITE
+	[LOG_ID_SMG]=$CONSOLE_HI_GREEN
+	[LOG_ID_SM2]=$CONSOLE_HI_WHITE
+	[LOG_ID_WRN]=$CONSOLE_HI_YELLOW
+	[LOG_ID_ERR]=$CONSOLE_HI_RED
+	[LOG_ID_VER]=$CONSOLE_HI_GREEN
+	[LOG_ID_DBG]=$CONSOLE_HI_CYAN
+)
+
+LOG_FUNCTIONS_COLORS_GREEN_W=(
+	[LOG_ID_MSG]=$CONSOLE_GREEN
+	[LOG_ID_MS2]=$CONSOLE_BLACK
+	[LOG_ID_SMG]=$CONSOLE_GREEN
+	[LOG_ID_SM2]=$CONSOLE_BLACK
+	[LOG_ID_WRN]=$CONSOLE_YELLOW
+	[LOG_ID_ERR]=$CONSOLE_RED
+	[LOG_ID_VER]=$CONSOLE_GREEN
+	[LOG_ID_DBG]=$CONSOLE_CYAN
+)
+
+LOG_FUNCTIONS_COLORS_BLUE_B=(
+	[LOG_ID_MSG]=$CONSOLE_HI_BLUE
+	[LOG_ID_MS2]=$CONSOLE_HI_WHITE
+	[LOG_ID_SMG]=$CONSOLE_HI_BLUE
+	[LOG_ID_SM2]=$CONSOLE_HI_WHITE
+	[LOG_ID_WRN]=$CONSOLE_HI_YELLOW
+	[LOG_ID_ERR]=$CONSOLE_HI_RED
+	[LOG_ID_VER]=$CONSOLE_HI_BLUE
+	[LOG_ID_DBG]=$CONSOLE_HI_CYAN
+)
+
+LOG_FUNCTIONS_COLORS_BLUE_W=(
+	[LOG_ID_MSG]=$CONSOLE_BLUE
+	[LOG_ID_MS2]=$CONSOLE_BLACK
+	[LOG_ID_SMG]=$CONSOLE_BLUE
+	[LOG_ID_SM2]=$CONSOLE_BLACK
+	[LOG_ID_WRN]=$CONSOLE_YELLOW
+	[LOG_ID_ERR]=$CONSOLE_RED
+	[LOG_ID_VER]=$CONSOLE_BLUE
+	[LOG_ID_DBG]=$CONSOLE_CYAN
+)
+
+LOG_FUNCTIONS_COLORS=()
+
+LOG_LEVEL=$LOG_LEVELS_NORMAL
+
+LOG_USEESCAPECODES=true
+
+LOG_WRAPCOLUMNS=72
+
+LOG_SCREENBG=black
+
+
+# void log_configure (["mode=<MODE>"][, "colors=<COLORSVAR>|true|false|none"][, "escapecodes=true|false"][, "@no-setup"])
+#
+function log_configure {
+	local SETUP=true
+
+	while [[ $# -gt 0 ]]; do
+		case "$1" in
+		mode=*)
+			case "${1#mode=}" in
+			debug)
+				LOG_LEVEL=$LOG_LEVELS_DEBUG
+				;;
+			verbose)
+				LOG_LEVEL=$LOG_LEVELS_VERBOSE
+				;;
+			normal)
+				LOG_LEVEL=$LOG_LEVELS_NORMAL
+				;;
+			quiet)
+				LOG_LEVEL=$LOG_LEVELS_QUIET
+				;;
+			silent)
+				LOG_LEVEL=$LOG_LEVELS_SILENT
+				;;
+			esac
+			;;
+		colors=*)
+			case "${1#colors=}" in
+			false|none)
+				LOG_FUNCTIONS_COLORS=()
+				;;
+			true|default|green-b)
+				LOG_FUNCTIONS_COLORS=("${LOG_FUNCTIONS_COLORS_GREEN_B[@]}")
+				;;
+			green-w)
+				LOG_FUNCTIONS_COLORS=("${LOG_FUNCTIONS_COLORS_GREEN_W[@]}")
+				;;
+			blue-b)
+				LOG_FUNCTIONS_COLORS=("${LOG_FUNCTIONS_COLORS_BLUE_B[@]}")
+				;;
+			blue-w)
+				LOG_FUNCTIONS_COLORS=("${LOG_FUNCTIONS_COLORS_BLUE_W[@]}")
+				;;
+			*)
+				log_fatalerror "Invalid color mode: ${1#colors=}"
+				;;
+			esac
+			;;
+		escapecodes=*)
+			LOG_USEESCAPECODES=${1#escapecodes=}
+			;;
+		@no-setup)
+			SETUP=false
+			;;
+		*)
+			log_fatalerror "Invalid argument: $1"
+			;;
+		esac
+
+		shift
+	done
+
+	[[ $SETUP = true ]] && log_setup
+}
+
+
+# void log_setup (void)
+#
+function log_setup {
+	local NAME COLOR PREFIX TEMPLATE FUNCTION WRAPTEMPLATE0 WRAPTEMPLATE1
+	local -i LEVEL INDEX
+	local -a TEMPLATES=()
+
+	# Normal functions
+
+	if [[ LOG_LEVEL -ge LOG_LEVELS_DEBUG ]]; then
+		PREFIX='${FUNCNAME[1]}: '
+	else
+		PREFIX=''
+	fi
+
+	for INDEX in "${!LOG_FUNCTIONS[@]}"; do
+		NAME=${LOG_FUNCTIONS[INDEX]}
+		LEVEL=${LOG_FUNCTIONS_LEVELS[INDEX]}
+		COLOR=${LOG_FUNCTIONS_COLORS[INDEX]}
+
+		if [[ LEVEL -le LOG_LEVEL ]]; then
+			if [[ $LOG_USEESCAPECODES = false ]]; then
+				TEMPLATE="<MESSAGE>"
+			elif [[ -n $COLOR ]]; then
+				TEMPLATE="$CONSOLE_NORMAL$COLOR<MESSAGE>$CONSOLE_NORMAL"
+			else
+				TEMPLATE="$CONSOLE_NORMAL<MESSAGE>"
+			fi
+
+			eval "function $NAME { echo -e \"${TEMPLATE/'<MESSAGE>'/$PREFIX\$1}\"; LOG_LASTLEVEL=$LEVEL; }"
+		else
+			TEMPLATE=''
+
+			eval "function $NAME { LOG_LASTLEVEL=$LEVEL; }"
+		fi
+
+		TEMPLATES[INDEX]=$TEMPLATE
+	done
+
+	# Special functions log_prompt(), log_prompt_generate, log_prompt2() and log_prompt2_generate
+
+	if [[ LOG_FUNCTIONS_LEVELS[LOG_ID_MSG] -le LOG_LEVEL ]]; then
+		TEMPLATE=${TEMPLATES[LOG_ID_MSG]/'<MESSAGE>'/'$1'}
+
+		eval "
+			function log_prompt {
+				echo -en \"$TEMPLATE\"
+				LOG_LASTLEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_MSG]}
+			}
+
+			function log_prompt_generate {
+				__=\"$TEMPLATE\"
+			}
+		"
+	else
+		eval "function log_prompt { LOG_LASTLEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_MSG]}; }"
+		function log_prompt_generate { __=''; }
+	fi
+
+	if [[ LOG_FUNCTIONS_LEVELS[LOG_ID_MS2] -le LOG_LEVEL ]]; then
+		TEMPLATE=${TEMPLATES[LOG_ID_MS2]/'<MESSAGE>'/'$1'}
+
+		eval "
+			function log_prompt2 {
+				echo -en \"$TEMPLATE\"
+				LOG_LASTLEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_MS2]}
+			}
+
+			function log_prompt2_generate {
+				__=\"$TEMPLATE\"
+			}
+		"
+	else
+		eval "function log_prompt2 { LOG_LASTLEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_MS2]}; }"
+		function log_prompt2_generate { __=''; }
+	fi
+
+	# Special function log_fcall()
+
+	if [[ LOG_FUNCTIONS_LEVELS[LOG_ID_DBG] -le LOG_LEVEL ]]; then
+		TEMPLATE=${TEMPLATES[LOG_ID_DBG]/'<MESSAGE>'/'$MESSAGE'}
+
+		eval "
+			function log_fcall {
+				local MESSAGE
+
+				if [[ \$# -eq 1 ]]; then
+					MESSAGE=\"\${FUNCNAME[1]}( \\\"\$1\\\" )\"
+				elif [[ \$# -gt 1 ]]; then
+					local LASTARG=\${!#}
+					local -a ARGSTEMP
+					ARGSTEMP=(\"\${@:1:(\$# - 1)}\")
+					ARGSTEMP=(\"\${ARGSTEMP[@]/#/\\\"}\")
+					MESSAGE=\"\${FUNCNAME[1]}( \${ARGSTEMP[@]/%/\\\",} \\\"\$LASTARG\\\" )\"
+				else
+					MESSAGE=\"\${FUNCNAME[1]}()\"
+				fi
+
+				echo -e \"$TEMPLATE\"
+
+				LOG_LASTLEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_DBG]}
+			}
+		"
+	else
+		eval "function log_fcall { LOG_LASTLEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_DBG]}; }"
+	fi
+
+	# Special function log_finalerror()
+
+	if [[ LOG_FUNCTIONS_LEVELS[LOG_ID_ERR] -le LOG_LEVEL ]]; then
+		TEMPLATE=${TEMPLATES[LOG_ID_ERR]/'<MESSAGE>'/'$1'}
+		eval "
+			function log_finalerror {
+				echo \"$TEMPLATE\"
+				exit \"\${2:-1}\"
+			}
+		"
+	else
+		function log_finalerror { exit "${2:-1}"; }
+	fi
+
+	# Special function log_fatalerror()
+
+	if [[ LOG_FUNCTIONS_LEVELS[LOG_ID_ERR] -le LOG_LEVEL ]]; then
+		TEMPLATE=${TEMPLATES[LOG_ID_ERR]/'<MESSAGE>'/'${MESSAGE[*]}'}
+
+		eval "
+			function log_fatalerror {
+				local -a MESSAGE=()
+				local -i L=0 F
+
+				MESSAGE[L++]=''
+				MESSAGE[L++]=\"Fatal error: \${FUNCNAME[1]}(): \$1\"
+				MESSAGE[L++]=''
+				MESSAGE[L++]='Function call stack:'
+				MESSAGE[L++]=''
+
+				for (( F = \${#FUNCNAME[@]}; F--; )); do
+					MESSAGE[L++]=\$'\\t'\"\${FUNCNAME[F]}()\"
+				done
+
+				MESSAGE[L++]=''
+
+				local IFS=\$'\\n'
+
+				echo \"$TEMPLATE\"
+
+				exit \"\${2:-1}\"
+			}
+		"
+	else
+		function log_fatalerror { exit "${2:-1}"; }
+	fi
+
+	# Wrapped versions
+
+	WRAPTEMPLATE0="
+		function <NAME0> {
+			local WRAPPED
+			utils_parawrap \"\$1\" WRAPPED \"\${2:-$LOG_WRAPCOLUMNS}\"
+			local -i I
+			for I in \"\${!WRAPPED[@]}\"; do
+				<NAME1> \"\${WRAPPED[I]}\"
+			done
+		}
+	"
+
+	WRAPTEMPLATE1="
+		function <NAME0> {
+			LOG_LASTLEVEL=<LEVEL>
+		}
+	"
+
+	for INDEX in "${!LOG_FUNCTIONS[@]}"; do
+		NAME=${LOG_FUNCTIONS[INDEX]}
+		LEVEL=${LOG_FUNCTIONS_LEVELS[INDEX]}
+
+		FUNCTION=${WRAPTEMPLATE0/<NAME0>/"${NAME}_wrapped"}
+
+		if [[ LEVEL -le LOG_LEVEL ]]; then
+			FUNCTION=${FUNCTION/<NAME1>/"$NAME"}
+		else
+			FUNCTION=${FUNCTION/<LEVEL>/"$LEVEL"}
+		fi
+
+		eval "$FUNCTION"
+	done
+}
+
+
+# void log_checkterminal (void)
+#
+function log_checkterminal {
+	if available tput; then
+		if [[ -z $(tput reset) || ! $(tput colors) = 8 ]]; then
+			LOG_USEESCAPECODES=false
+			LOG_USECOLORS=false
+		fi
+	fi
+}
+
+
+# void log (string TEXT, ["color=<COLOR>"], ["level=<LEVEL>"])
+#
+# The generic logging function.
+#
+function log {
+	local COLOR='' LEVEL=$LOG_LEVELS_NORMAL A
+
+	for A; do
+		case "$A" in
+		color=*)
+			COLOR=${A#color=}
+			case "$COLOR" in
+			message)
+				COLOR=${LOG_FUNCTIONS_COLORS[LOG_ID_MSG]}
+				;;
+			message2)
+				COLOR=${LOG_FUNCTIONS_COLORS[LOG_ID_MS2]}
+				;;
+			supermessage)
+				COLOR=${LOG_FUNCTIONS_COLORS[LOG_ID_SMG]}
+				;;
+			supermessage2)
+				COLOR=${LOG_FUNCTIONS_COLORS[LOG_ID_SM2]}
+				;;
+			warning)
+				COLOR=${LOG_FUNCTIONS_COLORS[LOG_ID_WRN]}
+				;;
+			error)
+				COLOR=${LOG_FUNCTIONS_COLORS[LOG_ID_ERR]}
+				;;
+			verbose)
+				COLOR=${LOG_FUNCTIONS_COLORS[LOG_ID_VER]}
+				;;
+			debug)
+				COLOR=${LOG_FUNCTIONS_COLORS[LOG_ID_DBG]}
+				;;
+			#beginoptionalblock
+			$'\e'\[*)
+				;;
+			*)
+				echo "log: Invalid parameter to color: $COLOR"
+				exit 1
+				;;
+			esac
+			#endoptionalblock
+			;;
+		level=*)
+			LEVEL=${A#level=}
+			case "$LEVEL" in
+			silent)
+				LEVEL=${LOG_LEVELS_SILENT}
+				;;
+			quiet)
+				LEVEL=${LOG_LEVELS_QUIET}
+				;;
+			normal)
+				LEVEL=${LOG_LEVELS_NORMAL}
+				;;
+			verbose)
+				LEVEL=${LOG_LEVELS_VERBOSE}
+				;;
+			debug)
+				LEVEL=${LOG_LEVELS_DEBUG}
+				;;
+			message)
+				LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_MSG]}
+				;;
+			message2)
+				LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_MS2]}
+				;;
+			supermessage)
+				LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_SMG]}
+				;;
+			supermessage2)
+				LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_SM2]}
+				;;
+			warning)
+				LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_WRN]}
+				;;
+			error)
+				LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_ERR]}
+				;;
+			verbose)
+				LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_VER]}
+				;;
+			debug)
+				LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_DBG]}
+				;;
+			finalerror)
+				LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_ERR]}
+				;;
+			criticalerror)
+				LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_ERR]}
+				;;
+			#beginoptionalblock
+			+([[:digit:]]))
+				;;
+			*)
+				echo "log: Invalid parameter to level: $LEVEL"
+				exit 1
+				;;
+			#endoptionalblock
+			esac
+			;;
+		esac
+	done
+
+	if [[ LEVEL -le LOG_LEVEL ]]; then
+		if [[ $LOG_USEESCAPECODES = false ]]; then
+			echo -e "$1"
+		elif [[ -n $COLOR ]]; then
+			echo -e "$CONSOLE_NORMAL$COLOR$1$CONSOLE_NORMAL"
+		else
+			echo -e "$CONSOLE_NORMAL$1"
+		fi
+	fi
+
+	LOG_LASTLEVEL=$LEVEL
+}
+
+
+# void log_message (string TEXT)
+#
+function log_message {
+	:
+}
+
+
+# void log_message2 (string TEXT)
+#
+function log_message2 {
+	:
+}
+
+
+# void log_supermessage (string TEXT)
+#
+function log_supermessage {
+	:
+}
+
+
+# void log_supermessage2 (string TEXT)
+#
+function log_supermessage2 {
+	:
+}
+
+
+# void log_prompt (string TEXT)
+#
+function log_prompt {
+	:
+}
+
+
+# void log_prompt_generate (string TEXT)
+#
+# > string __ = generated prompt string
+#
+function log_prompt_generate {
+	__=''
+}
+
+
+# void log_prompt2 (string TEXT)
+#
+function log_prompt2 {
+	:
+}
+
+
+# void log_prompt2_generate (string TEXT)
+#
+# > string __ = generated prompt string
+#
+function log_prompt2_generate {
+	__=''
+}
+
+
+# void log_warning (string TEXT)
+#
+function log_warning {
+	:
+}
+
+
+# void log_error (string TEXT)
+#
+function log_error {
+	:
+}
+
+
+# void log_verbose (string TEXT)
+#
+function log_verbose {
+	:
+}
+
+
+# void log_debug (string TEXT)
+#
+function log_debug {
+	:
+}
+
+
+# void log_fcall ([string ARGS])
+#
+function log_fcall {
+	:
+}
+
+
+# void log_finalerror (string FUNCTION, [int EXITCODE])
+#
+function log_finalerror {
+	:
+}
+
+
+# void log_fatalerror (string FUNCTION, [int EXITCODE])
+#
+function log_fatalerror {
+	:
+}
+
+
+# void log_newline (void)
+#
+# Creates a newline with level based on the last level.
+#
+function log_newline {
+	[[ LOG_LEVEL -ge LOG_LASTLEVEL ]] && echo
+}
+
+
+# void log_<function>_wrapped (string TEXT)
+#
+# Versions of logging functions that creates wrapped output.
+#
+function log_message_wrapped { :; }
+function log_message2_wrapped { :; }
+function log_supermessage_wrapped { :; }
+function log_supermessage2_wrapped { :; }
+function log_warning_wrapped { :; }
+function log_error_wrapped { :; }
+function log_verbose_wrapped { :; }
+function log_debug_wrapped { :; }
+
+
+# bool log_checklevel (string IDENT, ...)
+#
+# Where IDENT can be any of the significant part of the name of the
+# supported functions like message, message2, error, warning,
+# verbose, debug, supermessage, supermessage2, fcall, finalerror and
+# criticalerror; any of the valid levels like silent, quiet, normal,
+# verbose, debug or just any number.
+#
+# More than one IDENT can be specified.
+#
+# If one of the IDENTs represents a level that is lower than the current
+# level, this function returns true or false if none otherwise.
+#
+function log_checklevel {
+	local -i LEVEL
+
+	for A; do
+		case "$1" in
+		silent)
+			LEVEL=${LOG_LEVELS_SILENT}
+			;;
+		quiet)
+			LEVEL=${LOG_LEVELS_QUIET}
+			;;
+		normal)
+			LEVEL=${LOG_LEVELS_NORMAL}
+			;;
+		verbose)
+			LEVEL=${LOG_LEVELS_VERBOSE}
+			;;
+		debug)
+			LEVEL=${LOG_LEVELS_DEBUG}
+			;;
+		message)
+			LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_MSG]}
+			;;
+		message2)
+			LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_MS2]}
+			;;
+		supermessage)
+			LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_SMG]}
+			;;
+		supermessage2)
+			LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_SM2]}
+			;;
+		warning)
+			LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_WRN]}
+			;;
+		error)
+			LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_ERR]}
+			;;
+		verbose)
+			LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_VER]}
+			;;
+		debug)
+			LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_DBG]}
+			;;
+		finalerror)
+			LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_ERR]}
+			;;
+		criticalerror)
+			LEVEL=${LOG_FUNCTIONS_LEVELS[LOG_ID_ERR]}
+			;;
+		+([[:digit:]]))
+			LEVEL=$1
+			;;
+		#beginoptionalblock
+		*)
+			echo "log_checklevel: Invalid parameter: $LEVEL"
+			exit 1
+			;;
+		#endoptionalblock
+		esac
+
+		[[ LEVEL -le LOG_LEVEL ]] && return 0
+	done
+
+	return 1
+}
+
+
+{
+	[[ $DEBUG = true ]] && LOG_LEVEL=$LOG_LEVELS_DEBUG
+
+	log_checkterminal
+
+	log_setup
+}

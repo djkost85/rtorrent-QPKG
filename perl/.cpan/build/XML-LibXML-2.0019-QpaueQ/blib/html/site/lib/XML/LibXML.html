@@ -1,0 +1,517 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../scineplex.css">
+<title>XML::LibXML - Perl Binding for libxml2</title>
+<link rel="stylesheet" href="../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',3);</script>
+<h1><a>XML::LibXML - Perl Binding for libxml2</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#encodings_support_in_xml__libxml">ENCODINGS SUPPORT IN XML::LIBXML</a></li>
+	<li><a href="#thread_support">THREAD SUPPORT</a></li>
+	<li><a href="#version_information">VERSION INFORMATION</a></li>
+	<li><a href="#exports">EXPORTS</a></li>
+	<li><a href="#export_tags">EXPORT TAGS</a></li>
+	<li><a href="#related_modules">RELATED MODULES</a></li>
+	<li><a href="#xml__libxml_and_xml__gdome">XML::LIBXML AND XML::GDOME</a></li>
+	<li><a href="#contacts">CONTACTS</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML - Perl Binding for libxml2</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML</span><span class="operator">;</span>
+  <span class="keyword">my</span> <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">load_xml</span><span class="operator">(</span><span class="string">string</span> <span class="operator">=&gt;</span> <span class="operator">&lt;&lt;</span><span class="default">'EOT'</span><span class="operator">);</span><span class="string">
+  &lt;some-xml/&gt;
+  </span><span class="default">EOT</span>
+</pre>
+<pre>
+  <span class="variable">$Version_String</span> <span class="operator">=</span> <span class="variable">XML::LibXML::LIBXML_DOTTED_VERSION</span><span class="operator">;</span>
+  <span class="variable">$Version_ID</span> <span class="operator">=</span> <span class="variable">XML::LibXML::LIBXML_VERSION</span><span class="operator">;</span>
+  <span class="variable">$DLL_Version</span> <span class="operator">=</span> <span class="variable">XML::LibXML::LIBXML_RUNTIME_VERSION</span><span class="operator">;</span>
+  <span class="variable">$libxmlnode</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">import_GDOME</span><span class="operator">(</span> <span class="variable">$node</span><span class="operator">,</span> <span class="variable">$deep</span> <span class="operator">);</span>
+  <span class="variable">$gdomenode</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">export_GDOME</span><span class="operator">(</span> <span class="variable">$node</span><span class="operator">,</span> <span class="variable">$deep</span> <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This module is an interface to libxml2, providing XML and HTML parsers with
+DOM, SAX and XMLReader interfaces, a large subset of DOM Layer 3 interface and
+a XML::XPath-like interface to XPath API of libxml2. The module is split into
+several packages which are not described in this section; unless stated
+otherwise, you only need to <code>use XML::LibXML;</code> in your programs.</p>
+<p>For further information, please check the following documentation:</p>
+<dl>
+<dt><strong><a name="xml_libxml_parser" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Parser.html">the XML::LibXML::Parser manpage</a></a></strong></dt>
+
+<dd>
+<p>Parsing XML files with XML::LibXML</p>
+</dd>
+<dt><strong><a name="xml_libxml_dom" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/DOM.html">the XML::LibXML::DOM manpage</a></a></strong></dt>
+
+<dd>
+<p>XML::LibXML Document Object Model (DOM) Implementation</p>
+</dd>
+<dt><strong><a name="xml_libxml_sax" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/SAX.html">the XML::LibXML::SAX manpage</a></a></strong></dt>
+
+<dd>
+<p>XML::LibXML direct SAX parser</p>
+</dd>
+<dt><strong><a name="xml_libxml_reader" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Reader.html">the XML::LibXML::Reader manpage</a></a></strong></dt>
+
+<dd>
+<p>Reading XML with a pull-parser</p>
+</dd>
+<dt><strong><a name="xml_libxml_dtd" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Dtd.html">the XML::LibXML::Dtd manpage</a></a></strong></dt>
+
+<dd>
+<p>XML::LibXML frontend for DTD validation</p>
+</dd>
+<dt><strong><a name="xml_libxml_relaxng" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/RelaxNG.html">the XML::LibXML::RelaxNG manpage</a></a></strong></dt>
+
+<dd>
+<p>XML::LibXML frontend for RelaxNG schema validation</p>
+</dd>
+<dt><strong><a name="xml_libxml_schema" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Schema.html">the XML::LibXML::Schema manpage</a></a></strong></dt>
+
+<dd>
+<p>XML::LibXML frontend for W3C Schema schema validation</p>
+</dd>
+<dt><strong><a name="xml_libxml_xpathcontext" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/XPathContext.html">the XML::LibXML::XPathContext manpage</a></a></strong></dt>
+
+<dd>
+<p>API for evaluating XPath expressions with enhanced support for the evaluation
+context</p>
+</dd>
+<dt><strong><a name="xml_libxml_inputcallback" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/InputCallback.html">the XML::LibXML::InputCallback manpage</a></a></strong></dt>
+
+<dd>
+<p>Implementing custom URI Resolver and input callbacks</p>
+</dd>
+<dt><strong><a name="xml_libxml_common" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Common.html">the XML::LibXML::Common manpage</a></a></strong></dt>
+
+<dd>
+<p>Common functions for XML::LibXML related Classes</p>
+</dd>
+</dl>
+<p>The nodes in the Document Object Model (DOM) are represented by the following
+classes (most of which &quot;inherit&quot; from <a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Node.html">the XML::LibXML::Node manpage</a>):</p>
+<dl>
+<dt><strong><a name="xml_libxml_document" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Document.html">the XML::LibXML::Document manpage</a></a></strong></dt>
+
+<dd>
+<p>XML::LibXML class for DOM document nodes</p>
+</dd>
+<dt><strong><a name="xml_libxml_node" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Node.html">the XML::LibXML::Node manpage</a></a></strong></dt>
+
+<dd>
+<p>Abstract base class for XML::LibXML DOM nodes</p>
+</dd>
+<dt><strong><a name="xml_libxml_element" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Element.html">the XML::LibXML::Element manpage</a></a></strong></dt>
+
+<dd>
+<p>XML::LibXML class for DOM element nodes</p>
+</dd>
+<dt><strong><a name="xml_libxml_text" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Text.html">the XML::LibXML::Text manpage</a></a></strong></dt>
+
+<dd>
+<p>XML::LibXML class for DOM text nodes</p>
+</dd>
+<dt><strong><a name="xml_libxml_comment" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Comment.html">the XML::LibXML::Comment manpage</a></a></strong></dt>
+
+<dd>
+<p>XML::LibXML class for comment DOM nodes</p>
+</dd>
+<dt><strong><a name="xml_libxml_cdatasection" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/CDATASection.html">the XML::LibXML::CDATASection manpage</a></a></strong></dt>
+
+<dd>
+<p>XML::LibXML class for DOM CDATA sections</p>
+</dd>
+<dt><strong><a name="xml_libxml_attr" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Attr.html">the XML::LibXML::Attr manpage</a></a></strong></dt>
+
+<dd>
+<p>XML::LibXML DOM attribute class</p>
+</dd>
+<dt><strong><a name="xml_libxml_documentfragment" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/DocumentFragment.html">the XML::LibXML::DocumentFragment manpage</a></a></strong></dt>
+
+<dd>
+<p>XML::LibXML's DOM L2 Document Fragment implementation</p>
+</dd>
+<dt><strong><a name="xml_libxml_namespace" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Namespace.html">the XML::LibXML::Namespace manpage</a></a></strong></dt>
+
+<dd>
+<p>XML::LibXML DOM namespace nodes</p>
+</dd>
+<dt><strong><a name="xml_libxml_pi" class="item"><a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/PI.html">the XML::LibXML::PI manpage</a></a></strong></dt>
+
+<dd>
+<p>XML::LibXML DOM processing instruction nodes</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="encodings_support_in_xml__libxml">ENCODINGS SUPPORT IN XML::LIBXML</a></h1>
+<p>Recall that since version 5.6.1, Perl distinguishes between character strings
+(internally encoded in UTF-8) and so called binary data and, accordingly,
+applies either character or byte semantics to them. A scalar representing a
+character string is distinguished from a byte string by special flag (UTF8).
+Please refer to <em>perlunicode </em>&gt;&gt;&gt;&gt;&gt; for details.</p>
+<p>XML::LibXML's API is designed to deal with many encodings of XML documents
+completely transparently, so that the application using XML::LibXML can be
+completely ignorant about the encoding of the XML documents it works with. On
+the other hand, functions like <code>XML::LibXML::Document-&gt;setEncoding</code> give the user control over the document encoding.</p>
+<p>To ensure the aforementioned transparency and uniformity, most functions of
+XML::LibXML that work with in-memory trees accept and return data as character
+strings (i.e. UTF-8 encoded with the UTF8 flag on) regardless of the original
+document encoding; however, the functions related to I/O operations (i.e.
+parsing and saving) operate with binary data (in the original document
+encoding) obeying the encoding declaration of the XML documents.</p>
+<p>Below we summarize basic rules and principles regarding encoding:</p>
+<ol>
+<li>
+<p>Do NOT apply any encoding-related PerlIO layers (<a href="../../../lib/pod/perlrun.html#utf8"><code>:utf8</code></a> or <a href="#encoding"><code>:encoding(...)</code></a>) to file handles that are an input for the parses or an output for a
+serializer of (full) XML documents. This is because the conversion of the data
+to/from the internal character representation is provided by libxml2 itself
+which must be able to enforce the encoding specified by the <code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;...&quot;?&gt;</code> declaration. Here is an example to follow:</p>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML</span><span class="operator">;</span>
+  <span class="comment"># load</span>
+  <span class="keyword">open</span> <span class="keyword">my</span> <span class="variable">$fh</span><span class="operator">,</span> <span class="string">'&lt;'</span><span class="operator">,</span> <span class="string">'file.xml'</span><span class="operator">;</span>
+  <span class="keyword">binmode</span> <span class="variable">$fh</span><span class="operator">;</span> <span class="comment"># drop all PerlIO layers possibly created by a use open pragma</span>
+  <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">load_xml</span><span class="operator">(</span><span class="string">IO</span> <span class="operator">=&gt;</span> <span class="variable">$fh</span><span class="operator">);</span>
+</pre>
+<pre>
+  <span class="comment"># save</span>
+  <span class="keyword">open</span> <span class="keyword">my</span> <span class="variable">$out</span><span class="operator">,</span> <span class="string">'&gt;'</span><span class="operator">,</span> <span class="string">'out.xml'</span><span class="operator">;</span>
+  <span class="keyword">binmode</span> <span class="variable">$out</span><span class="operator">;</span> <span class="comment"># as above</span>
+  <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">toFH</span><span class="operator">(</span><span class="variable">$out</span><span class="operator">);</span>
+  <span class="comment"># or</span>
+  <span class="keyword">print</span> <span class="operator">{</span><span class="variable">$out</span><span class="operator">}</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">toString</span><span class="operator">();</span>
+</pre>
+</li>
+<li>
+<p>All functions working with DOM accept and return character strings (UTF-8
+encoded with UTF8 flag on). E.g.</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Document</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="string">'1.0'</span><span class="operator">,</span><span class="variable">$some_encoding</span><span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">$element</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">createElement</span><span class="operator">(</span><span class="variable">$name</span><span class="operator">);</span>
+  <span class="variable">$element</span><span class="operator">-&gt;</span><span class="variable">appendText</span><span class="operator">(</span><span class="variable">$text</span><span class="operator">);</span>
+  <span class="variable">$xml_fragment</span> <span class="operator">=</span> <span class="variable">$element</span><span class="operator">-&gt;</span><span class="variable">toString</span><span class="operator">();</span> <span class="comment"># returns a character string</span>
+  <span class="variable">$xml_document</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">toString</span><span class="operator">();</span> <span class="comment"># returns a byte string</span>
+</pre>
+<p>where <code>$some_encoding</code> is the document encoding that will be used when saving the document, and <code>$name</code> and <code>$text</code> contain character strings (UTF-8 encoded with UTF8 flag on). Note that the
+method <code>toString</code> returns XML as a character string if applied to other node than the Document
+node and a byte string containing the appropriate</p>
+<pre>
+  &lt;?xml version=&quot;1.0&quot; encoding=&quot;...&quot;?&gt;</pre>
+<p>declaration if applied to a <a href="../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Document.html">the XML::LibXML::Document manpage</a>.</p>
+</li>
+<li>
+<p>DOM methods also accept binary strings in the original encoding of the document
+to which the node belongs (UTF-8 is assumed if the node is not attached to any
+document). Exploiting this feature is NOT RECOMMENDED since it is considered
+bad practice.</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Document</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="string">'1.0'</span><span class="operator">,</span><span class="string">'iso-8859-2'</span><span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">$text</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">createTextNode</span><span class="operator">(</span><span class="variable">$some_latin2_encoded_byte_string</span><span class="operator">);</span>
+  <span class="comment"># WORKS, BUT NOT RECOMMENDED!</span>
+</pre>
+</li>
+</ol>
+<p><em>NOTE: </em>&gt;&gt;&gt;&gt;&gt; libxml2 support for many encodings is based on the iconv library. The actual
+list of supported encodings may vary from platform to platform. To test if your
+platform works correctly with your language encoding, build a simple document
+in the particular encoding and try to parse it with XML::LibXML to see if the
+parser produces any errors. Occasional crashes were reported on rare platforms
+that ship with a broken version of iconv.</p>
+<p>
+</p>
+<hr />
+<h1><a name="thread_support">THREAD SUPPORT</a></h1>
+<p>XML::LibXML since 1.67 partially supports Perl threads in Perl &gt;= 5.8.8.
+XML::LibXML can be used with threads in two ways:</p>
+<p>By default, all XML::LibXML classes use CLONE_SKIP class method to prevent Perl
+from copying XML::LibXML::* objects when a new thread is spawn. In this mode,
+all XML::LibXML::* objects are thread specific. This is the safest way to work
+with XML::LibXML in threads.</p>
+<p>Alternatively, one may use</p>
+<pre>
+  <span class="keyword">use</span> <span class="variable">threads</span><span class="operator">;</span>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML</span> <span class="string">qw(:threads_shared)</span><span class="operator">;</span>
+</pre>
+<p>to indicate, that all XML::LibXML node and parser objects should be shared
+between the main thread and any thread spawn from there. For example, in</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">load_xml</span><span class="operator">(</span><span class="string">location</span> <span class="operator">=&gt;</span> <span class="variable">$filename</span><span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">$thr</span> <span class="operator">=</span> <span class="variable">threads</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="keyword">sub</span><span class="operator">{</span>
+    <span class="comment"># code working with $doc</span>
+    <span class="number">1</span><span class="operator">;</span>
+  <span class="operator">});</span>
+  <span class="variable">$thr</span><span class="operator">-&gt;</span><span class="variable">join</span><span class="operator">;</span>
+</pre>
+<p>the variable <code>$doc</code> refers to the exact same XML::LibXML::Document in the spawned thread as in the
+main thread.</p>
+<p>Without using mutex locks, parallel threads may read the same document (i.e.
+any node that belongs to the document), parse files, and modify different
+documents.</p>
+<p>However, if there is a chance that some of the threads will attempt to modify a
+document (or even create new nodes based on that document, e.g. with <code>$doc-&gt;createElement</code>) that other threads may be reading at the same time, the user is responsible
+for creating a mutex lock and using it in <em>both </em>&gt;&gt;&gt;&gt;&gt; in the thread that modifies and the thread that reads:</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">load_xml</span><span class="operator">(</span><span class="string">location</span> <span class="operator">=&gt;</span> <span class="variable">$filename</span><span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">$mutex</span> <span class="operator">:</span> <span class="variable">shared</span><span class="operator">;</span>
+  <span class="keyword">my</span> <span class="variable">$thr</span> <span class="operator">=</span> <span class="variable">threads</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="keyword">sub</span><span class="operator">{</span>
+     <span class="keyword">lock</span> <span class="variable">$mutex</span><span class="operator">;</span>
+     <span class="keyword">my</span> <span class="variable">$el</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">createElement</span><span class="operator">(</span><span class="string">'foo'</span><span class="operator">);</span>
+     <span class="comment"># ...</span>
+    <span class="number">1</span><span class="operator">;</span>
+  <span class="operator">});</span>
+  <span class="operator">{</span>
+    <span class="keyword">lock</span> <span class="variable">$mutex</span><span class="operator">;</span>
+    <span class="keyword">my</span> <span class="variable">$root</span> <span class="operator">=</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">documentElement</span><span class="operator">;</span>
+    <span class="keyword">say</span> <span class="variable">$root</span><span class="operator">-&gt;</span><span class="variable">name</span><span class="operator">;</span>
+  <span class="operator">}</span>
+  <span class="variable">$thr</span><span class="operator">-&gt;</span><span class="variable">join</span><span class="operator">;</span>
+</pre>
+<p>Note that libxml2 uses dictionaries to store short strings and these
+dictionaries are kept on a document node. Without mutex locks, it could happen
+in the previous example that the thread modifies the dictionary while other
+threads attempt to read from it, which could easily lead to a crash.</p>
+<p>
+</p>
+<hr />
+<h1><a name="version_information">VERSION INFORMATION</a></h1>
+<p>Sometimes it is useful to figure out, for which version XML::LibXML was
+compiled for. In most cases this is for debugging or to check if a given
+installation meets all functionality for the package. The functions
+XML::LibXML::LIBXML_DOTTED_VERSION and XML::LibXML::LIBXML_VERSION provide this
+version information. Both functions simply pass through the values of the
+similar named macros of libxml2. Similarly, XML::LibXML::LIBXML_RUNTIME_VERSION
+returns the version of the (usually dynamically) linked libxml2.</p>
+<dl>
+<dt><strong><a name="xml_libxml_libxml_dotted_version" class="item">XML::LibXML::LIBXML_DOTTED_VERSION</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$Version_String</span> <span class="operator">=</span> <span class="variable">XML::LibXML::LIBXML_DOTTED_VERSION</span><span class="operator">;</span>
+</pre>
+<p>Returns the version string of the libxml2 version XML::LibXML was compiled for.
+This will be &quot;2.6.2&quot; for &quot;libxml2 2.6.2&quot;.</p>
+</dd>
+<dt><strong><a name="xml_libxml_libxml_version" class="item">XML::LibXML::LIBXML_VERSION</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$Version_ID</span> <span class="operator">=</span> <span class="variable">XML::LibXML::LIBXML_VERSION</span><span class="operator">;</span>
+</pre>
+<p>Returns the version id of the libxml2 version XML::LibXML was compiled for.
+This will be &quot;20602&quot; for &quot;libxml2 2.6.2&quot;. Don't mix this version id with
+$XML::LibXML::VERSION. The latter contains the version of XML::LibXML itself
+while the first contains the version of libxml2 XML::LibXML was compiled for.</p>
+</dd>
+<dt><strong><a name="xml_libxml_libxml_runtime_version" class="item">XML::LibXML::LIBXML_RUNTIME_VERSION</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$DLL_Version</span> <span class="operator">=</span> <span class="variable">XML::LibXML::LIBXML_RUNTIME_VERSION</span><span class="operator">;</span>
+</pre>
+<p>Returns a version string of the libxml2 which is (usually dynamically) linked
+by XML::LibXML. This will be &quot;20602&quot; for libxml2 released as &quot;2.6.2&quot; and
+something like &quot;20602-CVS2032&quot; for a CVS build of libxml2.</p>
+<p>XML::LibXML issues a warning if the version of libxml2 dynamically linked to it
+is less than the version of libxml2 which it was compiled against.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="exports">EXPORTS</a></h1>
+<p>By default the module exports all constants and functions listed in the :all
+tag, described below.</p>
+<p>
+</p>
+<hr />
+<h1><a name="export_tags">EXPORT TAGS</a></h1>
+<dl>
+<dt><strong><a name="all" class="item"><code>:all</code></a></strong></dt>
+
+<dd>
+<p>Includes the tags <a href="#libxml"><code>:libxml</code></a>, <a href="#encoding"><code>:encoding</code></a>, and <a href="#ns"><code>:ns</code></a> described below.</p>
+</dd>
+<dt><strong><a name="libxml" class="item"><code>:libxml</code></a></strong></dt>
+
+<dd>
+<p>Exports integer constants for DOM node types.</p>
+<pre>
+  XML_ELEMENT_NODE            =&gt; 1
+  XML_ATTRIBUTE_NODE          =&gt; 2
+  XML_TEXT_NODE               =&gt; 3
+  XML_CDATA_SECTION_NODE      =&gt; 4
+  XML_ENTITY_REF_NODE         =&gt; 5
+  XML_ENTITY_NODE             =&gt; 6
+  XML_PI_NODE                 =&gt; 7
+  XML_COMMENT_NODE            =&gt; 8
+  XML_DOCUMENT_NODE           =&gt; 9
+  XML_DOCUMENT_TYPE_NODE      =&gt; 10
+  XML_DOCUMENT_FRAG_NODE      =&gt; 11
+  XML_NOTATION_NODE           =&gt; 12
+  XML_HTML_DOCUMENT_NODE      =&gt; 13
+  XML_DTD_NODE                =&gt; 14
+  XML_ELEMENT_DECL            =&gt; 15
+  XML_ATTRIBUTE_DECL          =&gt; 16
+  XML_ENTITY_DECL             =&gt; 17
+  XML_NAMESPACE_DECL          =&gt; 18
+  XML_XINCLUDE_START          =&gt; 19
+  XML_XINCLUDE_END            =&gt; 20</pre>
+</dd>
+<dt><strong><a name="encoding" class="item"><code>:encoding</code></a></strong></dt>
+
+<dd>
+<p>Exports two encoding conversion functions from XML::LibXML::Common.</p>
+<pre>
+  encodeToUTF8()
+  decodeFromUTF8()</pre>
+</dd>
+<dt><strong><a name="ns" class="item"><code>:ns</code></a></strong></dt>
+
+<dd>
+<p>Exports two convenience constants: the implicit namespace of the reserved <code>xml:</code> prefix, and the implicit namespace for the reserved <code>xmlns:</code> prefix.</p>
+<pre>
+  XML_XML_NS    =&gt; '<a href="http://www.w3.org/XML/1998/namespace">http://www.w3.org/XML/1998/namespace</a>'
+  XML_XMLNS_NS  =&gt; '<a href="http://www.w3.org/2000/xmlns/">http://www.w3.org/2000/xmlns/</a>'</pre>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="related_modules">RELATED MODULES</a></h1>
+<p>The modules described in this section are not part of the XML::LibXML package
+itself. As they support some additional features, they are mentioned here.</p>
+<dl>
+<dt><strong><a name="xml_libxslt" class="item"><a href="../../../XML/LibXSLT.html">the XML::LibXSLT manpage</a></a></strong></dt>
+
+<dd>
+<p>XSLT 1.0 Processor using libxslt and XML::LibXML</p>
+</dd>
+<dt><strong><a name="xml_libxml_iterator" class="item"><a href="../../../XML/LibXML/Iterator.html">the XML::LibXML::Iterator manpage</a></a></strong></dt>
+
+<dd>
+<p>XML::LibXML Implementation of the DOM Traversal Specification</p>
+</dd>
+<dt><strong><a name="xml_compacttree_xs" class="item"><a href="../../../XML/CompactTree/XS.html">the XML::CompactTree::XS manpage</a></a></strong></dt>
+
+<dd>
+<p>Uses XML::LibXML::Reader to very efficiently to parse XML document or element
+into native Perl data structures, which are less flexible but significantly
+faster to process then DOM.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="xml__libxml_and_xml__gdome">XML::LIBXML AND XML::GDOME</a></h1>
+<p>Note: <em>THE FUNCTIONS DESCRIBED HERE ARE STILL EXPERIMENTAL </em>&gt;&gt;&gt;&gt;&gt;</p>
+<p>Although both modules make use of libxml2's XML capabilities, the DOM
+implementation of both modules are not compatible. But still it is possible to
+exchange nodes from one DOM to the other. The concept of this exchange is
+pretty similar to the function cloneNode(): The particular node is copied on
+the low-level to the opposite DOM implementation.</p>
+<p>Since the DOM implementations cannot coexist within one document, one is forced
+to copy each node that should be used. Because you are always keeping two nodes
+this may cause quite an impact on a machines memory usage.</p>
+<p>XML::LibXML provides two functions to export or import GDOME nodes:
+<a href="#import_gdome"><code>import_GDOME()</code></a> and <a href="#export_gdome"><code>export_GDOME()</code></a>. Both function have two parameters: the node
+and a flag for recursive import. The flag works as in <code>cloneNode()</code>.</p>
+<p>The two functions allow to export and import XML::GDOME nodes explicitly,
+however, XML::LibXML allows also the transparent import of XML::GDOME nodes in
+functions such as <code>appendChild()</code>, <code>insertAfter()</code> and so on. While native nodes
+are automatically adopted in most functions XML::GDOME nodes are always cloned
+in advance. Thus if the original node is modified after the operation, the node
+in the XML::LibXML document will not have this information.</p>
+<dl>
+<dt><strong><a name="import_gdome" class="item">import_GDOME</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$libxmlnode</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">import_GDOME</span><span class="operator">(</span> <span class="variable">$node</span><span class="operator">,</span> <span class="variable">$deep</span> <span class="operator">);</span>
+</pre>
+<p>This clones an XML::GDOME node to an XML::LibXML node explicitly.</p>
+</dd>
+<dt><strong><a name="export_gdome" class="item">export_GDOME</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$gdomenode</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">export_GDOME</span><span class="operator">(</span> <span class="variable">$node</span><span class="operator">,</span> <span class="variable">$deep</span> <span class="operator">);</span>
+</pre>
+<p>Allows to clone an XML::LibXML node into an XML::GDOME node.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="contacts">CONTACTS</a></h1>
+<p>For bug reports, please use the CPAN request tracker on
+<a href="http://rt.cpan.org/NoAuth/Bugs.html?Dist=XML-LibXML">http://rt.cpan.org/NoAuth/Bugs.html?Dist=XML-LibXML</a></p>
+<p>For suggestions etc., and other issues related to XML::LibXML you may use the
+perl XML mailing list (<code>perl-xml@listserv.ActiveState.com</code>), where most XML-related Perl modules are discussed. In case of problems you
+should check the archives of that list first. Many problems are already
+discussed there. You can find the list's archives and subscription options at <a href="http://aspn.activestate.com/ASPN/Mail/Browse/Threaded/perl-xml">http://aspn.activestate.com/ASPN/Mail/Browse/Threaded/perl-xml</a>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Matt Sergeant,
+Christian Glahn,
+Petr Pajas</p>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p>2.0019</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>2001-2007, AxKit.com Ltd.</p>
+<p>2002-2006, Christian Glahn.</p>
+<p>2006-2009, Petr Pajas.</p>
+
+</body>
+
+</html>

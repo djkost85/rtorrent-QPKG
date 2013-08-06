@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/2255/trunk/plugins/show_peers_like_wtorrent
+END
+plugin.info
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/2255/trunk/plugins/show_peers_like_wtorrent/plugin.info
+END
+init.js
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/2162/trunk/plugins/show_peers_like_wtorrent/init.js
+END

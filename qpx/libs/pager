@@ -1,0 +1,35 @@
+#!/usr/bin/env sh
+: ${DEBUG:=1}
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include available
+
+#
+# commands/pager
+#
+
+# void pager (void)
+#
+if available less; then
+	function pager {
+		less -qS
+	}
+elif available more; then
+	function pager {
+		more
+	}
+elif available cat; then
+	function pager {
+		cat
+	}
+else
+	function pager {
+		local REPLY IFS=''
+		while read -r; do
+			echo "$REPLY"
+		done
+	}
+fi

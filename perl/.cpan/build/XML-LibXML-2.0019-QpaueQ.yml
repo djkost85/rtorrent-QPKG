@@ -1,0 +1,55 @@
+---
+distribution: !!perl/hash:CPAN::Distribution
+  CALLED_FOR: XML::LibXML
+  CHECKSUM_STATUS: OK
+  ID: S/SH/SHLOMIF/XML-LibXML-2.0019.tar.gz
+  RO:
+    CPAN_COMMENT: ~
+    CPAN_USERID: SHLOMIF
+  archived: tar
+  badtestcnt: 1
+  build_dir: /usr/bin/rtorrent/perl/.cpan/build/XML-LibXML-2.0019-QpaueQ
+  incommandcolor: 1
+  localfile: /usr/bin/rtorrent/perl/.cpan/sources/authors/id/S/SH/SHLOMIF/XML-LibXML-2.0019.tar.gz
+  make: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 5
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581230
+  make_test: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 12
+    FAILED: 1
+    TEXT: NO
+    TIME: 1375581475
+  negative_prefs_cache: 12
+  prefs: {}
+  prereq_pm:
+    build_requires:
+      ExtUtils::MakeMaker: '0'
+    requires:
+      ExtUtils::MakeMaker: '6.56'
+      Test::More: '0'
+      XML::NamespaceSupport: '1.07'
+      XML::SAX: '0.11'
+      base: '0'
+      strict: '0'
+      vars: '0'
+      warnings: '0'
+  reqtype: c
+  sponsored_mods: {}
+  unwrapped: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 5
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581203
+  writemakefile: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 5
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581207
+perl:
+  $^X: /usr/bin/rtorrent/perl/bin/perl-static
+  mtime_$^X: 1375581022
+  mtime_dll: 0
+  sitearchexp: /usr/bin/rtorrent/perl/site/lib
+time: 1375581475

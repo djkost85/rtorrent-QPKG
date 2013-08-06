@@ -1,0 +1,240 @@
+#!/usr/bin/env sh
+: ${DEBUG:=1}
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include array
+include getabspath
+include globals
+include log
+include useextglob
+
+#
+# temp
+#
+
+TEMP_SESSION=()
+TEMP_DIR=''
+
+
+# void temp_initialize (string <dir_path>)
+#
+# Initializes handler.  The temporary directory to use must be
+# specified.  It is automatically converted to its absolute form.
+#
+function temp_initialize {
+	log_fcall "$@"
+
+	assume "$# -eq 1" -- "Invalid number of arguments."
+
+	getabspath "$1"/.
+
+	local DIR=$__
+
+	if [[ ! -e $DIR ]]; then
+		log_finalerror "Directory does not exist: $DIR"
+	elif [[ $DIR = /. ]]; then
+		log_finalerror "Root directory is not allowed to be used as temporary directory."
+	fi
+
+	TEMP_DIR=$DIR
+}
+
+
+# bool temp_create ([string <prefix>])
+#
+# Creates a temporary file on TEMP_DIR.  Returns true if file is
+# created.  The created file is saved on the variable __.
+# An optional prefix for the filename could be added as an argument.
+#
+# > __ = temporary file
+#
+function temp_create {
+	log_fcall "$@"
+
+	local FILE PREFIX
+
+	if [[ -n $1 ]]; then
+		PREFIX=$1.
+	else
+		PREFIX=''
+	fi
+
+	until
+		FILE=${TEMP_DIR}/${PREFIX}${RANDOM}.temp
+		! array_has_value TEMP_SESSION "$FILE" && ! [[ -e $FILE ]]
+	do
+		continue
+	done
+
+	: > "$FILE" || {
+		log_error "Unable to create temporary file."
+		return 1
+	}
+
+	array_push_f TEMP_SESSION "$FILE"
+
+	__=$FILE
+
+	return 0
+}
+
+
+# void temp_reserve ([string <prefix>])
+#
+# Reserves a temporary file. This generates a filename and saves it in
+# the session variable but does not create it.
+#
+function temp_reserve {
+	log_fcall "$@"
+
+	local FILE PREFIX
+
+	if [[ -n $1 ]]; then
+		PREFIX=$1.
+	else
+		PREFIX=''
+	fi
+
+	until
+		FILE=${TEMP_DIR}/${PREFIX}${RANDOM}.temp
+		! array_has_value TEMP_SESSION "$FILE" && ! [[ -e $FILE ]]
+	do
+		continue
+	done
+
+	array_push_f TEMP_SESSION "$FILE"
+
+	__=$FILE
+}
+
+
+# bool temp_cleanup (string <special_argument> | string <absolute_specific_file_path>)
+#
+# Cleans all created temporary files and remove them from registry.  If
+# all files are removed successfully, or if they no longer exist, return
+# true.  If a file can't be delete, it won't be removed from registry.
+#
+# Special Arguments:
+#
+# @latest                - Cleans up latest generated file.
+#
+# @session | @registered - Cleans up all files generated in current
+#                          session.
+#
+# @others  | @old        - Cleans up all other files not generated in
+#                          current session but recognizeable from the
+#                          normal format.
+#
+# @all                   - Cleans up all files.
+#
+# If no argument is specified, this will cleanup session files.
+#
+function temp_cleanup {
+	log_fcall "$@"
+
+	local R=0
+
+	if [[ $# -gt 0 ]]; then
+		for __; do
+			case "$__" in
+			@latest)
+				temp_cleanup_latest || R=1
+				;;
+			@session|@registered)
+				temp_cleanup_session || R=1
+				;;
+			@others|@old)
+				temp_cleanup_others || R=1
+				;;
+			@all)
+				temp_cleanup_session || R=1
+				temp_cleanup_others || R=1
+				;;
+			/*)
+				temp_cleanup_specific "$__" || R=1
+				;;
+			*)
+				log_fatalerror "Invalid argument: $__"
+				;;
+			esac
+		done
+	else
+		temp_cleanup_session || R=1
+	fi
+
+	return "$R"
+}
+
+
+# void temp_cleanup_latest (void)
+#
+function temp_cleanup_latest {
+	log_fcall "$@"
+	local -i I
+	array_get_last_index TEMP_SESSION I && {
+		if [[ -f ${TEMP_SESSION[I]} ]]; then
+			temp_remove_file "${TEMP_SESSION[I]}" && unset "TEMP_SESSION[$I]" || return 1
+		else
+			unset "TEMP_SESSION[$I]"
+		fi
+	}
+	return 0
+}
+
+
+# void temp_cleanup_session (void)
+#
+function temp_cleanup_session {
+	log_fcall "$@"
+	local -i I R=1
+	for I in "${!TEMP_SESSION[@]}"; do
+		if [[ -f ${TEMP_SESSION[I]} ]]; then
+			temp_remove_file "${TEMP_SESSION[I]}" && unset "TEMP_SESSION[$I]" || R=0
+		else
+			unset "TEMP_SESSION[$I]"
+		fi
+	done
+	return "$R"
+}
+
+
+# void temp_cleanup_others (void)
+#
+function temp_cleanup_others {
+	log_fcall "$@"
+	local R=0
+	while read __; do
+		if [[ -f $__ ]] && ! array_has_value TEMP_SESSION "$__"; then
+			temp_remove_file "$__" || R=1
+		fi
+	#done < <(compgen -G "$TEMP_DIR/*.+([[:digit:]]).temp")
+	return "$R"
+}
+
+
+# void temp_cleanup_specific (string <file_path>)
+#
+function temp_cleanup_specific {
+	log_fcall "$@"
+	getabspath "$1"
+	if [[ -f $__ ]]; then
+		temp_remove_file "$__" || return 1
+	fi
+	array_remove_values TEMP_SESSION "$__"
+	return 0
+}
+
+
+# void temp_remove_file (void)
+#
+function temp_remove_file {
+	log_fcall "$@"
+	rm "$1" || {
+		log_error "Unable to remove temporary file: $1"
+		return 1
+	}
+	return 0
+}

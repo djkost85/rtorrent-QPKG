@@ -1,0 +1,16 @@
+/usr/bin/rtorrent/perl/lib/HTML/Entities.pm
+/usr/bin/rtorrent/perl/lib/HTML/Filter.pm
+/usr/bin/rtorrent/perl/lib/HTML/HeadParser.pm
+/usr/bin/rtorrent/perl/lib/HTML/LinkExtor.pm
+/usr/bin/rtorrent/perl/lib/HTML/Parser.pm
+/usr/bin/rtorrent/perl/lib/HTML/PullParser.pm
+/usr/bin/rtorrent/perl/lib/HTML/TokeParser.pm
+/usr/bin/rtorrent/perl/lib/auto/HTML/Parser/Parser.bs
+/usr/bin/rtorrent/perl/lib/auto/HTML/Parser/Parser.so
+/usr/bin/rtorrent/perl/man/man3/HTML::Entities.3
+/usr/bin/rtorrent/perl/man/man3/HTML::Filter.3
+/usr/bin/rtorrent/perl/man/man3/HTML::HeadParser.3
+/usr/bin/rtorrent/perl/man/man3/HTML::LinkExtor.3
+/usr/bin/rtorrent/perl/man/man3/HTML::Parser.3
+/usr/bin/rtorrent/perl/man/man3/HTML::PullParser.3
+/usr/bin/rtorrent/perl/man/man3/HTML::TokeParser.3

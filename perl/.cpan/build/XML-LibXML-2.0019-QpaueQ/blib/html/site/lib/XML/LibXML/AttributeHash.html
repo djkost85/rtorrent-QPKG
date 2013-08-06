@@ -1,0 +1,82 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::AttributeHash - tie an XML::LibXML::Element to a hash to access its attributes</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::AttributeHash - tie an XML::LibXML::Element to a hash to access its attributes</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::AttributeHash - tie an XML::LibXML::Element to a hash to access its attributes</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ <span class="keyword">tie</span> <span class="keyword">my</span> <span class="variable">%hash</span><span class="operator">,</span> <span class="string">'XML::LibXML::AttributeHash'</span><span class="operator">,</span> <span class="variable">$element</span><span class="operator">;</span>
+ <span class="variable">$hash</span><span class="operator">{</span><span class="string">'href'</span><span class="operator">}</span> <span class="operator">=</span> <span class="string">'http://example.com/'</span><span class="operator">;</span>
+ <span class="keyword">print</span> <span class="variable">$element</span><span class="operator">-&gt;</span><span class="variable">getAttribute</span><span class="operator">(</span><span class="string">'href'</span><span class="operator">)</span> <span class="operator">.</span> <span class="string">"\n"</span><span class="operator">;</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This class allows an element's attributes to be accessed as if they were a
+plain old Perl hash. Attribute names become hash keys. Namespaced attributes
+are keyed using Clark notation.</p>
+<pre>
+ <span class="keyword">my</span> <span class="variable">$XLINK</span> <span class="operator">=</span> <span class="string">'http://www.w3.org/1999/xlink'</span><span class="operator">;</span>
+ <span class="keyword">tie</span> <span class="keyword">my</span> <span class="variable">%hash</span><span class="operator">,</span> <span class="string">'XML::LibXML::AttributeHash'</span><span class="operator">,</span> <span class="variable">$element</span><span class="operator">;</span>
+ <span class="variable">$hash</span><span class="operator">{</span><span class="string">"{</span><span class="variable">$XLINK</span><span class="string">}href"</span><span class="operator">}</span> <span class="operator">=</span> <span class="string">'http://localhost/'</span><span class="operator">;</span>
+ <span class="keyword">print</span> <span class="variable">$element</span><span class="operator">-&gt;</span><span class="variable">getAttributeNS</span><span class="operator">(</span><span class="variable">$XLINK</span><span class="operator">,</span> <span class="string">'href'</span><span class="operator">)</span> <span class="operator">.</span> <span class="string">"\n"</span><span class="operator">;</span>
+</pre>
+<p>There is rarely any need to use XML::LibXML::AttributeHash directly. In
+general, it is possible to take advantage of XML::LibXML::Element's
+overloading. The example in the SYNOPSIS could have been written:</p>
+<pre>
+ <span class="variable">$element</span><span class="operator">-&gt;</span><span class="operator">{</span><span class="string">'href'</span><span class="operator">}</span> <span class="operator">=</span> <span class="string">'http://example.com/'</span><span class="operator">;</span>
+ <span class="keyword">print</span> <span class="variable">$element</span><span class="operator">-&gt;</span><span class="variable">getAttribute</span><span class="operator">(</span><span class="string">'href'</span><span class="operator">)</span> <span class="operator">.</span> <span class="string">"\n"</span><span class="operator">;</span>
+</pre>
+<p>The tie interface allows the passing of additional arguments to
+XML::LibXML::AttributeHash:</p>
+<pre>
+ <span class="keyword">tie</span> <span class="keyword">my</span> <span class="variable">%hash</span><span class="operator">,</span> <span class="string">'XML::LibXML::AttributeHash'</span><span class="operator">,</span> <span class="variable">$element</span><span class="operator">,</span> <span class="variable">%args</span><span class="operator">;</span>
+</pre>
+<p>Currently only one argument is supported, the boolean &quot;weaken&quot; which (if
+true) indicates that the tied object's reference to the element should be
+a weak reference. This is used by XML::LibXML::Element's overloading. The
+&quot;weaken&quot; argument is ignored if you don't have a working Scalar::Util::weaken.</p>
+
+</body>
+
+</html>

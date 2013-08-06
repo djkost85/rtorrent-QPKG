@@ -1,0 +1,4 @@
+/usr/bin/rtorrent/perl/bin/reloc_perl
+/usr/bin/rtorrent/perl/lib/ActiveState/RelocateTree.pm
+/usr/bin/rtorrent/perl/man/man1/reloc_perl.1
+/usr/bin/rtorrent/perl/man/man3/ActiveState::RelocateTree.3

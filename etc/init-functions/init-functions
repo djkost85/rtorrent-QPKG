@@ -1,0 +1,75 @@
+
+pidofproc () {
+    local pidfile line i pids= status specified pid
+    pidfile=
+    specified=
+    
+    OPTIND=1
+    while getopts p: opt ; do
+        case "$opt" in
+            p)  pidfile="$OPTARG"; specified=1;;
+        esac
+    done
+    shift $(($OPTIND - 1))
+
+    if [ -z "${pidfile:-}" ]; then
+        pidfile=/var/run/${1##*/}.pid
+    fi
+
+    if [ -f "$pidfile" ]; then
+        read pid < "$pidfile"
+        if [ -n "${pid:-}" ]; then
+            if $(kill -0 "${pid:-}" 2> /dev/null); then
+                echo "$pid"
+                return 0
+            else
+                return 1 # program is dead and /var/run pid file exists
+            fi
+        fi
+    fi
+    if [ -x /bin/pidof -a ! "$specified" ]; then
+        /bin/pidof -o %PPID $1
+        status="$?"
+        [ "$status" = 1 ] && return 3 # program is not running
+        return 0
+    fi
+    return 4 # program or service is unknown
+}
+
+# start-stop-daemon uses the same algorithm as "pidofproc" above.
+killproc () {
+    local pidfile sig status base i name_param
+    pidfile=
+    name_param=
+
+    OPTIND=1
+    while getopts p: opt ; do
+        case "$opt" in
+            p)  pidfile="$OPTARG";;
+        esac
+    done
+    shift $(($OPTIND - 1))
+
+    base=${1##*/}
+    if [ ! $pidfile ]; then
+        pidfile=/var/run/$base.pid
+        name_param="--name $base"
+    fi
+
+    sig=$(echo ${2:-} | sed -e 's/^-\(.*\)/\1/')
+    sig=$(echo $sig | sed -e 's/^SIG\(.*\)/\1/')
+    if [ -n "$sig" ]; then
+        /sbin/start-stop-daemon --stop --pidfile "$pidfile" --signal "$sig" --quiet $name_param
+    else
+        /sbin/start-stop-daemon --stop --pidfile "$pidfile" --retry 5 --quiet --oknodo $name_param
+    fi
+    status="$?"
+    if [ "$status" = 1 ]; then
+        [ -n "$sig" ] && return 0
+        return 3 # program is not running
+    fi
+
+    rm -f "$pidfile"
+    return 0
+}
+

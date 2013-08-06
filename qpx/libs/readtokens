@@ -1,0 +1,144 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include useextglob
+include utils/implode
+
+#
+# readtokens
+#
+
+# bool readtokens ([function <error_function>, [int <input_offet>]])
+#
+# Reads tokens from multiple lines.
+#
+# < stdin
+# < error_function = callback function when error occurs
+# < input_offet = reference starting input line number for error messages
+#
+# > __A0 = tokens read
+# > __I0 = number of tokens rea
+# > __I1 = lines read
+#
+# Function will return true if input was read. If an error during
+# parsing occurred, return value will depend on the one returned by the
+# error functions.
+#
+function readtokens {
+	local ERROR_FUNCTION=${1:-':'}
+	local -i INPUT_OFFSET=${2:-'0'}
+
+	__A0=() __I0=0 __I1=0
+
+	local A B T TOKEN='' R=0
+	local -a L
+
+	local IFS=''
+
+	read -r A || return 1
+	(( __I1++ ))
+
+	for (( ;; )); do
+		case "${A:0:1}" in
+		\')
+			A=${A#\'} L=()
+
+			for (( ;; )); do
+				A=${A//\'\'}
+
+				if [[ $A == *\'* ]]; then
+					L[${#L[@]}]=${A%%\'*}
+					A=${A#*\'}
+					break
+				fi
+
+				L[${#L[@]}]=$A
+
+				read -r A || {
+					"$ERROR_FUNCTION" "End of file reached looking for '." "$(( INPUT_OFFSET + __I1 ))"
+					R=$?
+					break
+				}
+
+				(( __I1++ ))
+			done
+
+			utils_implode L T $'\n'
+
+			TOKEN=${TOKEN}${T}
+			;;
+		\")
+			A=${A#\"} L=()
+
+			for (( ;; )); do
+				T=''
+
+				until [[ -z $A ]]; do
+					case "${A:0:1}" in
+					\")
+						L[${#L[@]}]=$T
+						A=${A:1}
+						break 2
+						;;
+					\\)
+						T=${T}${A:1:1}
+						A=${A:2}
+						;;
+					*)
+						B=${A%%[\"\\]*}
+						T=${T}${B}
+						A=${A:${#B}}
+						;;
+					esac
+				done
+
+				L[${#L[@]}]=$T
+
+				read -r A || {
+					"$ERROR_FUNCTION" 'End of file reached looking for ".' "$(( INPUT_OFFSET + __I1 ))"
+					R=$?
+					break
+				}
+
+				(( __I1++ ))
+			done
+
+			utils_implode L T $'\n'
+
+			TOKEN=${TOKEN}${T}
+			;;
+		\\)
+			TOKEN=${TOKEN}${A:1:1}
+			A=${A:2}
+			;;
+		\#)
+			if [[ -n $TOKEN ]]; then
+				TOKEN=${TOKEN}\#
+			else
+				break
+			fi
+			;;
+		[[:space:]])
+			A=${A##+([[:space:]])}
+			if [[ -n $TOKEN ]]; then
+				__A0[__I0++]=$TOKEN
+				TOKEN=''
+			fi
+			;;
+		'')
+			[[ -n $TOKEN ]] && __A0[__I0++]=$TOKEN
+			break
+			;;
+		*)
+			T=${A%%[[:space:]\'\"\\\#]*}
+			TOKEN=${TOKEN}${T}
+			A=${A:${#T}}
+			;;
+		esac
+	done
+
+	[[ R -eq 0 ]]
+}

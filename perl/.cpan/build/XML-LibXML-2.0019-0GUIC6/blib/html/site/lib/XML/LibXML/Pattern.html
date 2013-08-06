@@ -1,0 +1,147 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::Pattern - XML::LibXML::Pattern - interface to libxml2 XPath patterns</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::Pattern - XML::LibXML::Pattern - interface to libxml2 XPath patterns</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::Pattern - XML::LibXML::Pattern - interface to libxml2 XPath patterns</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML</span><span class="operator">;</span>
+  <span class="keyword">my</span> <span class="variable">$pattern</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Pattern</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="string">'/x:html/x:body//x:div'</span><span class="operator">,</span> <span class="operator">{</span> <span class="string">'x'</span> <span class="operator">=&gt;</span> <span class="string">'http://www.w3.org/1999/xhtml'</span> <span class="operator">}</span><span class="operator">);</span>
+  <span class="comment"># test a match on an XML::LibXML::Node $node</span>
+</pre>
+<pre>
+  <span class="keyword">if</span> <span class="operator">(</span><span class="variable">$pattern</span><span class="operator">-&gt;</span><span class="variable">matchesNode</span><span class="operator">(</span><span class="variable">$node</span><span class="operator">))</span> <span class="operator">{</span> <span class="operator">...</span> <span class="operator">}</span>
+</pre>
+<pre>
+  <span class="comment"># or on an XML::LibXML::Reader</span>
+</pre>
+<pre>
+  <span class="keyword">if</span> <span class="operator">(</span><span class="variable">$reader</span><span class="operator">-&gt;</span><span class="variable">matchesPattern</span><span class="operator">(</span><span class="variable">$pattern</span><span class="operator">))</span> <span class="operator">{</span> <span class="operator">...</span> <span class="operator">}</span>
+</pre>
+<pre>
+  <span class="comment"># or skip reading all nodes that do not match</span>
+</pre>
+<pre>
+  <span class="keyword">print</span> <span class="variable">$reader</span><span class="operator">-&gt;</span><span class="variable">nodePath</span> <span class="keyword">while</span> <span class="variable">$reader</span><span class="operator">-&gt;</span><span class="variable">nextPatternMatch</span><span class="operator">(</span><span class="variable">$pattern</span><span class="operator">);</span>
+</pre>
+<pre>
+  <span class="variable">$pattern</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Pattern</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="variable">pattern</span><span class="operator">,</span> <span class="operator">{</span> <span class="string">prefix</span> <span class="operator">=&gt;</span> <span class="variable">namespace_URI</span><span class="operator">,</span> <span class="operator">...</span> <span class="operator">}</span> <span class="operator">);</span>
+  <span class="variable">$bool</span> <span class="operator">=</span> <span class="variable">$pattern</span><span class="operator">-&gt;</span><span class="variable">matchesNode</span><span class="operator">(</span><span class="variable">$node</span><span class="operator">);</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This is a perl interface to libxml2's pattern matching support <em><a href="http://xmlsoft.org/html/libxml-pattern.html">http://xmlsoft.org/html/libxml-pattern.html</a> </em>&gt;&gt;&gt;&gt;&gt;. This feature requires recent versions of libxml2.</p>
+<p>Patterns are a small subset of XPath language, which is limited to
+(disjunctions of) location paths involving the child and descendant axes in
+abbreviated form as described by the extended BNF given below:</p>
+<pre>
+  Selector ::=     Path ( '|' Path )*
+  Path     ::=     ('.//' | '//' | '/' )? Step ( '/' Step )*
+  Step     ::=     '.' | NameTest
+  NameTest ::=     QName | '*' | NCName ':' '*'</pre>
+<p>For readability, whitespace may be used in selector XPath expressions even
+though not explicitly allowed by the grammar: whitespace may be freely added
+within patterns before or after any token, where</p>
+<pre>
+  token     ::=     '.' | '/' | '//' | '|' | NameTest</pre>
+<p>Note that no predicates or attribute tests are allowed.</p>
+<p>Patterns are particularly useful for stream parsing provided via the <code>XML::LibXML::Reader</code> interface.</p>
+<dl>
+<dt><strong><a name="new" class="item"><code>new()</code></a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$pattern</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Pattern</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="variable">pattern</span><span class="operator">,</span> <span class="operator">{</span> <span class="string">prefix</span> <span class="operator">=&gt;</span> <span class="variable">namespace_URI</span><span class="operator">,</span> <span class="operator">...</span> <span class="operator">}</span> <span class="operator">);</span>
+</pre>
+<p>The constructor of a pattern takes a pattern expression (as described by the
+BNF grammar above) and an optional HASH reference mapping prefixes to namespace
+URIs. The method returns a compiled pattern object.</p>
+<p>Note that if the document has a default namespace, it must still be given an
+prefix in order to be matched (as demanded by the XPath 1.0 specification). For
+example, to match an element <code>&lt;a xmlns=&quot;http://foo.bar&quot;&lt;/a&gt;</code>, one should use a pattern like this:</p>
+<pre>
+  <span class="variable">$pattern</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Pattern</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="string">'foo:a'</span><span class="operator">,</span> <span class="operator">{</span> <span class="string">foo</span> <span class="operator">=&gt;</span> <span class="string">'http://foo.bar'</span> <span class="operator">}</span><span class="operator">);</span>
+</pre>
+</dd>
+<dt><strong><a name="matchesnode" class="item"><code>matchesNode($node)</code></a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$bool</span> <span class="operator">=</span> <span class="variable">$pattern</span><span class="operator">-&gt;</span><span class="variable">matchesNode</span><span class="operator">(</span><span class="variable">$node</span><span class="operator">);</span>
+</pre>
+<p>Given an XML::LibXML::Node object, returns a true value if the node is matched
+by the compiled pattern expression.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><a href="../../../../.cpan/build/XML-LibXML-2.0019-0GUIC6/blib/lib/XML/LibXML/Reader.html">the XML::LibXML::Reader manpage</a> for other methods involving compiled patterns.</p>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Matt Sergeant,
+Christian Glahn,
+Petr Pajas</p>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p>2.0019</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>2001-2007, AxKit.com Ltd.</p>
+<p>2002-2006, Christian Glahn.</p>
+<p>2006-2009, Petr Pajas.</p>
+
+</body>
+
+</html>

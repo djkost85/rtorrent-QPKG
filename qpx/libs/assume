@@ -1,0 +1,85 @@
+#!/usr/bin/env sh
+: ${DEBUG:=1}
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include defaults
+include log
+include misc
+include null
+include useextglob
+
+# void assume (string <expression>, [meta <arg>, ...], ["--", string <info>, ...])
+#
+function assume {
+	eval "[[ $1 ]] 2>&$NULL" || assume_reportfailure "$@"
+}
+
+
+# void assume_reportfailure (...)
+#
+function assume_reportfailure {
+	log_fcall "$@"
+
+	# EXPR
+
+	local EXPR=$1
+	shift
+
+	# INFO and ARGS
+
+	local -a INFO=() ARGS=()
+	local -i I J
+
+	for (( I = $#; I; --I )); do
+		[[ ${!I} = -- ]] && break
+	done
+
+	if [[ I -gt 0 ]]; then
+		INFO=("${@:I + 1}")
+		ARGS=("${@:1:I - 1}")
+	else
+		ARGS=("$@")
+	fi
+
+	# MESSAGE
+
+	local -a MESSAGE=()
+	local -i L=0
+	local IFS=$DEFAULTS_IFS
+
+	MESSAGE[L++]="Expression $EXPR failed in function ${FUNCNAME[2]}()."
+
+	if [[ ${#INFO[@]} -gt 0 ]]; then
+		MESSAGE[L++]=''
+		MESSAGE[L++]='Info:'
+		MESSAGE[L++]=''
+		MESSAGE[L++]=$'\t'"${INFO[*]}"
+	fi
+
+	if [[ ${#ARGS[@]} -gt 0 ]]; then
+		MESSAGE[L++]=''
+		MESSAGE[L++]='Arguments:'
+		MESSAGE[L++]=''
+
+		for I in "${!ARGS[@]}"; do
+			MESSAGE[L++]=$'\t$'$(( I + 2 ))": \"${ARGS[I]}\""
+		done
+	fi
+
+	IFS=$'\n'
+
+	dumpvariables
+
+	MESSAGE[L++]=''
+	MESSAGE[L++]="Variables dumped in \"$__\"."
+
+	#$GLOBALS_USERLOGDIR/variables.dump
+	${GLOBALS_VARDUMP}
+
+	log_fatalerror "${MESSAGE[*]}"
+
+	exit 1
+}

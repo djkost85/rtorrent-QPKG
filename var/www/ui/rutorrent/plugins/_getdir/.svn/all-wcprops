@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/2286/trunk/plugins/_getdir
+END
+info.php
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/2115/trunk/plugins/_getdir/info.php
+END
+_getdir.css
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/2114/trunk/plugins/_getdir/_getdir.css
+END
+getdirs.php
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/2286/trunk/plugins/_getdir/getdirs.php
+END
+getfiles.php
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/2286/trunk/plugins/_getdir/getfiles.php
+END
+plugin.info
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/2255/trunk/plugins/_getdir/plugin.info
+END
+init.js
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2114/trunk/plugins/_getdir/init.js
+END

@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+# defaults.sh
+#
+# Contains global default values.
+#
+
+DEFAULTS_EDITORS=('vim -c "set nowrap" -c "set tabstop=4" -n' 'nano' 'emacs' 'vi' 'ed')
+DEFAULTS_IFS=$' \t\n'
+DEFAULTS_LINES=24
+DEFAULTS_PLAYINTERVAL=0
+DEFAULTS_SHELL=${BASH:-/bin/bash}
+DEFAULTS_VTAG='version:'

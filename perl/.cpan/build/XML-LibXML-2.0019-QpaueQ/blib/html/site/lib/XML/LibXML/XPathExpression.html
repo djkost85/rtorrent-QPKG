@@ -1,0 +1,112 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::XPathExpression - XML::LibXML::XPathExpression - interface to libxml2 pre-compiled XPath expressions</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::XPathExpression - XML::LibXML::XPathExpression - interface to libxml2 pre-compiled XPath expressions</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::XPathExpression - XML::LibXML::XPathExpression - interface to libxml2 pre-compiled XPath expressions</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML</span><span class="operator">;</span>
+  <span class="keyword">my</span> <span class="variable">$compiled_xpath</span> <span class="operator">=</span> <span class="variable">XML::LibXML::XPathExpression</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="string">'//foo[@bar="baz"][position()&lt;4]'</span><span class="operator">);</span>
+</pre>
+<pre>
+  <span class="comment"># interface from XML::LibXML::Node</span>
+</pre>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$result</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">find</span><span class="operator">(</span><span class="variable">$compiled_xpath</span><span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">@nodes</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">findnodes</span><span class="operator">(</span><span class="variable">$compiled_xpath</span><span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">$value</span> <span class="operator">=</span> <span class="variable">$node</span><span class="operator">-&gt;</span><span class="variable">findvalue</span><span class="operator">(</span><span class="variable">$compiled_xpath</span><span class="operator">);</span>
+</pre>
+<pre>
+  <span class="comment"># interface from XML::LibXML::XPathContext</span>
+</pre>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$result</span> <span class="operator">=</span> <span class="variable">$xpc</span><span class="operator">-&gt;</span><span class="variable">find</span><span class="operator">(</span><span class="variable">$compiled_xpath</span><span class="operator">,</span><span class="variable">$node</span><span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">@nodes</span> <span class="operator">=</span> <span class="variable">$xpc</span><span class="operator">-&gt;</span><span class="variable">findnodes</span><span class="operator">(</span><span class="variable">$compiled_xpath</span><span class="operator">,</span><span class="variable">$node</span><span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">$value</span> <span class="operator">=</span> <span class="variable">$xpc</span><span class="operator">-&gt;</span><span class="variable">findvalue</span><span class="operator">(</span><span class="variable">$compiled_xpath</span><span class="operator">,</span><span class="variable">$node</span><span class="operator">);</span>
+</pre>
+<pre>
+  <span class="variable">$compiled</span> <span class="operator">=</span> <span class="variable">XML::LibXML::XPathExpression</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="variable">xpath_string</span> <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This is a perl interface to libxml2's pre-compiled XPath expressions.
+Pre-compiling an XPath expression can give in some performance benefit if the
+same XPath query is evaluated many times. <code>XML::LibXML::XPathExpression</code> objects can be passed to all <code>find...</code> functions <code>XML::LibXML</code> that expect an XPath expression.</p>
+<dl>
+<dt><strong><a name="new" class="item"><code>new()</code></a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$compiled</span> <span class="operator">=</span> <span class="variable">XML::LibXML::XPathExpression</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="variable">xpath_string</span> <span class="operator">);</span>
+</pre>
+<p>The constructor takes an XPath 1.0 expression as a string and returns an object
+representing the pre-compiled expressions (the actual data structure is
+internal to libxml2).</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Matt Sergeant,
+Christian Glahn,
+Petr Pajas</p>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p>2.0019</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>2001-2007, AxKit.com Ltd.</p>
+<p>2002-2006, Christian Glahn.</p>
+<p>2006-2009, Petr Pajas.</p>
+
+</body>
+
+</html>

@@ -1,0 +1,52 @@
+---
+distribution: !!perl/hash:CPAN::Distribution
+  CALLED_FOR: HTML::Parser
+  CHECKSUM_STATUS: OK
+  ID: G/GA/GAAS/HTML-Parser-3.71.tar.gz
+  archived: tar
+  build_dir: /usr/bin/rtorrent/perl/.cpan/build/HTML-Parser-3.71-To1FVX
+  install: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 3
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581196
+  localfile: /usr/bin/rtorrent/perl/.cpan/sources/authors/id/G/GA/GAAS/HTML-Parser-3.71.tar.gz
+  make: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 3
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581188
+  make_test: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 3
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581194
+  negative_prefs_cache: 3
+  prefs:
+    install: {}
+  prereq_pm:
+    build_requires:
+      ExtUtils::MakeMaker: '0'
+      Test::More: '0'
+    requires:
+      HTML::Tagset: '3'
+      XSLoader: '0'
+      perl: '5.008'
+  reqtype: c
+  sponsored_mods: {}
+  unwrapped: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 3
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581183
+  writemakefile: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 3
+    FAILED: ''
+    TEXT: YES
+    TIME: 1375581184
+perl:
+  $^X: /usr/bin/rtorrent/perl/bin/perl-static
+  mtime_$^X: 1375581022
+  mtime_dll: 0
+  sitearchexp: /usr/bin/rtorrent/perl/site/lib
+time: 1375581196

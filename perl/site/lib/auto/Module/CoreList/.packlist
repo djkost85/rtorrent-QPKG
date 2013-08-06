@@ -1,0 +1,4 @@
+/usr/bin/rtorrent/perl/site/bin/corelist
+/usr/bin/rtorrent/perl/site/lib/Module/CoreList.pm
+/usr/bin/rtorrent/perl/site/man/man1/corelist.1
+/usr/bin/rtorrent/perl/site/man/man3/Module::CoreList.3

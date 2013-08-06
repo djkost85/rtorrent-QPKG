@@ -1,0 +1,79 @@
+8
+
+dir
+2335
+http://rutorrent.googlecode.com/svn/trunk/plugins/edit
+http://rutorrent.googlecode.com/svn
+
+
+
+2013-07-25T08:53:10.302042Z
+2325
+holmen@brasse.se
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+f4b6cfda-67a8-11de-ba0c-230037762ff9
+
+lang
+dir
+
+action.php
+file
+
+
+
+
+2013-08-03T18:18:01.000000Z
+b7d009007d3f165c6ddcf0691eefdbd7
+2012-09-03T11:21:08.009356Z
+2115
+novik65
+
+plugin.info
+file
+
+
+
+
+2013-08-03T18:18:01.000000Z
+feb2ea2dea80c678abc63da02da0ed39
+2012-12-07T12:55:51.715399Z
+2255
+novik65
+
+edit.css
+file
+
+
+
+
+2013-08-03T18:18:01.000000Z
+464664b7790898e62672197556e1c9cb
+2012-09-08T14:31:59.360696Z
+2162
+serge.6401
+
+init.js
+file
+
+
+
+
+2013-08-03T18:18:01.000000Z
+ce2e49bdf62a25c06af06029ee4d8c8b
+2012-09-08T14:31:59.360696Z
+2162
+serge.6401
+

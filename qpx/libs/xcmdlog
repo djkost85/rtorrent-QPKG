@@ -1,0 +1,565 @@
+#!/usr/bin/env sh
+
+#_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+#} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+_QLIBNAME="lbxcmdl" ; _QLIB_version="0.1.3"
+_QLIBDESC="QPX Execution Logging Library"
+
+##### LOAD ONLY ONCE #####
+[ ! -z "$(eval echo \"\$QPX_l${_QLIBNAME}\")" ] && {
+	[ "$DEBUG" != "0" ] && echo "[ $QPROJECT $_QLIBNAME ] Version ${_QLIB_version} already started!"
+	return 1
+} || {
+	[ "$DEBUG" != "0" ] && echo "[ $QPROJECT $_QLIBNAME ] Version ${_QLIB_version} is loading right now..."
+	eval QPX_l${_QLIBNAME}="${_QLIB_version}"
+	#export QPX_l${_QLIBNAME}
+}
+
+
+include defined
+include enabled
+include exists
+include ansi
+include qlog
+
+
+NOW_LOG="date +%Y%m%d-%H%M%S.%N" # out:20130307-052210.417747339
+: ${LOGDATEFORMAT:="%b %e %H:%M:%S"}
+: ${LOG_FILE:="$QPX_LOG_FILE"}
+: ${LOG_ENABLED:="yes"}
+: ${SYSLOG_ENABLED:="no"}
+: ${SYSLOG_TAG:="$QPROJECT"}
+: ${XRES_WIDTH:=80}
+
+
+init () {
+    #
+    # Syslog style log messages
+    #
+    if ! defined LOGDATEFORMAT
+    then
+        LOGDATEFORMAT="%b %e %H:%M:%S"
+    fi
+    if ! defined LOG_FILE
+    then
+        LOG_FILE="$QPX_LOG_FILE"
+    fi
+
+    #
+    # Enable / disable logging to a file
+    # Value: yes or no (y / n)
+    #
+    if ! defined LOG_ENABLED
+    then
+        LOG_ENABLED=no
+    fi
+    if ! defined SYSLOG_ENABLED
+    then
+        SYSLOG_ENABLED=no
+    fi
+    if ! defined SYSLOG_TAG
+    then
+        SYSLOG_TAG="$QPROJECT"
+    fi
+
+    #
+    # Bug fix for Bash, parsing exclamation mark.
+    #
+    set +o histexpand
+}
+
+#
+# returns 0 if a directory exists
+# returns 1 otherwise
+#
+function directory_exists {
+    if [[ -d "$1" ]]; then
+        return 0
+    fi
+    return 1
+}
+
+
+#
+# Checks if a variable is set to "y" or "yes".
+# Usefull for detecting if a configurable option is set or not.
+#
+option_enabled () {
+
+    VAR="$1"
+    VAR_VALUE=$(eval echo \$$VAR)
+    if [[ "$VAR_VALUE" == "y" ]] || [[ "$VAR_VALUE" == "yes" ]]
+    then
+        return 0
+    else
+        return 1
+    fi
+}
+
+#
+# The log funcion just puts a string into a file, prepended with a date & time in 
+# syslog format.
+#
+
+log2syslog () {
+
+    if option_enabled  SYSLOG_ENABLED
+    then
+       MESSAGE="$1"
+       logger -t "$SYSLOG_TAG" " $MESSAGE" #The space is not a typo!"
+    fi
+}
+
+#
+# This function writes messages to a log file and/or syslog
+# The only argument is a message that has to be logged.
+# 
+
+log () {
+    
+    if option_enabled LOG_ENABLED || option_enabled SYSLOG_ENABLED 
+    then
+        LOG_MESSAGE="$1" 
+        DATE=`date +"$LOGDATEFORMAT"`
+
+        if has_value LOG_MESSAGE
+        then
+            LOG_STRING="$DATE $LOG_MESSAGE"
+        else
+            LOG_STRING="$DATE -- empty log message, no input received --"
+        fi
+
+        if option_enabled LOG_ENABLED
+        then
+            echo "$LOG_STRING" >> "$LOG_FILE"
+        fi
+
+        if option_enabled SYSLOG_ENABLED
+        then
+            #
+            # Syslog already prepends a date/time stamp so only the message 
+            # is logged. 
+            #
+            log2syslog "$LOG_MESSAGE"
+        fi
+    fi
+}
+
+
+#
+# This function basically replaces the 'echo' function in bash scripts.
+# The added functionality over echo is logging and using colors. 
+#
+# The first argument is the string / message that must be displayed.
+# The second argument is the text color.
+
+msg () {
+
+    MESSAGE="$1"
+    COLOR="$2"
+
+    if ! has_value COLOR
+    then
+        COLOR="$nc"
+    fi
+
+    if has_value "MESSAGE"
+    then
+        echo -e "${COLOR}${MESSAGE}${nc}"
+        log "$MESSAGE"
+    else
+        #echo "-- no message received --"
+        log "$MESSAGE"
+    fi
+}
+
+#
+# This function sends log to the QTS system log
+#
+qlog_status () {
+    MESSAGE="$1"
+    STATUS="$2"
+    ERR_CALLER="$3"
+
+    case $STATUS in
+    *EMERG* | *ALERT* | *CRITICAL* | *PANIC* | *ERROR* | *NOT_OK* | *FAILURE* | *FAILED* )
+        err_qlog "[$STATUS]: $MESSAGE"
+        echo "  line:$ERR_CALLER"
+    ;;
+    *NOTI* | *NOTE* | *INFO* | *DEBUG* | OK | *OKAY* | *PASSED* | *SUCCESS* )
+        qlog "$MESSAGE"
+    ;;
+    *WARN* | *UNDEF* | *)
+        warn_qlog "[$STATUS]: $MESSAGE"
+    ;;
+    esac
+}
+
+#
+# This function echos a message 
+# and displays the status at the end of the line.
+#
+# It can be used to create status messages other
+# than the default messages available such as
+# OK or FAIL
+#
+msg_status () {
+    MESSAGE="$1"
+    STATUS="$2"
+    ERR_CALLER="${3:-$(caller 0)}"
+
+    msg "$MESSAGE"
+    display_status "$STATUS"
+    qlog_status "$MESSAGE" "$STATUS" "$ERR_CALLER"
+}
+
+#
+# These functions are just short hand for messages like
+# msg_status "this message is ok" OK
+#
+
+#
+# The following functions are shorthand for 
+# msg_status "a message" OK 
+# msg_status "another message" FAIL
+
+
+msg_emergency () {
+    MESSAGE="$1"
+    STATUS="EMERGENCY"
+    ERR_CALLER="${2:-$(caller 0)}"
+    msg_status "$MESSAGE" "$STATUS" "$ERR_CALLER"
+} >&2
+
+msg_alert () {
+    MESSAGE="$1"
+    STATUS="ALERT"
+    ERR_CALLER="${2:-$(caller 0)}"
+    msg_status "$MESSAGE" "$STATUS" "$ERR_CALLER"
+} >&2
+
+msg_critical () {
+    MESSAGE="$1"
+    STATUS="CRITICAL"
+    ERR_CALLER="${2:-$(caller 0)}"
+    msg_status "$MESSAGE" "$STATUS" "$ERR_CALLER"
+} >&2
+
+msg_panic () {
+    MESSAGE="$1"
+    STATUS="PANIC"
+    ERR_CALLER="${2:-$(caller 0)}"
+    msg_status "$MESSAGE" "$STATUS" "$ERR_CALLER"
+} >&2
+
+msg_error () {
+    MESSAGE="$1"
+    STATUS="ERROR"
+    ERR_CALLER="${2:-$(caller 0)}"
+    msg_status "$MESSAGE" "$STATUS" "$ERR_CALLER"
+} >&2
+
+msg_warning () {
+    MESSAGE="$1"
+    STATUS="WARNING"
+    ERR_CALLER="${2:-$(caller 0)}"
+    msg_status "$MESSAGE" "$STATUS" "$ERR_CALLER"
+}
+
+msg_notice () {
+    MESSAGE="$1"
+    STATUS="NOTICE"
+    ERR_CALLER="${2:-$(caller 0)}"
+    msg_status "$MESSAGE" "$STATUS" "$ERR_CALLER"
+}
+
+msg_info () {
+    MESSAGE="$1"
+    STATUS="INFO"
+    ERR_CALLER="${2:-$(caller 0)}"
+    msg_status "$MESSAGE" "$STATUS" "$ERR_CALLER"
+}
+
+msg_debug () {
+    MESSAGE="$1"
+    STATUS="DEBUG"
+    ERR_CALLER="${2:-$(caller 0)}"
+    msg_status "$MESSAGE" "$STATUS" "$ERR_CALLER"
+}
+
+msg_ok () {
+    MESSAGE="$1"
+    STATUS="OK"
+    ERR_CALLER="${2:-$(caller 0)}"
+    msg_status "$MESSAGE" "$STATUS" "$ERR_CALLER"
+}
+
+msg_not_ok () {
+    MESSAGE="$1"
+    STATUS="NOT_OK"
+    ERR_CALLER="${2:-$(caller 0)}"
+    msg_status "$MESSAGE" "$STATUS" "$ERR_CALLER"
+} >&2
+
+msg_fail () {
+    MESSAGE="$1"
+    STATUS="FAILED"
+    ERR_CALLER="${2:-$(caller 0)}"
+    msg_status "$MESSAGE" "$STATUS" "$ERR_CALLER"
+} >&2
+
+msg_success () {
+    MESSAGE="$1"
+    STATUS="SUCCESS"
+    ERR_CALLER="${2:-$(caller 0)}"
+    msg_status "$MESSAGE" "$STATUS" "$ERR_CALLER"
+}
+
+msg_passed () {
+    MESSAGE="$1"
+    STATUS="PASSED"
+    ERR_CALLER="${2:-$(caller 0)}"
+    msg_status "$MESSAGE" "$STATUS" "$ERR_CALLER"
+}
+
+check_status () {
+
+    CMD="$1"
+    STATUS="$2"
+
+    if [ "$STATUS" == "0" ]
+    then
+        msg_ok "$CMD"
+    else
+        msg_fail "$CMD"
+    fi
+}
+
+#
+# Private function
+#
+# This is a function that just positions
+# the cursor one row up and to the right.
+# It then prints a message with specified
+# Color
+# It is used for displaying colored status messages on the
+# Right side of the screen.
+#
+# ARG1 = "status message (OK / FAIL)"
+# ARG2 = The color in which the status is displayed.
+#
+raw_status () {
+
+    STATUS="$1"
+    COLOR="$2"
+
+    function position_cursor () {
+
+        if [ $XRES_WIDTH -gt 0 ]; then
+                let RES_COL=$XRES_WIDTH-10
+        else
+                let RES_COL=`tput cols`-10
+        fi
+        #tput cufl $RES_COL
+        tput cuf $RES_COL
+        tput cuu1
+    }
+
+    position_cursor
+    echo -e "[${nc}${bd}${COLOR}${STATUS}${nc}]"
+    log "Status = $STATUS"
+}
+
+
+#
+# This function converts a status message to a particular color.
+#
+display_status () {
+
+
+    STATUS="$1"
+
+    case $STATUS in 
+
+    EMERGENCY )
+            #STATUS="EMERGENCY"
+            STATUS="-EMERG-"
+            COLOR="$bd$bred$yellow"
+            ;;
+    ALERT )
+            #STATUS="  ALERT  "
+            STATUS="-ALERT-"
+            COLOR="$bd$bred$yellow"
+            ;;
+    CRITICAL|PANIC )
+            #STATUS="CRITICAL "
+            STATUS=" PANIC "
+            COLOR="$bd$bred$yellow"
+            ;;
+    ERROR )
+            #STATUS="  ERROR  "
+            STATUS="-ERROR-"
+            COLOR="$bd$bred$white"
+            ;;
+
+    WARNING )
+            #STATUS=" WARNING "
+            STATUS="WARNING"
+            COLOR="$bd$yellow"
+            ;;
+
+    NOTICE )
+            #STATUS=" NOTICE  "
+            STATUS="NOTICE!"
+            #STATUS=" NOTED "
+            COLOR="$bd$blue"
+            ;;
+    INFO )
+            #STATUS="  INFO   "
+            STATUS=" INFO. "
+            STATUS=" INFO. "
+            COLOR="$bd$cyan"
+            ;;
+    DEBUG )
+            #STATUS="  DEBUG  "
+            STATUS=" DEBUG "
+            COLOR="$nc"
+            ;;
+
+    OK  )
+            #STATUS="  OKAY   "
+            STATUS=" OKAY! "
+            COLOR="$bd$green"
+            ;;
+    NOT_OK)
+            #STATUS=" NOT OK  "
+            STATUS="-ALERT-"
+            COLOR="$bd$bred$yellow"
+            ;;
+
+    PASSED )
+            #STATUS=" PASSED  "
+            STATUS="PASSED"
+            COLOR="$bd$green"
+            ;;
+
+    SUCCESS )
+            #STATUS=" SUCCESS "
+            STATUS="SUCCESS"
+            COLOR="$bd$green"
+            ;;
+
+    FAILURE | FAILED )
+            #STATUS=" FAILED  "
+            STATUS="FAILED!"
+            COLOR="$bd$bred$yellow"
+            ;;
+
+    *)
+            #STATUS="UNDEFINED"
+            STATUS="UNDEF'D"
+            COLOR="$bd$yellow"
+    esac
+
+    raw_status "$STATUS" "$COLOR"
+}
+
+
+#
+# Exit with error status 
+#
+bail () {
+
+    ERROR="$?"
+    MSG="$1"
+    if [ ! "$ERROR" = "0" ]
+    then
+        msg_fail "$MSG"
+        exit "$ERROR"
+    fi
+}
+
+
+#
+# This function executes a command provided as a parameter
+# The function then displays if the command succeeded or not.
+#
+cmd () {
+
+    COMMAND="$1"
+    msg "Executing: $COMMAND"
+
+    RESULT=`$COMMAND 2>&1`
+    ERROR="$?"
+
+    MSG="[ $QPROJECT x: ] cmd: ${COMMAND:0:44}..."
+
+    tput cuu1
+
+    if [ "$ERROR" == "0" ]
+    then
+        msg_ok "$MSG"
+        if [ "$DEBUG" == "1" ]
+        then
+            msg "$RESULT"
+        fi
+    else
+        msg_fail "$MSG"
+        log "$RESULT"
+    fi
+
+    return "$ERROR"
+}
+
+
+#
+# Prints an error message ($2) to stderr and exits with the return code ($1).
+# The message is also logged.
+#
+function die {
+    local -r err_code="$1"
+    local -r err_msg="$2"
+    local -r err_caller="${3:-$(caller 0)}"
+
+    msg_fail "ERROR: $err_msg"
+    msg_fail "ERROR: At line $err_caller"
+    msg_fail "ERROR: Error code = $err_code"
+    exit "$err_code"
+} >&2 # function writes to stderr
+
+#
+# Check if a return code ($1) indicates an error (i.e. >0) and prints an error
+# message ($2) to stderr and exits with the return code ($1).
+# The error is also logged.
+#
+# Die if error code is false.
+#
+function die_if_false {
+    local -r err_code=$1
+    local -r err_msg=$2
+    local -r err_caller=$(caller 0)
+
+    if [[ "$err_code" != "0" ]]
+    then
+        die $err_code "$err_msg" "$err_caller"
+    fi
+} >&2 # function writes to stderr
+
+#
+# Dies when error code is true
+#
+function die_if_true {
+    local -r err_code=$1
+    local -r err_msg=$2
+    local -r err_caller=$(caller 0)
+
+    if [[ "$err_code" == "0" ]]
+    then
+        die $err_code "$err_msg" "$err_caller"
+    fi
+} >&2 # function writes to stderr
+
+init
+

@@ -1,0 +1,124 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::RelaxNG - RelaxNG Schema Validation</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::RelaxNG - RelaxNG Schema Validation</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::RelaxNG - RelaxNG Schema Validation</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML</span><span class="operator">;</span>
+  <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">-&gt;</span><span class="variable">parse_file</span><span class="operator">(</span><span class="variable">$url</span><span class="operator">);</span>
+</pre>
+<pre>
+  <span class="variable">$rngschema</span> <span class="operator">=</span> <span class="variable">XML::LibXML::RelaxNG</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="string">location</span> <span class="operator">=&gt;</span> <span class="variable">$filename_or_url</span> <span class="operator">);</span>
+  <span class="variable">$rngschema</span> <span class="operator">=</span> <span class="variable">XML::LibXML::RelaxNG</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="string">string</span> <span class="operator">=&gt;</span> <span class="variable">$xmlschemastring</span> <span class="operator">);</span>
+  <span class="variable">$rngschema</span> <span class="operator">=</span> <span class="variable">XML::LibXML::RelaxNG</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="string">DOM</span> <span class="operator">=&gt;</span> <span class="variable">$doc</span> <span class="operator">);</span>
+  <span class="keyword">eval</span> <span class="operator">{</span> <span class="variable">$rngschema</span><span class="operator">-&gt;</span><span class="variable">validate</span><span class="operator">(</span> <span class="variable">$doc</span> <span class="operator">);</span> <span class="operator">};</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The XML::LibXML::RelaxNG class is a tiny frontend to libxml2's RelaxNG
+implementation. Currently it supports only schema parsing and document
+validation.</p>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<dl>
+<dt><strong><a name="new" class="item">new</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$rngschema</span> <span class="operator">=</span> <span class="variable">XML::LibXML::RelaxNG</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="string">location</span> <span class="operator">=&gt;</span> <span class="variable">$filename_or_url</span> <span class="operator">);</span>
+  <span class="variable">$rngschema</span> <span class="operator">=</span> <span class="variable">XML::LibXML::RelaxNG</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="string">string</span> <span class="operator">=&gt;</span> <span class="variable">$xmlschemastring</span> <span class="operator">);</span>
+  <span class="variable">$rngschema</span> <span class="operator">=</span> <span class="variable">XML::LibXML::RelaxNG</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="string">DOM</span> <span class="operator">=&gt;</span> <span class="variable">$doc</span> <span class="operator">);</span>
+</pre>
+<p>The constructor of XML::LibXML::RelaxNG may get called with either one of three
+parameters. The parameter tells the class from which source it should generate
+a validation schema. It is important, that each schema only have a single
+source.</p>
+<p>The location parameter allows to parse a schema from the filesystem or a URL.</p>
+<p>The string parameter will parse the schema from the given XML string.</p>
+<p>The DOM parameter allows to parse the schema from a pre-parsed <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Document.html">the XML::LibXML::Document manpage</a>.</p>
+<p>Note that the constructor will <a href="../../../../lib/pod/perlfunc.html#die"><code>die()</code></a> if the schema does not meed the
+constraints of the RelaxNG specification.</p>
+</dd>
+<dt><strong><a name="validate" class="item">validate</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="keyword">eval</span> <span class="operator">{</span> <span class="variable">$rngschema</span><span class="operator">-&gt;</span><span class="variable">validate</span><span class="operator">(</span> <span class="variable">$doc</span> <span class="operator">);</span> <span class="operator">};</span>
+</pre>
+<p>This function allows to validate a (parsed) document against the given RelaxNG
+schema. The argument of this function should be an XML::LibXML::Document
+object. If this function succeeds, it will return 0, otherwise it will <a href="../../../../lib/pod/perlfunc.html#die"><code>die()</code></a>
+and report the errors found. Because of this <a href="#validate"><code>validate()</code></a> should be always
+evaluated.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Matt Sergeant,
+Christian Glahn,
+Petr Pajas</p>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p>2.0019</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>2001-2007, AxKit.com Ltd.</p>
+<p>2002-2006, Christian Glahn.</p>
+<p>2006-2009, Petr Pajas.</p>
+
+</body>
+
+</html>

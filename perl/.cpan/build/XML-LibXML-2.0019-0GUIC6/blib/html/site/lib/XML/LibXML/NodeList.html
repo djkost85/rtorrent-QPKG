@@ -1,0 +1,172 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::NodeList - a list of XML document nodes</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::NodeList - a list of XML document nodes</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#api">API</a></li>
+	<ul>
+
+		<li><a href="#new__nodes_"><code>new(@nodes)</code></a></li>
+		<li><a href="#get_nodelist__"><code>get_nodelist()</code></a></li>
+		<li><a href="#string_value__"><code>string_value()</code></a></li>
+		<li><a href="#to_literal__"><code>to_literal()</code></a></li>
+		<li><a href="#get_node__pos_"><code>get_node($pos)</code></a></li>
+		<li><a href="#size__"><a href="../../../../lib/pod/perlfunc.html#size"><code>size()</code></a></a></li>
+		<li><a href="#pop__"><a href="../../../../lib/pod/perlrun.html#pop"><code>pop()</code></a></a></li>
+		<li><a href="#push__nodes_"><a href="../../../../lib/pod/perlfunc.html#push"><code>push(@nodes)</code></a></a></li>
+		<li><a href="#append__nodelist_"><code>append($nodelist)</code></a></li>
+		<li><a href="#shift__"><a href="../../../../lib/pod/perlfunc.html#shift"><code>shift()</code></a></a></li>
+		<li><a href="#unshift__nodes_"><a href="../../../../lib/pod/perlfunc.html#unshift"><code>unshift(@nodes)</code></a></a></li>
+		<li><a href="#prepend__nodelist_"><code>prepend($nodelist)</code></a></li>
+		<li><a href="#map__coderef_"><a href="../../../../lib/pod/perlfunc.html#map"><code>map($coderef)</code></a></a></li>
+		<li><a href="#grep__coderef_"><a href="../../../../lib/pod/perlfunc.html#grep"><code>grep($coderef)</code></a></a></li>
+		<li><a href="#sort__coderef_"><a href="../../../../lib/pod/perlfunc.html#sort"><code>sort($coderef)</code></a></a></li>
+		<li><a href="#reverse__"><a href="../../../../lib/pod/perlfunc.html#reverse"><code>reverse()</code></a></a></li>
+		<li><a href="#foreach__coderef_"><code>foreach($coderef)</code></a></li>
+		<li><a href="#reduce__coderef___init_">reduce($coderef, $init)</a></li>
+	</ul>
+
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::NodeList - a list of XML document nodes</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>An XML::LibXML::NodeList object contains an ordered list of nodes, as
+detailed by the W3C DOM documentation of Node Lists.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$results</span> <span class="operator">=</span> <span class="variable">$dom</span><span class="operator">-&gt;</span><span class="variable">findnodes</span><span class="operator">(</span><span class="string">'//somepath'</span><span class="operator">);</span>
+  <span class="keyword">foreach</span> <span class="keyword">my</span> <span class="variable">$context</span> <span class="operator">(</span><span class="variable">$results</span><span class="operator">-&gt;</span><span class="variable">get_nodelist</span><span class="operator">)</span> <span class="operator">{</span>
+    <span class="keyword">my</span> <span class="variable">$newresults</span> <span class="operator">=</span> <span class="variable">$context</span><span class="operator">-&gt;</span><span class="variable">findnodes</span><span class="operator">(</span><span class="string">'./other/element'</span><span class="operator">);</span>
+    <span class="operator">...</span>
+  <span class="operator">}</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="api">API</a></h1>
+<p>
+</p>
+<h2><a name="new__nodes_"><code>new(@nodes)</code></a></h2>
+<p>You will almost never have to create a new NodeList object, as it is all
+done for you by XPath.</p>
+<p>
+</p>
+<h2><a name="get_nodelist__"><code>get_nodelist()</code></a></h2>
+<p>Returns a list of nodes, the contents of the node list, as a perl list.</p>
+<p>
+</p>
+<h2><a name="string_value__"><code>string_value()</code></a></h2>
+<p>Returns the string-value of the first node in the list.
+See the XPath specification for what &quot;string-value&quot; means.</p>
+<p>
+</p>
+<h2><a name="to_literal__"><code>to_literal()</code></a></h2>
+<p>Returns the concatenation of all the string-values of all
+the nodes in the list.</p>
+<p>
+</p>
+<h2><a name="get_node__pos_"><code>get_node($pos)</code></a></h2>
+<p>Returns the node at $pos. The node position in XPath is based at 1, not 0.</p>
+<p>
+</p>
+<h2><a name="size__"><a href="../../../../lib/pod/perlfunc.html#size"><code>size()</code></a></a></h2>
+<p>Returns the number of nodes in the NodeList.</p>
+<p>
+</p>
+<h2><a name="pop__"><a href="../../../../lib/pod/perlrun.html#pop"><code>pop()</code></a></a></h2>
+<p>Equivalent to perl's pop function.</p>
+<p>
+</p>
+<h2><a name="push__nodes_"><a href="../../../../lib/pod/perlfunc.html#push"><code>push(@nodes)</code></a></a></h2>
+<p>Equivalent to perl's push function.</p>
+<p>
+</p>
+<h2><a name="append__nodelist_"><code>append($nodelist)</code></a></h2>
+<p>Given a nodelist, appends the list of nodes in $nodelist to the end of the
+current list.</p>
+<p>
+</p>
+<h2><a name="shift__"><a href="../../../../lib/pod/perlfunc.html#shift"><code>shift()</code></a></a></h2>
+<p>Equivalent to perl's shift function.</p>
+<p>
+</p>
+<h2><a name="unshift__nodes_"><a href="../../../../lib/pod/perlfunc.html#unshift"><code>unshift(@nodes)</code></a></a></h2>
+<p>Equivalent to perl's unshift function.</p>
+<p>
+</p>
+<h2><a name="prepend__nodelist_"><code>prepend($nodelist)</code></a></h2>
+<p>Given a nodelist, prepends the list of nodes in $nodelist to the front of
+the current list.</p>
+<p>
+</p>
+<h2><a name="map__coderef_"><a href="../../../../lib/pod/perlfunc.html#map"><code>map($coderef)</code></a></a></h2>
+<p>Equivalent to perl's map function.</p>
+<p>
+</p>
+<h2><a name="grep__coderef_"><a href="../../../../lib/pod/perlfunc.html#grep"><code>grep($coderef)</code></a></a></h2>
+<p>Equivalent to perl's grep function.</p>
+<p>
+</p>
+<h2><a name="sort__coderef_"><a href="../../../../lib/pod/perlfunc.html#sort"><code>sort($coderef)</code></a></a></h2>
+<p>Equivalent to perl's sort function.</p>
+<p>Caveat: Perl's magic <a href="../../../../lib/pod/perlvar.html#_a"><code>$a</code></a> and <a href="../../../../lib/pod/perlvar.html#_b"><code>$b</code></a> variables are not available in
+<code>$coderef</code>. Instead the two terms are passed to the coderef as arguments.</p>
+<p>
+</p>
+<h2><a name="reverse__"><a href="../../../../lib/pod/perlfunc.html#reverse"><code>reverse()</code></a></a></h2>
+<p>Equivalent to perl's reverse function.</p>
+<p>
+</p>
+<h2><a name="foreach__coderef_"><code>foreach($coderef)</code></a></h2>
+<p>Inspired by perl's foreach loop. Executes the coderef on each item in
+the list. Similar to <a href="../../../../lib/pod/perlfunc.html#map"><code>map</code></a>, but instead of returning the list of values
+returned by $coderef, returns the original NodeList.</p>
+<p>
+</p>
+<h2><a name="reduce__coderef___init_">reduce($coderef, $init)</a></h2>
+<p>Equivalent to List::Util's reduce function. <code>$init</code> is optional and
+provides an initial value for the reduction.</p>
+<p>Caveat: Perl's magic <a href="../../../../lib/pod/perlvar.html#_a"><code>$a</code></a> and <a href="../../../../lib/pod/perlvar.html#_b"><code>$b</code></a> variables are not available in
+<code>$coderef</code>. Instead the two terms are passed to the coderef as arguments.</p>
+
+</body>
+
+</html>

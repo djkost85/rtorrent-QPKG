@@ -1,0 +1,70 @@
+#!/usr/bin/env sh
+: ${DEBUG:=1}
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include assume
+include log
+include null
+include useextglob
+
+#
+# signal
+#
+# Helper script for handling signals.
+#
+
+SIGNAL_HUP=1
+SIGNAL_INT=2
+SIGNAL_QUIT=3
+SIGNAL_ILL=4
+SIGNAL_TRAP=5
+SIGNAL_ABRT=6
+SIGNAL_BUS=7
+SIGNAL_FPE=8
+SIGNAL_KILL=9
+SIGNAL_USR1=10
+SIGNAL_SEGV=11
+SIGNAL_USR2=12
+SIGNAL_PIPE=13
+SIGNAL_ALRM=14
+SIGNAL_TERM=15
+SIGNAL_STKFLT=16
+SIGNAL_CHLD=17
+SIGNAL_CONT=18
+SIGNAL_STOP=19
+SIGNAL_TSTP=20
+SIGNAL_TTIN=21
+SIGNAL_TTOU=22
+SIGNAL_URG=23
+SIGNAL_XCPU=24
+SIGNAL_XFSZ=25
+SIGNAL_VTALRM=26
+SIGNAL_PROF=27
+SIGNAL_WINCH=28
+SIGNAL_IO=29
+SIGNAL_PWR=30
+SIGNAL_SYS=31
+
+
+# uint signal (uint <pid>, int <signal number>|string <signal name>)
+#
+function signal {
+	log_fcall "$@"
+
+	# assume "\$2 == +([[:digit:]]) && \$3 == @(+([[:digit:]])|SIGNAL_HUP|SIGNAL_INT|SIGNAL_QUIT|SIGNAL_ILL|SIGNAL_TRAP|SIGNAL_ABRT|SIGNAL_BUS|SIGNAL_FPE|SIGNAL_KILL|SIGNAL_USR1|SIGNAL_SEGV|SIGNAL_USR2|SIGNAL_PIPE|SIGNAL_ALRM|SIGNAL_TERM|SIGNAL_STKFLT|SIGNAL_CHLD|SIGNAL_CONT|SIGNAL_STOP|SIGNAL_TSTP|SIGNAL_TTIN|SIGNAL_TTOU|SIGNAL_URG|SIGNAL_XCPU|SIGNAL_XFSZ|SIGNAL_VTALRM|SIGNAL_PROF|SIGNAL_WINCH|SIGNAL_IO|SIGNAL_PWR|SIGNAL_SYS|SIGHUP|SIGINT|SIGQUIT|SIGILL|SIGTRAP|SIGABRT|SIGBUS|SIGFPE|SIGKILL|SIGUSR1|SIGSEGV|SIGUSR2|SIGPIPE|SIGALRM|SIGTERM|SIGSTKFLT|SIGCHLD|SIGCONT|SIGSTOP|SIGTSTP|SIGTTIN|SIGTTOU|SIGURG|SIGXCPU|SIGXFSZ|SIGVTALRM|SIGPROF|SIGWINCH|SIGIO|SIGPWR|SIGSYS|SIGRT)" "$1" "$2"
+
+	# If only 'kill' was only meant to send terminating signals and
+	# there was another more general signal sending function with a
+	# different name then perhaps I wouldn't have wrapped 'kill' here.
+	#
+	# Yes there should always be a 'kill' function but why put all
+	# signal sending mechanisms to it?  If practicality is the answer,
+	# I think it's already out of place.
+
+	local -i PID=$1 SIGNAL=$2  ## Automatically expands if $1 is a variable.
+
+	kill -s "$SIGNAL" "$PID" 2>&"$NULL"
+}

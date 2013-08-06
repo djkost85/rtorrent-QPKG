@@ -1,0 +1,231 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>Net::SSLeay::Handle - Perl module that lets SSL sockets be handled as standard file handles.</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>Net::SSLeay::Handle - Perl module that lets SSL sockets be handled as standard file handles.</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#using_existing_sockets">USING EXISTING SOCKETS</a></li>
+		<li><a href="#export">EXPORT</a></li>
+	</ul>
+
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#todo">TODO</a></li>
+	<li><a href="#caveats">CAVEATS</a></li>
+	<li><a href="#changes">CHANGES</a></li>
+	<li><a href="#known_bugs">KNOWN BUGS</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>Net::SSLeay::Handle - Perl module that lets SSL (HTTPS) sockets be
+handled as standard file handles.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">Net::SSLeay::Handle</span> <span class="string">qw/shutdown/</span><span class="operator">;</span>
+  <span class="keyword">my</span> <span class="operator">(</span><span class="variable">$host</span><span class="operator">,</span> <span class="variable">$port</span><span class="operator">)</span> <span class="operator">=</span> <span class="operator">(</span><span class="string">"localhost"</span><span class="operator">,</span> <span class="number">443</span><span class="operator">);</span>
+</pre>
+<pre>
+  <span class="keyword">tie</span><span class="operator">(</span><span class="variable">*SSL</span><span class="operator">,</span> <span class="string">"Net::SSLeay::Handle"</span><span class="operator">,</span> <span class="variable">$host</span><span class="operator">,</span> <span class="variable">$port</span><span class="operator">);</span>
+</pre>
+<pre>
+  <span class="keyword">print</span> <span class="variable">SSL</span> <span class="string">"GET / HTTP/1.0\r\n"</span><span class="operator">;</span>
+  <span class="keyword">shutdown</span><span class="operator">(\</span><span class="variable">*SSL</span><span class="operator">,</span> <span class="number">1</span><span class="operator">);</span>
+  <span class="keyword">print</span> <span class="keyword">while</span> <span class="operator">(&lt;</span><span class="variable">SSL</span><span class="operator">&gt;);</span>
+  <span class="keyword">close</span> <span class="variable">SSL</span><span class="operator">;</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>Net::SSLeay::Handle allows you to request and receive HTTPS web pages
+using &quot;old-fashion&quot; file handles as in:</p>
+<pre>
+    <span class="keyword">print</span> <span class="variable">SSL</span> <span class="string">"GET / HTTP/1.0\r\n"</span><span class="operator">;</span>
+</pre>
+<p>and</p>
+<pre>
+    <span class="keyword">print</span> <span class="keyword">while</span> <span class="operator">(&lt;</span><span class="variable">SSL</span><span class="operator">&gt;);</span>
+</pre>
+<p>If you export the shutdown routine, then the only extra code that
+you need to add to your program is the tie function as in:</p>
+<pre>
+    <span class="keyword">my</span> <span class="variable">$socket</span><span class="operator">;</span>
+    <span class="keyword">if</span> <span class="operator">(</span><span class="variable">$scheme</span> <span class="keyword">eq</span> <span class="string">"https"</span><span class="operator">)</span> <span class="operator">{</span>
+        <span class="keyword">tie</span><span class="operator">(</span><span class="variable">*S2</span><span class="operator">,</span> <span class="string">"Net::SSLeay::Handle"</span><span class="operator">,</span> <span class="variable">$host</span><span class="operator">,</span> <span class="variable">$port</span><span class="operator">);</span>
+        <span class="variable">$socket</span> <span class="operator">=</span> <span class="operator">\</span><span class="variable">*S2</span><span class="operator">;</span>
+    <span class="keyword">else</span> <span class="operator">{</span>
+        <span class="variable">$socket</span> <span class="operator">=</span> <span class="variable">Net::SSLeay::Handle</span><span class="operator">-&gt;</span><span class="variable">make_socket</span><span class="operator">(</span><span class="variable">$host</span><span class="operator">,</span> <span class="variable">$port</span><span class="operator">);</span>
+    <span class="operator">}</span>
+    <span class="keyword">print</span> <span class="variable">$socket</span> <span class="variable">$request_headers</span><span class="operator">;</span>
+    <span class="operator">...</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<dl>
+<dt><strong><a name="shutdown" class="item">shutdown</a></strong></dt>
+
+<dd>
+<pre>
+  shutdown(\*SOCKET, $mode)</pre>
+<p>Calls to the main <a href="#shutdown"><code>shutdown()</code></a> don't work with tied sockets created with this
+module.  This shutdown should be able to distinquish between tied and untied
+sockets and do the right thing.</p>
+</dd>
+<dt><strong><a name="debug" class="item">debug</a></strong></dt>
+
+<dd>
+<pre>
+  my $debug = Net::SSLeay::Handle-&gt;debug()
+  Net::SSLeay::Handle-&gt;debug(1)</pre>
+<p>Get/set debuging mode. Always returns the debug value before the function call.
+if an additional argument is given the debug option will be set to this value.</p>
+</dd>
+<dt><strong><a name="make_socket" class="item">make_socket</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$sock</span> <span class="operator">=</span> <span class="variable">Net::SSLeay::Handle</span><span class="operator">-&gt;</span><span class="variable">make_socket</span><span class="operator">(</span><span class="variable">$host</span><span class="operator">,</span> <span class="variable">$port</span><span class="operator">);</span>
+</pre>
+<p>Creates a socket that is connected to $post using $port. It uses
+$Net::SSLeay::proxyhost and proxyport if set and authentificates itself against
+this proxy depending on $Net::SSLeay::proxyauth. It also turns autoflush on for
+the created socket.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="using_existing_sockets">USING EXISTING SOCKETS</a></h2>
+<p>One of the motivations for writing this module was to avoid
+duplicating socket creation code (which is mostly error handling).
+The calls to <a href="../../../../lib/pod/perlfunc.html#tie"><code>tie()</code></a> above where it is passed a $host and $port is
+provided for convenience testing.  If you already have a socket
+connected to the right host and port, S1, then you can do something
+like:</p>
+<pre>
+    <span class="keyword">my</span> <span class="variable">$socket</span> <span class="operator">\</span><span class="variable">*S1</span><span class="operator">;</span>
+    <span class="keyword">if</span> <span class="operator">(</span><span class="variable">$scheme</span> <span class="keyword">eq</span> <span class="string">"https"</span><span class="operator">)</span> <span class="operator">{</span>
+        <span class="keyword">tie</span><span class="operator">(</span><span class="variable">*S2</span><span class="operator">,</span> <span class="string">"Net::SSLeay::Handle"</span><span class="operator">,</span> <span class="variable">$socket</span><span class="operator">);</span>
+        <span class="variable">$socket</span> <span class="operator">=</span> <span class="operator">\</span><span class="variable">*S2</span><span class="operator">;</span>
+    <span class="operator">}</span>
+    <span class="keyword">my</span> <span class="variable">$last_sel</span> <span class="operator">=</span> <span class="keyword">select</span><span class="operator">(</span><span class="variable">$socket</span><span class="operator">);</span> <span class="variable">$|</span> <span class="operator">=</span> <span class="number">1</span><span class="operator">;</span> <span class="keyword">select</span><span class="operator">(</span><span class="variable">$last_sel</span><span class="operator">);</span>
+    <span class="keyword">print</span> <span class="variable">$socket</span> <span class="variable">$request_headers</span><span class="operator">;</span>
+    <span class="operator">...</span>
+</pre>
+<p>Note: As far as I know you must be careful with the globs in the <a href="../../../../lib/pod/perlfunc.html#tie"><code>tie()</code></a>
+function.  The first parameter must be a glob (*SOMETHING) and the
+last parameter must be a reference to a glob (\*SOMETHING_ELSE) or a
+scaler that was assigned to a reference to a glob (as in the example
+above)</p>
+<p>Also, the two globs must be different.  When I tried to use the same
+glob, I got a core dump.</p>
+<p>
+</p>
+<h2><a name="export">EXPORT</a></h2>
+<p>None by default.</p>
+<p>You can export the <a href="#shutdown"><code>shutdown()</code></a> function.</p>
+<p>It is suggested that you do export <a href="#shutdown"><code>shutdown()</code></a> or use the fully
+qualified Net::SSLeay::Handle::shutdown() function to shutdown SSL
+sockets.  It should be smart enough to distinguish between SSL and
+non-SSL sockets and do the right thing.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">Net::SSLeay::Handle</span> <span class="string">qw/shutdown/</span><span class="operator">;</span>
+  <span class="keyword">my</span> <span class="operator">(</span><span class="variable">$host</span><span class="operator">,</span> <span class="variable">$port</span><span class="operator">)</span> <span class="operator">=</span> <span class="operator">(</span><span class="string">"localhost"</span><span class="operator">,</span> <span class="number">443</span><span class="operator">);</span>
+</pre>
+<pre>
+  <span class="keyword">tie</span><span class="operator">(</span><span class="variable">*SSL</span><span class="operator">,</span> <span class="string">"Net::SSLeay::Handle"</span><span class="operator">,</span> <span class="variable">$host</span><span class="operator">,</span> <span class="variable">$port</span><span class="operator">);</span>
+</pre>
+<pre>
+  <span class="keyword">print</span> <span class="variable">SSL</span> <span class="string">"GET / HTTP/1.0\r\n"</span><span class="operator">;</span>
+  <span class="keyword">shutdown</span><span class="operator">(\</span><span class="variable">*SSL</span><span class="operator">,</span> <span class="number">1</span><span class="operator">);</span>
+  <span class="keyword">print</span> <span class="keyword">while</span> <span class="operator">(&lt;</span><span class="variable">SSL</span><span class="operator">&gt;);</span>
+  <span class="keyword">close</span> <span class="variable">SSL</span><span class="operator">;</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="todo">TODO</a></h1>
+<p>Better error handling.  Callback routine?</p>
+<p>
+</p>
+<hr />
+<h1><a name="caveats">CAVEATS</a></h1>
+<p>Tying to a file handle is a little tricky (for me at least).</p>
+<p>The first parameter to <a href="../../../../lib/pod/perlfunc.html#tie"><code>tie()</code></a> must be a glob (*SOMETHING) and the last
+parameter must be a reference to a glob (\*SOMETHING_ELSE) or a scaler
+that was assigned to a reference to a glob ($s = \*SOMETHING_ELSE).
+Also, the two globs must be different.  When I tried to use the same
+glob, I got a core dump.</p>
+<p>I was able to associate attributes to globs created by this module
+(like *SSL above) by making a hash of hashes keyed by the file head1.</p>
+<p>Support for old perls may not be 100%. If in trouble try 5.6.0 or
+newer.</p>
+<p>
+</p>
+<hr />
+<h1><a name="changes">CHANGES</a></h1>
+<p>Please see Net-SSLeay-Handle-0.50/Changes file.</p>
+<p>
+</p>
+<hr />
+<h1><a name="known_bugs">KNOWN BUGS</a></h1>
+<p>If you let this module construct sockets for you with Perl versions
+below v.5.6 then there is a slight memory leak.  Other upgrade your
+Perl, or create the sockets yourself.  The leak was created to let
+these older versions of Perl access more than one Handle at a time.</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Jim Bowlin <a href="mailto:jbowlin@linklint.org">jbowlin@linklint.org</a></p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p>Net::SSLeay, <code>perl(1)</code>, <a href="http://openssl.org/">http://openssl.org/</a></p>
+
+</body>
+
+</html>

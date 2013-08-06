@@ -1,0 +1,14 @@
+/usr/bin/rtorrent/perl/lib/CPAN/Meta.pm
+/usr/bin/rtorrent/perl/lib/CPAN/Meta/Converter.pm
+/usr/bin/rtorrent/perl/lib/CPAN/Meta/Feature.pm
+/usr/bin/rtorrent/perl/lib/CPAN/Meta/History.pm
+/usr/bin/rtorrent/perl/lib/CPAN/Meta/Prereqs.pm
+/usr/bin/rtorrent/perl/lib/CPAN/Meta/Spec.pm
+/usr/bin/rtorrent/perl/lib/CPAN/Meta/Validator.pm
+/usr/bin/rtorrent/perl/man/man3/CPAN::Meta.3
+/usr/bin/rtorrent/perl/man/man3/CPAN::Meta::Converter.3
+/usr/bin/rtorrent/perl/man/man3/CPAN::Meta::Feature.3
+/usr/bin/rtorrent/perl/man/man3/CPAN::Meta::History.3
+/usr/bin/rtorrent/perl/man/man3/CPAN::Meta::Prereqs.3
+/usr/bin/rtorrent/perl/man/man3/CPAN::Meta::Spec.3
+/usr/bin/rtorrent/perl/man/man3/CPAN::Meta::Validator.3

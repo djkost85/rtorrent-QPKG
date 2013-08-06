@@ -1,0 +1,60 @@
+#!/usr/bin/env sh
+: ${DEBUG:=1}
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include available
+include defaults
+include null
+include useextglob
+
+#
+# env
+#
+# Prepares common environment variables.
+#
+#
+
+# EDITOR
+
+if [[ -z $EDITOR ]] || ! available "${EDITOR%% *}"; then
+	EDITOR=vi
+
+	for __ in "${DEFAULTS_EDITORS[@]}"; do
+		available "${__%% *}" && {
+			EDITOR=$__
+			break
+		}
+	done
+fi
+
+
+# IFS
+
+IFS=$DEFAULTS_IFS
+
+
+# LINES
+
+available tput && LINES=$(exec tput lines)
+
+if [[ $LINES != +([[:digit:]]) ]] && available stty; then
+	LINES=$(exec stty size 2>&"$NULL")
+	LINES=${LINES% *}
+fi
+
+if [[ $LINES != +([[:digit:]]) || LINES -lt 80 ]]; then
+	LINES=$DEFAULTS_LINES
+fi
+
+
+# SHELL
+
+[[ -z $SHELL ]] && SHELL=$DEFAULTS_SHELL
+
+
+# USER
+
+[[ -z $USER ]] && available users && USER=$(exec users)

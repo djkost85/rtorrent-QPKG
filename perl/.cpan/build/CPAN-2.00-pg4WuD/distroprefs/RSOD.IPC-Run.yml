@@ -1,0 +1,20 @@
+---
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=28150
+
+match:
+  distribution: 'RSOD/IPC-Run-\d'
+test:
+  env:
+    LANG: C
+---
+comment: |
+
+  pty.t has a skip_all if IO::Pty is not installed.
+
+match:
+  distribution: 'TODDR/IPC-Run-\d'
+depends:
+  requires:
+    IO::Pty: 1.10

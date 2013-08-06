@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include patterns
+
+# DEBUG is an environment variable that's used by many applications and
+# in QPX, it's considered as a flag that tells if QPX/QPKG should
+# start in debug mode or not.  This variable should no longer be used
+# after initialization and GLOBALS_DEGUGMODE should thenafter be used
+# instead.
+
+
+if [[ $DEBUG = true || ($DEBUG == $PATTERNS_NUMBER && DEBUG -gt 0) ]] ; then
+	DEBUG=true
+else
+	DEBUG=false
+fi

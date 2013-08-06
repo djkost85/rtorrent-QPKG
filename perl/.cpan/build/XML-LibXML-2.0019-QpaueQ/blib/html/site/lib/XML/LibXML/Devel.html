@@ -1,0 +1,244 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::Devel - makes functions from LibXML.xs available</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::Devel - makes functions from LibXML.xs available</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#node_management">NODE MANAGEMENT</a></li>
+		<li><a href="#memory_debugging">MEMORY DEBUGGING</a></li>
+		<li><a href="#export">EXPORT</a></li>
+	</ul>
+
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#copyright_and_license">COPYRIGHT AND LICENSE</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::Devel - makes functions from LibXML.xs available</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="regex">/**********************************************
+   * C functions you want to access
+   */</span>
+  <span class="variable">xmlNode</span> <span class="variable">*return_node</span><span class="operator">();</span>
+  <span class="variable">void</span> <span class="variable">receive_node</span><span class="operator">(</span><span class="variable">xmlNode</span> <span class="operator">*);</span>
+</pre>
+<pre>
+  <span class="comment">###############################################</span>
+  <span class="comment"># XS Code</span>
+  <span class="variable">void</span> <span class="operator">*</span>
+    <span class="variable">xs_return_node</span>
+    <span class="variable">CODE</span><span class="operator">:</span>
+        <span class="variable">RETVAL</span> <span class="operator">=</span> <span class="variable">return_node</span><span class="operator">();</span>
+    <span class="variable">OUTPUT</span><span class="operator">:</span>
+        <span class="variable">RETVAL</span>
+</pre>
+<pre>
+  <span class="variable">void</span>
+    <span class="variable">xs_receive_node</span>
+        <span class="variable">void</span> <span class="variable">*n</span>
+    <span class="variable">CODE</span><span class="operator">:</span>
+        <span class="variable">receive_node</span><span class="operator">(</span><span class="variable">n</span><span class="operator">);</span>
+</pre>
+<pre>
+  <span class="comment">###############################################</span>
+  <span class="comment"># Perl code</span>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML::Devel</span><span class="operator">;</span>
+</pre>
+<pre>
+  <span class="keyword">sub</span><span class="variable"> return_node
+  </span><span class="operator">{</span>
+    <span class="keyword">my</span> <span class="variable">$raw_node</span> <span class="operator">=</span> <span class="variable">xs_return_node</span><span class="operator">();</span>
+    <span class="keyword">my</span> <span class="variable">$node</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Devel::node_to_perl</span><span class="operator">(</span><span class="variable">$raw_node</span><span class="operator">);</span>
+    <span class="variable">XML::LibXML::Devel::refcnt_inc</span><span class="operator">(</span><span class="variable">$raw_node</span><span class="operator">);</span>
+    <span class="keyword">return</span> <span class="variable">$node</span><span class="operator">;</span>
+  <span class="operator">}</span>
+</pre>
+<pre>
+  <span class="keyword">sub</span><span class="variable"> receive_node
+  </span><span class="operator">{</span>
+    <span class="keyword">my</span> <span class="operator">(</span><span class="variable">$node</span><span class="operator">)</span> <span class="operator">=</span> <span class="variable">@_</span><span class="operator">;</span>
+    <span class="keyword">my</span> <span class="variable">$raw_node</span> <span class="operator">=</span> <span class="variable">XML::LibXML::Devel::node_from_perl</span><span class="operator">(</span><span class="variable">$node</span><span class="operator">);</span>
+    <span class="variable">xs_receive_node</span><span class="operator">(</span><span class="variable">$raw_node</span><span class="operator">);</span>
+    <span class="variable">XML::LibXML::Devel::refcnt_inc</span><span class="operator">(</span><span class="variable">$raw_node</span><span class="operator">);</span>
+  <span class="operator">}</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><code>XML::LibXML::Devel</code> makes functions from LibXML.xs available that
+are needed to wrap libxml2 nodes in and out of XML::LibXML::Nodes.
+This gives cleaner dependencies than using LibXML.so directly.</p>
+<p>To XS a library that uses libxml2 nodes the first step is to
+do this so that xmlNodePtr is passed as void *. These raw nodes
+are then turned into libxml nodes by using this <code>Devel</code> functions.</p>
+<p>Be aware that this module is currently rather experimental. The function
+names may change if I XS more functions and introduce a reasonable
+naming convention.</p>
+<p>Be also aware that this module is a great tool to cause segfaults and
+introduce memory leaks. It does however provide a partial cure by making
+<code>xmlMemUsed</code> available as <a href="#mem_used"><code>mem_used</code></a>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="node_management">NODE MANAGEMENT</a></h2>
+<dl>
+<dt><strong><a name="node_to_perl" class="item">node_to_perl</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">node_to_perl</span><span class="operator">(</span><span class="variable">$raw_node</span><span class="operator">);</span>
+</pre>
+<p>Returns a LibXML::Node object. This has a proxy node with a reference
+counter and an owner attached. The raw node will be deleted as soon
+as the reference counter reaches zero.
+If the C library is keeping a
+pointer to the raw node, you need to call refcnt_inc immediately.
+You also need to replace xmlFreeNode by a call to refcnt_dec.</p>
+</dd>
+<dt><strong>node_to_perl</strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">node_from_perl</span><span class="operator">(</span><span class="variable">$node</span><span class="operator">);</span>
+</pre>
+<p>Returns a raw node. This is a void * pointer and you can do nothing
+but passing it to functions that treat it as an xmlNodePtr. The
+raw node will be freed as soon as its reference counter reaches zero.
+If the C library is keeping a
+pointer to the raw node, you need to call refcnt_inc immediately.
+You also need to replace xmlFreeNode by a call to refcnt_dec.</p>
+</dd>
+<dt><strong><a name="refcnt_inc" class="item">refcnt_inc</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">refcnt_inc</span><span class="operator">(</span><span class="variable">$raw_node</span><span class="operator">);</span>
+</pre>
+<p>Increments the raw nodes reference counter. The raw node must already
+be known to perl to have a reference counter.</p>
+</dd>
+<dt><strong><a name="refcnt_dec" class="item">refcnt_dec</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">refcnt_dec</span><span class="operator">(</span><span class="variable">$raw_node</span><span class="operator">);</span>
+</pre>
+<p>Decrements the raw nodes reference counter and returns the value it
+had before. if the counter becomes zero or less,
+this method will free the proxy node holding the reference counter.
+If the node is part of a
+subtree, refcnt_dec will fix the reference counts and delete
+the subtree if it is not required any more.</p>
+</dd>
+<dt><strong><a name="refcnt" class="item">refcnt</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">refcnt</span><span class="operator">(</span><span class="variable">$raw_node</span><span class="operator">);</span>
+</pre>
+<p>Returns the value of the reference counter.</p>
+</dd>
+<dt><strong><a name="fix_owner" class="item">fix_owner</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">fix_owner</span><span class="operator">(</span><span class="variable">$raw_node</span><span class="operator">,</span> <span class="variable">$raw_parent</span><span class="operator">);</span>
+</pre>
+<p>This functions fixes the reference counts for an entire subtree.
+it is very important to fix an entire subtree after node operations
+where the documents or the owner node may get changed. this method is
+aware about nodes that already belong to a certain owner node.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="memory_debugging">MEMORY DEBUGGING</a></h2>
+<dl>
+<dt><strong><a name="_env_debug_memory_" class="item">$ENV{DEBUG_MEMORY}</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="keyword">BEGIN</span> <span class="operator">{</span><span class="variable">$ENV</span><span class="operator">{</span><span class="string">DEBUG_MEMORY</span><span class="operator">}</span> <span class="operator">=</span> <span class="number">1</span><span class="operator">;};</span>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML</span><span class="operator">;</span>
+</pre>
+<p>This turns on libxml2 memory debugging. It must be set before
+XML::LibXML is loaded.</p>
+</dd>
+<dt><strong><a name="mem_used" class="item">mem_used</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">mem_used</span><span class="operator">();</span>
+</pre>
+<p>Returns the number of bytes currently allocated.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="export">EXPORT</a></h2>
+<p>None by default.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p>This was created to support the needs of Apache2::ModXml2. So this
+can serve as an example.</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Joachim Zobel &lt;<a href="mailto:jz-2011@heute-morgen.de">jz-2011@heute-morgen.de</a>&gt;</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright_and_license">COPYRIGHT AND LICENSE</a></h1>
+<p>Copyright (C) 2011 by Joachim Zobel</p>
+<p>This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.10.1 or,
+at your option, any later version of Perl 5 you may have available.</p>
+
+</body>
+
+</html>

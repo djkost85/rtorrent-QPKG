@@ -1,0 +1,29 @@
+<?php
+$min_peers = "40";
+$max_peers = "3996";
+$min_peers_seed = "10";
+$max_peers_seed = "166";
+$max_uploads = "22";
+$port_range_low = "42000";
+$port_range_high = "";
+$port_random = "no";
+$check_hash = "yes";
+$use_udp_trackers = "yes";
+$encryption = "2";
+$dht = "2";
+$dht_port = "6881";
+$peer_exchange = "yes";
+$download_rate = "3072";
+$upload_rate = "128";
+$umask = "0";
+$stopat = "yes";
+$sratio = "500";
+$sratiomb = "200";
+$sratioelse = "2000";
+$watchdir = "yes";
+$pieces_memory_max_set = "384M";
+$user = "rtorrent";
+$pass = "admin";
+$upnp_main = "yes";
+$upnp_http = "no";
+?>

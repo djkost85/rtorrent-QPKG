@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2325/trunk/plugins/create
+END
+inner.sh
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/807/trunk/plugins/create/inner.sh
+END
+buildtorrent.sh
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/1433/trunk/plugins/create/buildtorrent.sh
+END
+transmissioncreate.sh
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1878/trunk/plugins/create/transmissioncreate.sh
+END
+correct.php
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/2204/trunk/plugins/create/correct.php
+END
+plugin.info
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/2255/trunk/plugins/create/plugin.info
+END
+init.php
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2115/trunk/plugins/create/init.php
+END
+createtorrent.sh
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/854/trunk/plugins/create/createtorrent.sh
+END
+transmissioncli.sh
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/854/trunk/plugins/create/transmissioncli.sh
+END
+create.css
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2162/trunk/plugins/create/create.css
+END
+mktorrent.sh
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/1433/trunk/plugins/create/mktorrent.sh
+END
+action.php
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/2115/trunk/plugins/create/action.php
+END
+createtorrent.php
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/2204/trunk/plugins/create/createtorrent.php
+END
+conf.php
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2115/trunk/plugins/create/conf.php
+END
+konqueror.css
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/2162/trunk/plugins/create/konqueror.css
+END
+init.js
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2261/trunk/plugins/create/init.js
+END

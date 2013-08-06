@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::SAX - XML::LibXML direct SAX parser</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::SAX - XML::LibXML direct SAX parser</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#features">FEATURES</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::SAX - XML::LibXML direct SAX parser</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>XML::LibXML provides an interface to libxml2 direct SAX interface. Through this
+interface it is possible to generate SAX events directly while parsing a
+document. While using the SAX parser XML::LibXML will not create a DOM Document
+tree.</p>
+<p>Such an interface is useful if very large XML documents have to be processed
+and no DOM functions are required. By using this interface it is possible to
+read data stored within an XML document directly into the application data
+structures without loading the document into memory.</p>
+<p>The SAX interface of XML::LibXML is based on the famous XML::SAX interface. It
+uses the generic interface as provided by XML::SAX::Base.</p>
+<p>Additionally to the generic functions, which are only able to process entire
+documents, XML::LibXML::SAX provides <em>parse_chunk() </em>&gt;&gt;&gt;&gt;&gt;. This method generates SAX events from well balanced data such as is often
+provided by databases.</p>
+<p>
+</p>
+<hr />
+<h1><a name="features">FEATURES</a></h1>
+<p><em>NOTE: </em>&gt;&gt;&gt;&gt;&gt; This feature is experimental.</p>
+<p>You can enable character data joining which may yield a significant speed boost
+in your XML processing in lower markup ratio situations by enabling the
+<a href="http://xmlns.perl.org/sax/join-character-data">http://xmlns.perl.org/sax/join-character-data</a> feature of this parser. This is
+done via the set_feature method like this:</p>
+<pre>
+  <span class="variable">$p</span><span class="operator">-&gt;</span><span class="variable">set_feature</span><span class="operator">(</span><span class="string">'http://xmlns.perl.org/sax/join-character-data'</span><span class="operator">,</span> <span class="number">1</span><span class="operator">);</span>
+</pre>
+<p>You can also specify a 0 to disable. The default is to have this feature
+disabled.</p>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Matt Sergeant,
+Christian Glahn,
+Petr Pajas</p>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p>2.0019</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>2001-2007, AxKit.com Ltd.</p>
+<p>2002-2006, Christian Glahn.</p>
+<p>2006-2009, Petr Pajas.</p>
+
+</body>
+
+</html>

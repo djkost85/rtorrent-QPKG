@@ -1,0 +1,66 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Execute it from QPX Framework. "
+
+_PLIBNAME="preload" ; _PLIBALT="${_PLIBNAME}" ; _PLIB_version="0.1.6"
+_QPXNAME="${QPROJECT} ${_PLIBNAME}" ; _QPXALT="${_QPXNAME}"
+_QDESC="QPX Framework Preloader"
+
+##### LOAD ONLY ONCE #####
+#[ ! -z "$(eval echo \"\$QPX_l${_PLIBNAME}\")" ] && {
+#        [ "$DEBUG" != "0" ] && echo "[ ${_QPXNAME} ] Version ${_PLIB_version} already started!"
+#        exit 1
+#} || {
+        echo "[ ${_QPXNAME} ] Version ${_PLIB_version} is loading right now..."
+        eval QPX_l${_PLIBNAME}="${_PLIB_version}"
+        #export QPX_l${_PLIBNAME}
+#}
+
+load() { :; }
+loader_addpath() { :; }
+verbose_addpath() { :; }
+
+restore_myname() {
+	_PLIBNAME="${_PLIBALT}"
+	_QPXNAME="${_QPXALT}"
+}
+
+verbose_addpath() {
+	_tmp_lib_addpath="$1"
+	[ "$DEBUG" != "0" ] && echo "[ ${_QPXNAME} ] +Include: ${_tmp_lib_addpath}/*"
+	loader_addpath "${_tmp_lib_addpath}" #&& echo " ..DONE" || echo "... FAILED!"
+}
+
+##### EXPORT PATHS #####
+Int_PATH="${PROGDIR}/bin:${PROGDIR}/sbin:${PROGDIR}/perl/bin"
+Int_LibPATH="${PROGDIR}/lib"
+PATH="${Int_PATH}:$PATH"
+LD_RUN_PATH="${Int_LibPATH}:$LD_RUN_PATH"
+LD_LIBRARY_PATH="${Int_LibPATH}:$LD_LIBRARY_PATH"
+
+Int_TERMCAP="${PROGDIR}/etc/termcap" ; [ -f "${Int_TERMCAP}" ] && {
+	export TERMCAP="${Int_TERMCAP}"
+	#[ "$DEBUG" != "0" ] && echo "[ ${_QPXNAME} ] =TERMCAP: ${Int_TERMCAP}"
+}
+
+Int_TERMINFO="${PROGDIR}/share/terminfo" ; [ -d "${Int_TERMINFO}" ] && {
+	export TERMINFO="${Int_TERMINFO}"
+	#[ "$DEBUG" != "0" ] && echo "[ ${_QPXNAME} ] =TERMINFO: ${Int_TERMINFO}"
+}
+
+##### LOAD LAUNCHER #####
+cd "${PROGDIR}/qpx/launcher"
+source "${PROGDIR}/qpx/launcher/loader"
+restore_myname
+cd ..
+
+##### ADD LIBS/FUNC DIRECTORY #####
+verbose_addpath "${PROGDIR}/qpx/basefiles"
+verbose_addpath "${PROGDIR}/qpx/libs"
+verbose_addpath "${PROGDIR}/qpx/service"
+
+##### EXECUTE INIT SCRIPT #####
+echo "[ ${_QPXNAME} ] exec_Service (args)\"$@\""
+load control "$@"
+

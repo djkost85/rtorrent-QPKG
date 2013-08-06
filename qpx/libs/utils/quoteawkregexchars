@@ -1,0 +1,43 @@
+#!/usr/bin/env sh
+
+# Provides functions that quotes regex chars recognized by awk.
+#
+
+# void utils_quoteawkregexchars (string)
+#
+# > string __ = quoted form string
+#
+function utils_quoteawkregexchars {
+	__=${1//\?/\\\?}
+	__=${__//\*/\\\*}
+	__=${__//+/\\+}
+	__=${__//./\\.}
+	__=${__//\{/\\\{}
+	__=${__//\}/\\\}}
+	__=${__//\[/\\\[}
+	__=${__//\]/\\\]}
+}
+
+
+# void utils_quoteawkregexchars_array (string, ...)
+#
+# > string array __A0 = array of quoted forms
+#
+function utils_quoteawkregexchars_array {
+	local A
+	local -i I=0
+
+	__A0=()
+
+	for A; do
+		A=${A//\?/\\\?}
+		A=${A//\*/\\\*}
+		A=${A//+/\\+}
+		A=${A//./\\.}
+		A=${A//\{/\\\{}
+		A=${A//\}/\\\}}
+		A=${A//\[/\\\[}
+		A=${A//\]/\\\]}
+		__A0[I++]=$A
+	done
+}

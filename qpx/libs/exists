@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+: ${DEBUG:=1}
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+#
+# returns 0 if a directory exists
+# returns 1 otherwise
+#
+function directory_exists {
+    if [[ -d "$1" ]]; then
+        return 0
+    fi
+    return 1
+}
+
+#
+# returns 0 if a (regular) file exists
+# returns 1 otherwise
+#
+function file_exists {
+    if [[ -f "$1" ]]; then
+        return 0
+    fi
+    return 1
+}
+

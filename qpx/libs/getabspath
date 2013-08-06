@@ -1,0 +1,54 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+# getabspath
+#
+# Portable utility for getting the absolute form of a path.
+#
+
+# void getabspath (string <path>)
+#
+# Gets the absolute form of a path.
+#
+# > string __ = absolute path
+#
+function getabspath {
+	local -a T1 T2=()
+	local -i I=0
+	local IFS=/ A
+
+	if [[ $1 == /* ]]; then
+		read -a T1 <<< "$1"
+	else
+		read -a T1 <<< "$PWD/$1"
+	fi
+
+	for A in "${T1[@]}"; do
+		case "$A" in
+		..)
+			[[ I -gt 0 ]] && unset T2\[--I\]
+			continue
+			;;
+		.|'')
+			continue
+			;;
+		esac
+
+		T2[I++]=$A
+	done
+
+	if [[ $1 == */ ]]; then
+		if [[ I -ne 0 ]]; then
+			__="/${T2[*]}/"
+		else
+			__=/
+		fi
+	elif [[ I -ne 0 ]]; then
+		__="/${T2[*]}"
+	else
+		__=/.
+	fi
+}

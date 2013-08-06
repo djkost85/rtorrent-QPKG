@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+
+include assume
+include available
+include patterns
+
+# bool utils_getlines (void)
+#
+# Gets the current number of lines on the screen.
+# Saves it to variable __.  Returns true if successful.
+#
+# > string __ = number of lines or empty string
+#
+if available tput; then
+	function utils_getlines {
+		__=''
+		__=$(exec tput lines)
+		[[ -n $__ ]]
+	}
+elif available stty; then
+	function utils_getlines {
+		__=''
+		__=$(exec stty size)
+		__=${__% *}
+		[[ -n $__ ]]
+	}
+else
+	function utils_getlines {
+		__=''
+		return 1
+	}
+fi

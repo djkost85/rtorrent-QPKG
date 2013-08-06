@@ -1,0 +1,937 @@
+#!/usr/bin/env sh
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Load it from QPX Framework. "
+
+: ${QPROJECT:="QPX"}
+_NAME="control" ; _ENAME="${QPROJECT}:${_NAME}"
+_DESC="${QPROJECT} Service Control Program"
+
+include globals
+include ansi
+
+include qlog
+XRES_WIDTH=79 ; include xcmdlog
+
+include qfuncs
+
+#include license_bsd ; #include version
+
+include deps/getcfg ;		include deps/awk ;		include deps/cat
+include deps/chmod ;		include deps/cp ;		include deps/cut
+include deps/date ;		include deps/echo ;		include deps/expr
+include deps/find ;		include deps/grep ;		include deps/ln
+include deps/ls ;		include deps/mkdir ;		include deps/mv
+include deps/readlink ;		include deps/rm ;		include deps/rmdir
+include deps/sed ;		include deps/sleep ;		include deps/sort
+include deps/stat ;		include deps/tee ;		include deps/touch
+include deps/tr ;		include deps/xargs ;		include deps/eval
+include deps/pidof ;		include deps/md5sum ;		include deps/sha1sum
+include deps/head ;		include deps/netstat ;		include deps/ed
+include deps/setcfg
+
+
+PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }' ; export PS4
+
+RETVAL=0
+USER_TIMEZONE=
+LOCK="/var/run/${QPROJECT}.lock"
+
+
+# ----------------------------------------------------------------------
+# PRIMARY IMPORTANT CONFIG FILE
+# ----------------------------------------------------------------------
+PKG_CONFIG=$PROGDIR/etc/package.conf
+# ----------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
+QPKG_CONF=/etc/config/qpkg.conf
+PKG_PATH=
+getInstallPath(){
+	local ret=`/sbin/getcfg ${QPROJECT} Install_Path -d "" -f $QPKG_CONF`
+	if [ "$PROGDIR" != "$ret" ]; then
+		msg_warning "[ ${_ENAME} ] Install path mismatch base of QPX Framework."
+		msg_notice "[ ${_ENAME} ] Install path: $ret"
+	else
+		[ "$DEBUG" != "0" ] && msg_debug "[ ${_ENAME} ] Install Path: $ret"
+	fi
+	PKG_PATH=$ret
+}
+getInstallPath
+# ----------------------------------------------------------------------
+
+SERVICES=(
+		"screen-cleanup|"
+		"rtorrent|rtorrent.lock"
+		"lighttpd|rtorrent-httpsd.pid"
+	)
+
+LINKS=(
+		"/usr/bin/rtorrent:${PKG_PATH}"
+		"/etc/rtorrent.conf:${PKG_PATH}/etc/rtorrent.conf"
+		"/etc/lighttpd:${PKG_PATH}/etc/lighttpd"
+	)
+
+DIRECTORIES=(
+		"downloads"
+		"complete"
+		"session"
+		"watch"
+		"unpack"
+		"temp"
+		"logs"
+		"settings"
+		"settings/certs"
+		"settings/users"
+		"settings/users/settings"
+	)
+
+
+RT_COMPLETE=
+
+
+# ----------------------------------------------------------------------
+BOOT_MODEL=`/bin/cat /etc/default_config/BOOT.conf 2>/dev/null` ; [ "$DEBUG" != "0" ] && msg_debug "[ ${_ENAME} ] Platform model: $BOOT_MODEL"
+WebShare=`/sbin/getcfg SHARE_DEF defWeb -d Qweb -f /etc/config/def_share.info`
+[ $WebShare = "Qweb" ] && QMOUNTS=TRUE || QMOUNTS=FALSE
+[ "$DEBUG" != "0" ] && msg_info "[ ${_ENAME} ] Q-prefixed Mounts: $QMOUNTS"
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+checkServiceState(){
+	local SERVICE_NAME="$1"
+	local SERVICE_PIDFILE="$2"
+	if [ -e "$SERVICE_PIDFILE" ]; then
+		if [ -s $SERVICE_PIDFILE ]; then
+			SERVICE_PID=`cat $SERVICE_PIDFILE`
+			SERVICE_PS="`ps -A | grep $SERVICE_NAME | grep $SERVICE_PID`"
+			if [ -n "$SERVICE_PS" ]; then
+				msg_success "[ ${_ENAME} ] SRV:${green}${SERVICE_NAME}${nc} PID:${yellow}${SERVICE_PID}${nc} running."
+			else
+				msg_notice "[ ${_ENAME} ] SRV:${red}${SERVICE_NAME}${nc} PID:${yellow}${SERVICE_PID}${nc} process dead."
+			fi
+		else
+			msg_not_ok "[ ${_ENAME} ] SRV:${red}${SERVICE_NAME}${nc} pid file empty."
+		fi
+	else
+		msg_info "[ ${_ENAME} ] Service ${green}${SERVICE_NAME}${nc} state file not found."
+	fi
+}
+checkMyState(){
+	local _name=
+	local _pid=
+	for (( i = 0 ; i < ${#SERVICES[@]} ; i++ )) do
+		_name=$(echo ${SERVICES[$i]} | cut -d \| -f 1)
+		_pid=$(echo ${SERVICES[$i]} | cut -d \| -f 2)
+		[ "x$_pid" != "x" ] && checkServiceState $_name $_pid
+	done
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+# ##--> Help note
+# ----------------------------------------------------------------------
+help() {                                        # Full header comments as documentation
+        echo "------------------------------------------------------------------------------
+ (${PROGNAME}) PID: $$; (parent:${PPID})
+---------------------------------------------------------- || Hello World! ---
+
+  Usage:
+          $PROGNAME (start|stop|enable|disable|status)
+
+  Available options:
+    start/stop      - start or stop chroot environment
+    enable/disable  - enables or disables application (launch) in Q/App Center
+    status          - checks running state
+
+------------------------------------------------------------------------------
+  Note: To make it running while system boots, enable it in QPKG section.
+------------------------------------------------------------------------------"
+}
+# ----------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
+function retcode {
+	RETCODE=$?
+	set +x
+	if [[ "$1" ]]; then
+		if (( $1 >= 0 )) 2>/dev/null; then
+			RETCODE=$1
+		else
+			eval $@
+			retcode
+		fi
+	fi
+	[[ "$_DEBUG" ]] && set -x || :
+	return $RETCODE
+}
+# usage 1: mount -a ; echo retcode   # shows ret value
+# usage 2: retcode 5                 # sets retcode value
+# usage 3: retcode mount -a          # executes command and gets the return value
+# example:
+#   mount -a
+#   if ! retcode; then
+#       error "Error: command \"mount -a\" failed with RC $RETCODE"
+#   fi
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+# Returns true if $1 is Integer
+# usage: is_int ${var} && echo "that's an int"
+isInt() {
+	if test ${1} -eq ${1} 2>/dev/null; then
+		return 0
+	fi
+	return 1
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+# Returns true if $1 is one of $2..$n
+arrayIsPresent() {
+	local val="$1"
+	shift
+	for v in "$@"; do
+		[ "$v" = "$val" ] && return 0
+	done
+	return 1
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+# In-place editing like sed -i but more portable...
+sed_i() {
+	local cmd="$1"
+	local file="$2"
+	local addr=","
+	echo "$cmd" | grep -qE '^/' && addr=
+	ed -s "$file" > /dev/null 2>&1 << EOF
+$addr$cmd
+w
+q
+EOF
+}
+# ----------------------------------------------------------------------
+
+
+
+
+# ----------------------------------------------------------------------
+# Legacy devices support (w/ Q-prefixed defshares)
+# ----------------------------------------------------------------------
+_share_DOWNLOAD="/share/Download" ; _share_QDOWNLOAD="/share/Qdownload"
+# ----------------------------------------------------------------------
+prepareDownloadBase(){
+	[ "$DEBUG" != "0" ] && msg_debug "[ ${_ENAME} ] DOWNLOAD SHARE: ${SYS_DOWNLOAD_SHARE}"
+	FSYS_DOWNLOAD_SHARE="/share/${SYS_DOWNLOAD_SHARE}"
+	if [ ! -d "${FSYS_DOWNLOAD_SHARE}" ]; then
+		msg_critical "[ ${_ENAME} ] ${FSYS_DOWNLOAD_SHARE} directory does not exist."
+	else
+		if [ ! "/share/${SYS_DOWNLOAD_SHARE}" = "${_share_DOWNLOAD}" ]; then
+			[ ! -d ${_share_DOWNLOAD} ] && cmd "mkdir -p ${_share_DOWNLOAD}"
+			mount | grep "${SYS_DOWNLOAD_SHARE}" | grep "${_share_DOWNLOAD}" 2>&1 >/dev/null
+			if ! test $? -eq 0 ; then
+				cmd "mount --bind ${FSYS_DOWNLOAD_SHARE} ${_share_DOWNLOAD}"
+			fi
+		fi
+	fi
+}
+umount_Download_Base(){
+	if [ ! "/share/${SYS_DOWNLOAD_SHARE}" = "${_share_DOWNLOAD}" ]; then
+		mount | grep "${SYS_DOWNLOAD_SHARE}" | grep "${_share_DOWNLOAD}" 2>&1 >/dev/null
+		if test $? -eq 0 ; then
+			cmd "umount ${_share_DOWNLOAD}"
+		fi
+	fi
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+RT_BASE="$_share_DOWNLOAD/rtorrent"
+createDirectoryStructue(){
+	local _d=
+	for (( i = 0 ; i < ${#DIRECTORIES[@]} ; i++ )) do
+		_d=$RT_BASE/${DIRECTORIES[$i]}
+		[ -d "$_d" ] || {
+			cmd "mkdir -p $_d"
+			cmd "chmod 777 $_d"
+		} && {
+			cmd "chmod 777 $_d"
+		}
+	done
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+# Link basic config files to rootfs
+# ----------------------------------------------------------------------
+createLink(){
+	local link_d="$1" ; 	local link_s="$2"
+	if [ ! -L "${link_d}" ] || [ ! "$(readlink ${link_d})" = ${link_s} ]; then
+		[ -L "${link_d}" ] && cmd "rm -rf ${link_d}"
+		cmd "ln -sf ${link_s} ${link_d}"
+	fi
+	return
+}
+createLinks(){
+	for (( i = 0 ; i < ${#LINKS[@]} ; i++ )) do
+		local _d=$(echo ${LINKS[$i]} | cut -d : -f 1)
+		local _s=$(echo ${LINKS[$i]} | cut -d : -f 2)
+		createLink $_d $_s
+	done
+
+	#link_d="/bin/pgrep" ; 	link_s="${PKG_PATH}${link_d}"
+	#if [ ! -f "${link_d}" ] && [ ! -L "${link_d}" ]; then
+	#	[ -L "${link_d}" ] && cmd "rm -rf ${link_d}"
+	#	cmd "ln -sf ${link_s} ${link_d}"
+	#fi
+}
+cleanLinks(){
+	for (( i = ${#LINKS[@]} ; i > 0 ; i-- )) do
+		local _d=$(echo ${LINKS[$i - 1]} | cut -d : -f 1)
+		local _s=$(echo ${LINKS[$i - 1]} | cut -d : -f 2)
+		cmd "rm $_d"
+	done
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+fixPty(){
+	cmd "chmod 666 /dev/ptmx" ; cmd "chmod 666 /dev/null"
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+setEnvVars(){
+	LANGVAR=`/usr/bin/locale | /bin/grep LANG | cut -f 2 -d "="`
+	[ "x${LANGVAR}" != x ] || export LANG=en_US.UTF-8
+
+	export HOME=/root
+	export TERM=xterm
+	export SHELL=/usr/bin/rtorrent/bin/bash
+	export USER=admin
+	export PWD=/root
+	export EDITOR=/bin/vi
+	export LOGNAME=admin
+
+	return
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+delLockFile(){
+	rm -f "${LOCK}"
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+getRegCloudName() {
+	OUR_CLOUDNAME=$(/sbin/getcfg "QNAP DDNS Service" "Host Name" -d MyServer -f /etc/config/qnapddns.conf)
+	if [ -n "$OUR_CLOUDNAME" ]; then
+		msg_info "[ ${_ENAME} ] Server hostname $OUR_CLOUDNAME"
+	else
+		msg_warning "[ ${_ENAME} ] Could not get registred cloud name!"
+		OUR_CLOUDNAME=NAS
+	fi
+}
+getRegCloudDomain() {
+	OUR_CLOUDSRV=$(/sbin/getcfg "QNAP DDNS Service" "Domain Name Server" -d MyCloudNAS.com -f /etc/config/qnapddns.conf)
+	if [ -n "$OUR_CLOUDNAME" ]; then
+		msg_info "[ ${_ENAME} ] Server domain $OUR_CLOUDSRV"
+	else
+		msg_warning "[ ${_ENAME} ] Could not get registred cloud name!"
+		OUR_CLOUDSRV="UnknownCloud.com"
+	fi
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+getUserEmailAddr() {
+	# TODO Get from config
+	USER_MAILADDR=$(/sbin/getcfg "User" "Mail" -d "$OUR_CLOUDNAME@$OUR_CLOUDSRV" -f $PKG_CONFIG)
+
+	if [ -n "$OUR_CLOUDNAME" ]; then
+		msg_info "[ ${_ENAME} ] User mail address: $USER_MAILADDR"
+	else
+		msg_warning "[ ${_ENAME} ] Mail address not set. Using nobody@null.com"
+		USER_MAILADDR="nobody@UnknownCloud.com"
+	fi	
+}
+# ----------------------------------------------------------------------
+
+
+
+# ----------------------------------------------------------------------
+isValidIpAddress() {
+	# It's not 100% accurate ... ;)
+	echo $1 | grep -qE '^[0-9][0-9]?[0-9]?\.[0-9][0-9]?[0-9]?\.[0-9][0-9]?[0-9]?\.[0-9][0-9]?[0-9]?$'
+}
+getMyInterfaceIp(){
+	local SYS_INTERFACE="bond0 eth0 eth1"
+	for interface in $SYS_INTERFACE
+	do
+		IPADDR_IF=`/sbin/ifconfig $interface | grep "inet addr" | cut -f 2 -d ':' | cut -f 1 -d ' '`
+		if [ "$IPADDR_IF" != "" ]; then
+			msg_info "[ ${_ENAME} ] Iface IP address... $IPADDR_IF"
+			break
+		fi
+	done
+}
+getMyExtIpAddress() {
+	isValidIpAddress "$IPADDR_EXT" && return
+	isValidIpAddress "$IPADDR_EXT" || IPADDR_EXT=$(wget --no-check-certificate http://www.whatismyip.com/automation/n09230945.asp -O - -o /dev/null)
+	isValidIpAddress "$IPADDR_EXT" || IPADDR_EXT=$(wget --no-check-certificate https://www.packetmail.net/myip.php -O - -q /dev/null)
+	isValidIpAddress "$IPADDR_EXT" || IPADDR_EXT=$(wget --no-check-certificate http://box.houkouonchi.jp/ip.php -O - -q /dev/null)
+	isValidIpAddress "$IPADDR_EXT" || IPADDR_EXT=$(ifconfig -a | grep "inet addr" | head -n1 | awk -F: '{print $2}' | awk '{print $1}')
+	isValidIpAddress "$IPADDR_EXT" || IPADDR_EXT="1.2.3.4"
+	msg_info "[ ${_ENAME} ] IP address... $IPADDR_EXT"
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+isPortUsed() {
+	local port="$1"
+	netstat -an 2>/dev/null | grep tcp | grep -w LISTEN | grep -qE "[.:]$port[ 	]" && return 0
+	return 1
+}
+isValidPortNumber() {
+	echo "$1" | grep -qiE '^[0-9]+$' || return 1
+	echo "$1" | grep -qiE '[0-9][0-9][0-9][0-9][0-9][0-9]' && return 1
+	[ $1 -ge 1024 ] && [ $1 -le 65535 ]
+}
+getNewPortNumber() {
+	while true; do
+		newPortNumber=$CURRENT_PORT
+		CURRENT_PORT=$(expr $CURRENT_PORT + 1)
+		isValidPortNumber $newPortNumber || msg_error "Invalid port number. Change CURRENT_PORT."
+		isPortUsed $newPortNumber || break
+		echo "${CWARNING}Port $newPortNumber is in use, trying next port...$CEND"
+	done
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+# php.ini Timezone Updates Functions
+# ----------------------------------------------------------------------
+isValidTzName() {
+	echo "$1" | LC_ALL=C grep -qE '^[A-Z][^/ ]*(/[A-Z][^/ ]*)?$' && return 0
+	return 1
+}
+detectTimeZone() {
+	[ -n "$USER_TIMEZONE" ] && return
+
+	local hash=
+	local hasher=
+	local files=
+	#local zoneinfoPath=/usr/share/zoneinfo
+	local zoneinfoPath=/etc/zoneinfo
+	if [ ! -d "$zoneinfoPath" ]; then
+		[ "$DEBUG" != "0" ] && msg_warning "[ ${_ENAME} ] Zone info not found /usr/share/zoneinfo"
+		return
+	fi
+	
+	if hasher=md5sum; available $hasher || hasher=sha1sum; available $hasher; then
+		[ -x "$hasher" ] && hasher="$hasher"
+		[ "$DEBUG" != "0" ] && msg_debug "[ ${_ENAME} ] Hasher: $hasher"
+		hash=$($hasher /etc/localtime | awk '{print $1}')
+		[ "$DEBUG" != "0" ] && msg_debug "[ ${_ENAME} ] /etc/localtime $hash"
+		files="$(find $zoneinfoPath -type f -print | xargs $hasher | grep -E "^$hash\\>" | awk '{print $2}')"
+	else
+		return
+	fi
+
+	# Detect all possible timezone names
+	local timezones=
+	for path in $files; do
+		local tz="${path#$zoneinfoPath/}"
+		while true; do
+			isValidTzName "$tz" && break
+			local newTz="${tz#*/}"
+			[ "$newTz" = "$tz" ] && tz= && break
+			tz="$newTz"
+		done
+		isValidTzName "$tz" && timezones="$timezones $tz"
+	done
+
+	# Now find the ones PHP likes...
+	local okRegions="(Africa|America|Antarctica|Arctic|Asia|Atlantic|Australia|Europe|Indian|Pacific)"
+	for tz in $timezones; do
+		echo "$tz" | grep -qE "^$okRegions/" && USER_TIMEZONE="$tz" && return
+	done
+
+	# Return the first one we found
+	for tz in $timezones; do
+		USER_TIMEZONE="$tz"
+		return
+	done
+}
+updatePhpTimezone() {
+	# Replace current TZ in php.ini
+	local WWW_PHP_INI="$PKG_PATH/etc/php5/php.ini"
+	if [ ! -f "$WWW_PHP_INI" ]; then
+		msg_warning "[ ${_ENAME} ] Could not find php.ini file: $WWW_PHP_INI"
+		return
+	fi
+	[ -z "$USER_TIMEZONE" ] && return
+
+	local zws="[ 	]*"
+	local newLine="date.timezone = $USER_TIMEZONE"
+#	if grep -qE "^${zws}date\\.timezone[ 	=]" "$WWW_PHP_INI"; then
+#		return
+#	elif grep -qE "^${zws}[;#]${zws}date\\.timezone[ 	=]" "$WWW_PHP_INI"; then
+#		sed_i "s!^${zws}[;#]${zws}date\\.timezone[ 	=].*\$!$newLine!" "$WWW_PHP_INI"
+#	else
+#		cat >> "$WWW_PHP_INI" << EOF
+	if grep -qE "^${zws}${zws}date\\.timezone[ 	=]" "$WWW_PHP_INI"; then
+		sed_i "s!^${zws}${zws}date\\.timezone[ 	=].*\$!$newLine!" "$WWW_PHP_INI"
+	else
+		cat >> "$WWW_PHP_INI" << EOF
+[Date]
+$newLine
+EOF
+	fi
+}
+
+
+# ----------------------------------------------------------------------
+setAuthorityIdentifier() {
+	# TODO save defaults into openssl.cnf
+	/sbin/setcfg " req_distinguished_name " stateOrProvinceName "RT Station" -f ${PKG_PATH}/share/openssl/openssl.cnf
+	/sbin/setcfg " req_distinguished_name " stateOrProvinceName_default "RT Station" -f ${PKG_PATH}/share/openssl/openssl.cnf
+	/sbin/setcfg " req_distinguished_name " localityName "Space" -f ${PKG_PATH}/share/openssl/openssl.cnf
+	/sbin/setcfg " req_distinguished_name " 0.organizationName "QNAP Storage" -f ${PKG_PATH}/share/openssl/openssl.cnf
+	/sbin/setcfg " req_distinguished_name " 0.organizationName_default "QNAP Storage" -f ${PKG_PATH}/share/openssl/openssl.cnf
+	/sbin/setcfg " req_distinguished_name " organizationalUnitName "QPX" -f ${PKG_PATH}/share/openssl/openssl.cnf
+	/sbin/setcfg " req_distinguished_name " commonName "$OUR_CLOUDNAME.$OUR_CLOUDSRV" -f ${PKG_PATH}/share/openssl/openssl.cnf
+	/sbin/setcfg " req_distinguished_name " emailAddress "secret@$OUR_CLOUDSRV" -f ${PKG_PATH}/share/openssl/openssl.cnf
+	/sbin/setcfg " req_attributes " unstructuredName "QNAP Club Poland" -f ${PKG_PATH}/share/openssl/openssl.cnf
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+createSelfSignedCertFile() {
+	local pemfile="$1"
+
+	if [ ! -f "$OTHER_PEM_FILE" ]; then
+		msg_info "[ ${_ENAME} ] Creating the self-signed certificate."
+		rm -f "$pemfile"
+		openssl req -new -newkey rsa:1024 -days 1000 -nodes -x509 -keyout "$pemfile" -out "$pemfile" -batch \
+			|| msg_error "[ ${_ENAME} ] Failed to create self-signed certificate."
+		OTHER_PEM_FILE="$pemfile"
+		CREATED_CERT_FILE=y
+	else
+		rm -f "$pemfile"
+		cp "$OTHER_PEM_FILE" "$pemfile" || msg_error "[ ${_ENAME} ] Failed to copy self-signed certificate."
+	fi
+
+	chmod 0600 "$pemfile"
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+checkPortAvailability(){
+	local _t_port=$1
+	local _t_name=$2
+
+	if isPortUsed $_t_port; then
+		delLockFile
+		msg_error "[ ${_ENAME} ] Port ${bd}$_t_port${nc} ($_t_name) is already in use."
+	else
+		msg_ok "[ ${_ENAME} ] Port ${bd}$_t_port${nc} ($_t_name) is available."
+	fi
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+getRtorrentPorts(){
+	CONFIG_DHT_PORT=$(/sbin/getcfg "" dht.port.set -d 6881 -f ${PKG_PATH}/etc/rtorrent.conf)
+	CONFIG_RT_PORT=$(/sbin/getcfg "" port_range -d 42000 -f ${PKG_PATH}/etc/rtorrent.conf | cut -d - -f 1)
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+addPortRedirection(){
+	getRtorrentPorts
+	UPNP_MAIN=$(/sbin/getcfg "" UPNP_MAIN -d "no" -f ${PKG_PATH}/etc/rtorrent.port)
+	UPNP_HTTP=$(/sbin/getcfg "" UPNP_HTTP -d "no" -f ${PKG_PATH}/etc/rtorrent.port)
+	if [ "$UPNP_MAIN" == "yes" ]; then
+		msg_notice "[ ${_ENAME} ] Redirecting ports (main): 5000, $CONFIG_DHT_PORT, $CONFIG_RT_PORT"
+		${PKG_PATH}/bin/upnpc -r 5000 TCP 5000 UDP   \
+					$CONFIG_DHT_PORT UDP \
+					$CONFIG_RT_PORT UDP  \
+					$CONFIG_RT_PORT TCP  >/dev/null || \
+			msg_warning "[ ${_ENAME} ] Failed to redirect ports: 5000, $CONFIG_DHT_PORT, $CONFIG_RT_PORT"
+	fi
+	if [ "$UPNP_HTTP" == "yes" ]; then
+		msg_notice "[ ${_ENAME} ] Redirecting ports (http): 6008, 6009"
+		${PKG_PATH}/bin/upnpc -r 6008 TCP 6008 UDP   \
+					6009 TCP 6009 UDP    >/dev/null || \
+			msg_warning "[ ${_ENAME} ] Failed to redirect ports: 6008, 6009"
+	fi
+	#upnpc -u <modem_ip/igd_url> -a <router_wan_ip> <wan_port> <wan_port> tcp    # adds a port redirection from the modem to the router
+	#upnpc -a <computer_lan_ip> <lan_port> <wan_port> tcp                        # adds a port redirection from the router to the computer
+}
+delPortRedirection(){
+	getRtorrentPorts
+	${PKG_PATH}/bin/upnpc -d 6008 TCP 6008 UDP   \
+				6009 TCP 6009 UDP    \
+				$CONFIG_DHT_PORT UDP \
+				$CONFIG_RT_PORT UDP  \
+				$CONFIG_RT_PORT TCP  >/dev/null || \
+					msg_warning "[ ${_ENAME} ] Failed to remove redirected ports."
+	#upnpc -d <wan_port> tcp                                                     # removes the port redirection from the router
+	#upnpc -u <modem_ip/igd_url> -d <wan_port> tcp                               # removes the port redirection from the modem
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+clearCache(){
+	local _d="$PKG_PATH/var/cache/lighttpd"
+	[ -d "$_d" ] && rm -rf "$_d"
+}
+# ----------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
+# [rtorrent.conf]
+# The 'send_buffer_size' and 'receive_buffer_size' options can be used
+# to adjust the socket send and receive buffer sizes.
+# Increasing the send buffer size may help reduce disk seeking
+# as more data is buffered each time the socket is written to.
+# On linux you may use "cat /proc/sys/net/ipv4/tcp_wmem" to see
+# the minimum, default and max buffer size, respectively.
+#DEBUG=1
+removeSocketBufferSettings() {
+	#[ -f "$PKG_CONFIG" ] && rm -f $PKG_CONFIG
+	/sbin/setcfg "network.wndBufSize" def_rcvbuf_size_max "" -f $PKG_CONFIG
+	/sbin/setcfg "network.wndBufSize" rt_rcvbuf_size_max "" -f $PKG_CONFIG
+	/sbin/setcfg "network.wndBufSize" def_sndbuf_size_max "" -f $PKG_CONFIG
+	/sbin/setcfg "network.wndBufSize" rt_sndbuf_size_max "" -f $PKG_CONFIG
+	/sbin/setcfg "network.socketMemory" def_mem_rcvbuf_size_min "" -f $PKG_CONFIG
+	/sbin/setcfg "network.socketMemory" def_mem_rcvbuf_size_ini "" -f $PKG_CONFIG
+	/sbin/setcfg "network.socketMemory" def_mem_rcvbuf_size_max "" -f $PKG_CONFIG
+	/sbin/setcfg "network.socketMemory" def_mem_rcvbuf_size "" -f $PKG_CONFIG
+	/sbin/setcfg "network.socketMemory" def_mem_sndbuf_size_min "" -f $PKG_CONFIG
+	/sbin/setcfg "network.socketMemory" def_mem_sndbuf_size_ini "" -f $PKG_CONFIG
+	/sbin/setcfg "network.socketMemory" def_mem_sndbuf_size_max "" -f $PKG_CONFIG
+	/sbin/setcfg "network.socketMemory" def_mem_sndbuf_size "" -f $PKG_CONFIG
+	/sbin/setcfg "network.socketMemory" rt_mem_rcvbuf_size "" -f $PKG_CONFIG
+	return
+}
+setSocketBuffer(){
+	touch $PKG_CONFIG
+	return
+}
+restoreSocketBuffer(){
+	return
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+setConfigPaths(){
+	local _d_watch="$RT_BASE/watch"
+	local _l_watch=$(expr length "$_d_watch")
+
+	local _d_complete="$RT_BASE/complete"
+	local _l_complete=$(expr length "$_d_complete")
+
+	local _users="$RT_BASE/settings/users"
+	local _settings="$_users/rtorrent/settings"
+
+	mkdir -p $RT_BASE/settings
+	mkdir -p $_users/rtorrent/settings
+	mkdir -p $_users/rtorrent/torrents
+	chmod -R 777 $RT_BASE/settings
+
+	if [ ! -f "$_settings/autotools.dat" ]; then
+		msg_notice "[ ${_ENAME} ] Saving UI Autotools settings."
+		touch $_settings/autotools.dat
+		echo -n "O:10:\"rAutoTools\":9:{s:4:\"hash\";s:13:\"autotools.dat\";s:12:\"enable_label\";s:1:\"0\";s:14:\"label_template\";s:5:\"{DIR}\";s:11:\"enable_move\";s:1:\"1\";s:16:\"path_to_finished\";s:$_l_complete:\"$_d_complete\";s:11:\"fileop_type\";s:4:\"Move\";s:12:\"enable_watch\";s:1:\"0\";s:13:\"path_to_watch\";s:$_l_watch:\"$_d_watch\";s:11:\"watch_start\";s:1:\"1\";}" > "$_settings/autotools.dat"
+		chmod 666 $_settings/autotools.dat
+	else
+		[ "$DEBUG" != "0" ] && msg_debug "[ ${_ENAME} ] UI autotools.dat file already exist."
+	fi
+	
+	if [ ! -f "$_settings/cookies.dat" ]; then
+		msg_notice "[ ${_ENAME} ] Creating UI cookies.dat file."
+		touch $_settings/cookies.dat
+		echo -n "O:8:\"rCookies\":2:{s:4:\"hash\";s:11:\"cookies.dat\";s:4:\"list\";a:0:{}}" > $_settings/cookies.dat
+		chmod 666 $_settings/cookies.dat
+	else
+		[ "$DEBUG" != "0" ] && msg_debug "[ ${_ENAME} ] UI cookies.dat file already exist."
+	fi
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+# Generates each time new password for RPC connection from UI
+# ----------------------------------------------------------------------
+genPasswd() {
+	[ "$DEBUG" != "0" ] && msg_debug "[ ${_ENAME} ] Generating new RPC password."
+	local l=$1
+	[ "$l" == "" ] && l=16
+	tr -dc A-Za-z0-9_ < /dev/urandom | head -c ${l} | xargs
+}
+setPasswd() {
+	[ "$DEBUG" != "0" ] && msg_debug "[ ${_ENAME} ] Applying new RPC password."
+	local _passwd=$(genPasswd 12)
+	/sbin/setcfg "RPC" "Random" "$_passwd" -f $PKG_PATH/etc/rtorrent.rpc
+	$PKG_PATH/bin/lighttpd-setpw.sh RPC "$_passwd"
+}
+
+
+
+# ----------------------------------------------------------------------
+# Move logs from loader and ctl (me) to HDD pool
+# ----------------------------------------------------------------------
+moveLogs(){
+	[ "$DEBUG" != "0" ] && msg_debug "[ ${_ENAME} ] Moving logs..."
+	local PROG_LOG_PATH=/share/Download/rtorrent/logs
+	local CTL_LOG_PATH=$PROG_LOG_PATH/ctl
+	mkdir -p $CTL_LOG_PATH
+	local _msg=
+	for x in `ls $PKG_PATH/var/log`; do
+		if [ "$x" != "$QPX_LOG_NAME" ]; then
+			mv -f "$PKG_PATH/var/log/$x" "$CTL_LOG_PATH/"
+			_msg="Moving file ../log/$x"
+			[ "$DEBUG" != "0" ] && msg_debug "[ ${_ENAME} ] ${_msg:0:43} ..."
+		fi
+	done
+}
+# ----------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------
+_serviceStart(){
+	# Make sure I should start...
+	RESULT=`/sbin/getcfg ${QPROJECT} Enable -u -d TRUE -f /etc/config/qpkg.conf`
+	if  [ "$RESULT" = "FALSE" ] ; then
+		msg_alert "[ ${_ENAME} ] ${QPROJECT} is ${warn}DISABLED${nc}."
+		exit 1
+	fi
+
+	# Create lock file to prevent double run
+	if [ ! -e "${LOCK}" ] ; then
+		cmd "touch ${LOCK}"
+	else
+		msg_alert "[ ${_ENAME} ] ${QPROJECT} ${alert}already${nc} Started."
+		exit 1
+	fi
+
+	echo 4194304 > /proc/sys/net/core/rmem_max
+	echo 1048576 > /proc/sys/net/core/wmem_max
+
+	createLinks
+	prepareDownloadBase
+	createDirectoryStructue
+	setConfigPaths
+	moveLogs
+	clearCache
+
+	[ "$DEBUG" != "0" ] && msg_debug "[ ${_ENAME} ] Detecting Timezone..."
+	detectTimeZone
+	if [ -n "$USER_TIMEZONE" ]; then
+		msg_info "[ ${_ENAME} ] Timezone $USER_TIMEZONE"
+		updatePhpTimezone
+	else
+		msg_warning "[ ${_ENAME} ] Could not detect timezone!"
+	fi
+
+	getRtorrentPorts
+	checkPortAvailability 6009 Web
+	checkPortAvailability 6008 SecureWeb
+	checkPortAvailability 5000 SCGI
+	checkPortAvailability $CONFIG_DHT_PORT DHT
+	checkPortAvailability $CONFIG_RT_PORT Torrent
+
+	addPortRedirection
+
+	getMyInterfaceIp
+	getMyExtIpAddress
+	
+	getRegCloudName
+	getRegCloudDomain
+	
+	getUserEmailAddr
+
+	# Detects new machine by IP and restores settings to default
+	# Create new self-signed certificate file and etc...
+	QPX_HOST_IP="$PKG_PATH/etc/ipaddr"
+	local OLD_IP_ADDRESS=`cat $QPX_HOST_IP 2>/dev/null`
+	local WWW_PEMFILE="$PKG_PATH/etc/lighttpd/lighttpd.pem"
+	if [ "$IPADDR_IF" != "$OLD_IP_ADDRESS" ] || [ ! -f "$WWW_PEMFILE" ]; then
+		msg_notice "[ ${_ENAME} ] Web server certificate not found..."
+		setAuthorityIdentifier
+		createSelfSignedCertFile "$WWW_PEMFILE"
+		removeSocketBufferSettings
+		echo "$IPADDR_IF" > $QPX_HOST_IP
+	else
+		msg_info "[ ${_ENAME} ] Web server certificate found."
+	fi
+
+	setPasswd
+
+	setSocketBuffer
+
+	fixPty
+	setEnvVars
+
+
+	local _name=
+	local _pid=
+	RETVAL=0 ; _RETVAL=
+	for (( i = 0 ; i < ${#SERVICES[@]} ; i++ )) do
+		_name=$(echo ${SERVICES[$i]} | cut -d \| -f 1)
+		_pid=$(echo ${SERVICES[$i]} | cut -d \| -f 2)
+		$PKG_PATH/etc/init.d/$_name start
+		_RETVAL=$?
+		if [ $RETVAL -eq 0 ]; then
+			msg_success "[ ${_ENAME} ] ${noerr}  $_name  ${nc} started."
+		else
+			msg_error "[ ${_ENAME} ] ${error}  $_name  ${nc} start failed."
+		fi
+		[ $RETVAL -eq 0 ] && RETVAL=$_RETVAL
+	done
+
+
+	if [ $RETVAL -eq 0 ]; then
+		RETVAL=0
+		msg_ok "[ ${_ENAME} ] ${noerr}Boot sequence done!${nc}"
+	else
+		RETVAL=1
+		msg_fail "[ ${_ENAME} ] ${error}Errors during boot sequence ...${nc}!"
+	fi
+}
+# ----------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
+_serviceStop(){
+	if [ -e "${LOCK}" ] ; then
+		cmd "rm -rf ${LOCK}"
+	else
+		msg_notice "[ ${_ENAME} ] (app) ${alert}Are you sure it is running?${nc}"
+		msg_alert "[ ${_ENAME} ] (app) ${error}Run state file not found.${nc}"
+		exit 0
+	fi
+
+	moveLogs
+	restoreSocketBuffer
+	delPortRedirection
+
+
+	local _name=
+	local _pid=
+	RETVAL=0 ; _RETVAL=
+	for (( i = ${#SERVICES[@]} ; i > 0 ; i-- )) do
+		_name=$(echo ${SERVICES[$i - 1]} | cut -d \| -f 1)
+		_pid=$(echo ${SERVICES[$i - 1]} | cut -d \| -f 2)
+		$PKG_PATH/etc/init.d/$_name stop
+		_RETVAL=$?
+		if [ $RETVAL -eq 0 ]; then
+			msg_success "[ ${_ENAME} ] ${noerr}  $_name  ${nc} stopped."
+		else
+			msg_error "[ ${_ENAME} ] ${error}  $_name  ${nc} stop failed."
+		fi
+		[ $RETVAL -eq 0 ] && RETVAL=$_RETVAL
+	done
+
+
+	sync ; sleep 1
+	umount_Download_Base
+
+	cleanLinks
+
+	if [ $RETVAL -eq 0 ]; then
+		RETVAL=0 ; msg_ok "[ ${_ENAME} ] ${noerr}Stop sequence done!${nc}"
+	else
+		RETVAL=1 ; msg_fail "[ ${_ENAME} ] ${error}Errors occured during stop sequence.${nc}"
+	fi
+
+}
+# ----------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
+_serviceSetEnabled(){
+		cmd "/sbin/setcfg ${QPROJECT} Enable TRUE -f /etc/config/qpkg.conf"
+		msg_ok "[ ${_ENAME} ] ${QPROJECT} Application launch has been ${noerr}Enabled${nc}."
+}
+# ----------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
+_serviceSetDisabled(){
+		cmd "/sbin/setcfg ${QPROJECT} Enable FALSE -f /etc/config/qpkg.conf"
+		msg_ok "[ ${_ENAME} ] ${QPROJECT} Application launch has been ${warn}Disabled${nc}."
+}
+# ----------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
+# ##--> Start
+# ----------------------------------------------------------------------
+
+
+case "$1" in
+	"start")
+		# ##--> Shall we dance?
+		_serviceStart
+		exit $?
+		;;
+	"stop")
+		_serviceStop
+		exit $?
+		;;
+	"restart")
+		#msg_alert "Restart not implemented. Stop and start manually!"
+		_serviceStop
+		RETVAL=$?
+		sync ; sleep 1
+		if [ $RETVAL -eq 0 ]; then
+			QPX_MOTD="$PKG_PATH/.qpx_motd.asc"
+			if [ -f "$QPX_MOTD" ]; then
+				if [ "$DEBUG" != "0" ]; then
+					cat $QPX_MOTD
+				else
+					msg_notice "[ ${_ENAME} ] ${yellow}-- Restart in progress ...! --${nc}"
+				fi
+			fi
+			_serviceStart
+			exit $?
+		else
+			exit $RETVAL
+		fi
+		;;
+	"enable")
+		_serviceSetEnabled
+		;;
+	"disable")
+		_serviceSetDisabled
+		;;
+	*)
+		[ "$1" != "status" ] && help
+		echo -e " ${QPROJECT} Application launch status is: " `/sbin/getcfg ${QPROJECT} Enable -d "Unknown" -f /etc/config/qpkg.conf`
+		checkMyState
+		exit 0
+		;;
+esac
+
+# Parent process has died so we also better die.
+exit 0

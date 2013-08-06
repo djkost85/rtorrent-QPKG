@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2255/trunk/plugins/erasedata
+END
+cat.sh
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/1857/trunk/plugins/erasedata/cat.sh
+END
+fin.sh
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/1857/trunk/plugins/erasedata/fin.sh
+END
+update.php
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/2115/trunk/plugins/erasedata/update.php
+END
+plugin.info
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/2255/trunk/plugins/erasedata/plugin.info
+END
+init.php
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/2115/trunk/plugins/erasedata/init.php
+END
+conf.php
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/2115/trunk/plugins/erasedata/conf.php
+END
+done.php
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/2115/trunk/plugins/erasedata/done.php
+END
+init.js
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/1933/trunk/plugins/erasedata/init.js
+END

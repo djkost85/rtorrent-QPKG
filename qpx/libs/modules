@@ -1,0 +1,644 @@
+#!/usr/bin/env sh
+: ${DEBUG:=1}
+
+_exit() { echo -e "Error: $*" ; echo "" ; exit 1
+} ; [[ -z "$QPROJECT" ]] && _exit " This program component cannot be run. Import it from QPX Framework. "
+
+
+include assume
+include log
+include null
+include patterns
+include signal
+include utils/explode
+
+#
+# modules.sh
+#
+# Handler of co-processes.
+#
+
+# MODULES[PID]=NAME
+# MODULES_NAMES_<NAME>=PID
+
+
+MODULES=()
+MODULES_STOPPED=()
+
+MODULES_DISOWNONQUIT=false
+MODULES_DISOWNFINISHED=false
+MODULES_PREVENTHUP=false
+MODULES_WAITONQUIT=true
+
+MODULES_PATTERNS_NAME=+([[:alpha:]])*([[:alnum:]_])
+MODULES_PATTERNS_PID=$PATTERNS_NUMBER
+
+
+# void modules_configure (...)
+#
+function modules_configure {
+	log_fcall "$@"
+
+	assume "$# -gt 0 && \$2 == *=*" "$1"
+
+	local TOKEN VALUE A
+
+	for A; do
+		TOKEN=${A%=*} VALUE=${A#*=}
+
+		assume "\$TOKEN == @(disownfinished|disownonquit|execfail|jobcontrol|preventhup|waitonquit)" -- \
+			"token \"$TOKEN\" is not a valid token"
+
+		assume "\$VALUE == @(on|true|off|false)" -- \
+			"token value \"$VALUE\" is not a valid value for token $TOKEN"
+
+		case "$TOKEN" in
+		disownfinished)
+			case "$VALUE" in
+			on|true)
+				MODULES_DISOWNFINISHED=true
+				;;
+			off|false)
+				MODULES_DISOWNFINISHED=false
+				;;
+			esac
+			;;
+		disownonquit)
+			case "$VALUE" in
+			on|true)
+				MODULES_DISOWNONQUIT=true
+				;;
+			off|false)
+				MODULES_DISOWNONQUIT=false
+				;;
+			esac
+			;;
+		execfail)
+			case "$VALUE" in
+			on|true)
+				shopt -s execfail
+				;;
+			off|false)
+				shopt -u execfail
+				;;
+			esac
+			;;
+		jobcontrol)
+			case "$VALUE" in
+			on|true)
+				set -m
+				;;
+			off|false)
+				set +m
+				;;
+			esac
+			;;
+		preventhup)
+			case "$VALUE" in
+			on|true)
+				MODULES_PREVENTHUP=true
+				;;
+			off|false)
+				MODULES_PREVENTHUP=false
+				;;
+			esac
+			;;
+		waitonquit)
+			case "$VALUE" in
+			on|true)
+				MODULES_WAITONQUIT=true
+				;;
+			off|false)
+				MODULES_WAITONQUIT=false
+				;;
+			esac
+			;;
+		#beginsyntaxcheckblock
+		*)
+			log_fatalerror "Invalid argument: $A"
+			;;
+		#endsyntaxcheckblock
+		esac
+	done
+}
+
+
+# void modules_register (string <name>, int <pid>)
+#
+function modules_register {
+	log_fcall "$@"
+
+	assume "$# -eq 2 && \$2 == $MODULES_PATTERNS_NAME && \$3 == $MODULES_PATTERNS_PID" "$1" "$2"
+
+	MODULES[$2]=$1
+	MODULES_STOPPED[$2]=
+	eval "MODULES_NAMES_$1=$2"
+}
+
+
+# void modules_unregister (string NAME)
+# void modules_unregister (uint PID)
+#
+function modules_unregister {
+	log_fcall "$@"
+
+	assume "$# -eq 1 && \$2 == @($MODULES_PATTERNS_NAME|$MODULES_PATTERNS_PID)" "$1"
+
+	local NAME PID
+
+	if [[ $1 == $MODULES_PATTERNS_PID ]]; then
+		PID=$1
+		NAME=${MODULES[PID]}
+		[[ -z $NAME ]] && return
+	else
+		NAME=$1
+		eval "PID=\$MODULES_NAMES_$NAME"
+		[[ -z $PID ]] && return
+	fi
+
+	unset MODULES\[PID\] MODULES_STOPPED\[PID\] "MODULES_NAMES_$NAME"
+}
+
+
+# stat modules_startnew (string NAME, [string <redirection>, ...], string <command>, [string <command arg>, ...])
+#
+function modules_startnew {
+	log_fcall "$@"
+
+	assume "$# -ge 2 && \$2 == $MODULES_PATTERNS_NAME" "$1"
+
+	local NAME=$1
+	shift
+
+	local -a REDIRECTIONS=()
+	local -i I=0
+	while [[ $1 == *([[:digit:]])\>* ]]; do
+		REDIRECTIONS[I++]=$1
+		shift
+	done
+
+	local OLDPIDVAR="MODULES_NAMES_$NAME"
+	[[ -n ${!OLDPIDVAR} ]] && modules_unregister "${!OLDPIDVAR}"
+
+	local -i PID R
+
+	eval "${REDIRECTIONS[@]}" "\"\$@\" &"
+
+	R=$? PID=$!
+
+	[[ $MODULES_PREVENTHUP = true ]] && disown -h "$PID"
+
+	[[ R -eq 0 ]] && modules_register "$NAME" "$PID"
+
+	return "$R"
+}
+
+
+# stat modules_startnew_ipiped (string NAME, int FD, [string <redirection>, ...], string <command>, [string <command arg>, ...])
+#
+function modules_startnew_ipiped {
+	log_fcall "$@"
+
+	assume "$# -ge 3"
+
+	local NAME=$1 FD=$2
+	shift 2
+
+ 	assume "\$NAME == $MODULES_PATTERNS_NAME" -- "First argument is not a valid module name: $NAME"
+	assume "-n \$FD && \$FD == $PATTERNS_NUMBER" -- "Second argument is not a valid FD number: $FD"
+	assume "FD -gt 2 && FD -lt 64" -- "Second argument does not represent a valid FD number: $FD"
+
+	local -a REDIRECTIONS=()
+	local -i I=0
+	while [[ $1 == *([[:digit:]])\>* ]]; do
+		REDIRECTIONS[I++]=$1
+		shift
+	done
+
+	local COMMAND=$1
+	shift
+
+	eval "local OLDPID=\$MODULES_NAMES_$NAME"
+	[[ -n $OLDPID ]] && modules_unregister "$OLDPID"
+
+	local IFS=$DEFAULTS_IFS
+
+	log_debug "exec $FD> >( exec \"$COMMAND\" \"\$@\" ${REDIRECTIONS[*]} )"
+
+	eval "exec $FD> >( exec \"$COMMAND\" \"\$@\" ${REDIRECTIONS[*]} )"
+
+	local -i PID=$!
+
+	[[ $MODULES_PREVENTHUP = true ]] && disown -h "$PID"
+
+	sleep 0.050s
+
+	if [[ ! -e /proc/$PID ]] || ! signal "$PID" 0; then
+		return 1
+	fi
+
+	modules_register "$NAME" "$PID"
+
+	return 0
+}
+
+
+# void modules_finishdone (uint <pid>)
+#
+function modules_finishdone {
+	log_fcall "$@"
+
+	assume "$# -eq 1 && \$2 == $MODULES_PATTERNS_PID" "$1"
+
+	[[ $MODULES_DISOWNFINISHED = true ]] && disown "$1" 2>&"$NULL"
+
+	modules_unregister "$1"
+}
+
+
+# stat modules_wait (string NAME)
+#
+function modules_wait {
+	log_fcall "$@"
+
+	assume "$# -eq 1 && \$2 == $MODULES_PATTERNS_NAME" "$1"
+
+	local NAME=$1
+	eval "local PID=\$MODULES_NAMES_$NAME"
+
+	local -i R=0
+
+	if [[ -z $PID ]]; then
+		:
+	elif [[ ! -e /proc/$PID ]] || ! signal "$PID" 0; then
+		modules_finishdone "$PID"
+	elif ! jobs -p "$PID" 2>&"$NULL"; then
+		modules_unregister "$PID"
+	else
+		wait "$PID"
+		(( R += $? ))
+	fi
+
+	return "$R"
+}
+
+
+# stat modules_wait_all (void)
+#
+function modules_wait_all {
+	log_fcall "$@"
+
+	local -i R=0
+
+	for PID in "${!MODULES[@]}"; do
+		if [[ ! -e /proc/$PID ]] || ! signal "$PID" 0; then
+			modules_finishdone "$PID"
+		elif ! jobs -p "$PID" 2>&"$NULL"; then
+			modules_unregister "$PID"
+		else
+			wait "$PID"
+			(( R += $? ))
+		fi
+	done
+
+	return "$R"
+}
+
+
+# stat modules_check (string NAME)
+#
+function modules_check {
+	log_fcall "$@"
+
+	assume "$# -eq 1 && \$2 == $MODULES_PATTERNS_NAME" "$1"
+
+	local NAME=$1
+	eval "local PID=\$MODULES_NAMES_$NAME"
+
+	if [[ -z $PID ]]; then
+		return 1
+	elif [[ ! -e /proc/$PID ]] || ! signal "$PID" 0; then
+		modules_finishdone "$PID"
+		return 1
+	fi
+
+	return 0
+}
+
+
+# stat modules_check_all (void)
+#
+function modules_check_all {
+	log_fcall "$@"
+
+	local -i R=0
+
+	for PID in "${!MODULES[@]}"; do
+		if [[ ! -e /proc/$PID ]] || ! signal "$PID" 0; then
+			modules_finishdone "$PID"
+			(( R++ ))
+		fi
+	done
+
+	return "$R"
+}
+
+
+# stat modules_stop (string NAME)
+#
+function modules_stop {
+	log_fcall "$@"
+
+	assume "$# -eq 1 && \$2 == $MODULES_PATTERNS_NAME" "$1"
+
+	local NAME=$1
+	eval "local PID=\$MODULES_NAMES_$NAME"
+
+	if [[ -z $PID ]]; then
+		return 1
+	elif [[ ! -e /proc/$PID ]] || ! signal "$PID" 0; then
+		modules_finishdone "$PID"
+		return 1
+	fi
+
+	MODULES_STOPPED[PID]=$PID
+
+	signal "$PID" SIGNAL_STOP || \
+		return 1
+
+	return 0
+}
+
+
+# stat modules_stop_all (void)
+#
+function modules_stop_all {
+	log_fcall "$@"
+
+	local -i R=0
+
+	for PID in "${!MODULES[@]}"; do
+		if [[ ! -e /proc/$PID ]] || ! signal "$PID" 0; then
+			modules_finishdone "$PID"
+			(( R++ ))
+		elif [[ -z ${MODULES_STOPPED[PID]} ]]; then
+			signal "$PID" SIGNAL_STOP
+			(( R += $? ))
+			MODULES_STOPPED[PID]=$PID
+		fi
+	done
+
+	return "$R"
+}
+
+
+# stat modules_continue (string <name>)
+#
+function modules_continue {
+	log_fcall "$@"
+
+	assume "$# -eq 1 && \$2 == $MODULES_PATTERNS_NAME" "$1"
+
+	eval "local PID=\$MODULES_NAMES_$1"
+
+	if [[ -z $PID ]]; then
+		return 1
+	elif [[ ! -e /proc/$PID ]] || ! signal "$PID" 0; then
+		modules_finishdone "$PID"
+		return 1
+	fi
+
+	unset MODULES_STOPPED\[PID\]
+
+	signal "$PID" SIGNAL_CONT || \
+		return 1
+
+	return 0
+}
+
+
+# stat modules_continue_all (void)
+#
+function modules_continue_all {
+	log_fcall "$@"
+
+	local -i R=0
+
+	for PID in "${!MODULES_STOPPED[@]}"; do
+		if [[ ! -e /proc/$PID ]] || ! signal "$PID" 0; then
+			modules_finishdone "$PID"
+			(( R++ ))
+		else
+			signal "$PID" SIGNAL_CONT
+			(( R += $? ))
+		fi
+	done
+
+	MODULES_STOPPED=()
+
+	return "$R"
+}
+
+
+# stat modules_detach (string <name>)
+#
+function modules_detach {
+	log_fcall "$@"
+
+	assume "$# -eq 1 && \$2 == $MODULES_PATTERNS_NAME" "$1"
+
+	eval "local PID=\$MODULES_NAMES_$1"
+
+	[[ -z $PID ]] && return 1
+
+	modules_unregister "$PID"
+
+	if [[ ! -e /proc/$PID ]] || ! signal "$PID" 0; then
+		return 1
+	fi
+
+	disown "$PID" 2>&"$NULL" || \
+		return 1
+
+	return 0
+}
+
+
+# stat modules_detach_all (void)
+#
+function modules_detach_all {
+	log_fcall "$@"
+
+	local -i R=0
+
+	for PID in "${!MODULES[@]}"; do
+		modules_unregister "$PID"
+
+		disown -h "$PID" 2>&"$NULL"
+		disown "$PID" 2>&"$NULL"
+
+		(( R += $? ))
+	done
+
+	return "$R"
+}
+
+
+# void modules_quit (string NAME, [string SIG])
+#
+function modules_quit {
+	log_fcall "$@"
+
+	assume "(($# -eq 1 || $# -eq 2) && \$2 == $MODULES_PATTERNS_NAME)" "$1"
+
+	local NAME=$1 SIG=$2
+
+	eval "local PID=\$MODULES_NAMES_$NAME"
+
+	if [[ -n $PID ]]; then
+		if [[ -e /proc/$PID ]]; then
+			signal "$PID" "${SIG:-SIGNAL_TERM}"
+
+			if [[ $MODULES_DISOWNONQUIT = true ]]; then
+				disown "$PID" 2>&"$NULL"
+			elif [[ $MODULES_WAITONQUIT = true ]]; then
+				wait "$PID" 2>&"$NULL"
+			fi
+		fi
+
+		modules_finishdone "$PID"
+	fi
+}
+
+
+# void modules_quit_all (void)
+#
+function modules_quit_all {
+	log_fcall "$@"
+
+	for PID in "${!MODULES[@]}"; do
+		if [[ -e /proc/$PID ]]; then
+			signal "$PID" SIGNAL_TERM
+
+			if [[ $MODULES_DISOWNONQUIT = true ]]; then
+				disown "$PID" 2>&"$NULL"
+			elif [[ $MODULES_WAITONQUIT = true ]]; then
+				wait "$PID" 2>&"$NULL"
+			fi
+		fi
+
+		modules_finishdone "$PID"
+	done
+}
+
+
+# stat modules_getpid (string <name>)
+#
+function modules_getpid {
+	log_fcall "$@"
+	assume "\$2 == $MODULES_PATTERNS_NAME" "$1"
+	eval "__=\$MODULES_NAMES_$1"
+	[[ $? -eq 0 ]]
+}
+
+
+# stat modules_getstat (string <name>)
+# stat modules_getstat (uint <pid>)
+#
+# Gets process stat.
+#
+# > string array __A0
+#
+function modules_getstat {
+	log_fcall "$@"
+
+	assume "\$2 == @($MODULES_PATTERNS_NAME|$MODULES_PATTERNS_PID)" "$1" -- \
+		"First paramater is invalid: $1"
+
+ 	assume "\$2 == $PATTERNS_VARIABLENAME" "$2" -- \
+		"Second paramater is invalid: $2"
+
+	__A0=()
+
+	local PID
+
+	if [[ $1 == $MODULES_PATTERNS_PID ]]; then
+		PID=$1
+	else
+		eval "PID=\$MODULES_NAMES_$1" && [[ -n $PID ]] || \
+			return 1
+	fi
+
+	if [[ -r /proc/$PID/stat ]]; then
+		local T1
+		local -a T2
+		local -i I=0
+
+		local DATA=$(<"/proc/$PID/stat")
+
+		__A0[I++]=${DATA%% *}
+
+		T1=${DATA%\) *} T1=${T1#* \(}
+		__A0[I++]=$T1
+
+		utils_explode "${DATA##*\) }" T2
+		__A0=("${__A0[@]}" "${T2[@]}")
+	fi
+
+	[[ ${#__A0[@]} -gt 0 ]]
+}
+
+
+# stat modules_getppid (string <name>)
+# stat modules_getppid (uint <pid>)
+#
+# Gets parent process' PID (PPID)
+#
+# > string __ = ppid
+#
+function modules_getppid {
+	log_fcall "$@"
+
+	assume "\$2 == @($MODULES_PATTERNS_NAME|$MODULES_PATTERNS_PID)" "$1" -- \
+		"First paramater is invalid: $1"
+
+ 	assume "\$2 == $PATTERNS_VARIABLENAME" "$2" -- \
+		"Second paramater is invalid: $2"
+
+	__A0=()
+
+	local PID
+
+	if [[ $1 == $MODULES_PATTERNS_PID ]]; then
+		PID=$1
+	else
+		eval "PID=\$MODULES_NAMES_$1" && [[ -n $PID ]] || \
+			return 1
+	fi
+
+	__=''
+
+	if [[ -r /proc/$PID/ppid ]]; then
+		__=$(<"/proc/$PID/ppid")
+	elif [[ -r /proc/$PID/stat ]]; then
+		__=$(<"/proc/$PID/stat")
+		__=${__PPID##*\) ? }
+		__=${__PPID%% *}
+	else
+		return 1
+	fi
+
+	[[ -n $__ ]]
+}
+
+
+# stat modules_getpname (uint <pid>)
+#
+# Gets the name of the process.
+#
+# > string __ = process name
+#
+function modules_getpname {
+	log_fcall "$@"
+	[[ -r /proc/$1/stat ]] && read __ < "/proc/$1/stat" && __=${__#* (} && __=${__%) *} && [[ -n $__ ]]
+}

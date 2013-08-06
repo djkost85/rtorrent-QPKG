@@ -1,0 +1,30 @@
+# Site list with capabilities
+115          | download |        |        |      |
+1fichier     | download | upload |        |      |
+2shared      | download | upload | delete |      |
+4shared      | download |        |        | list |
+badongo      | download |        |        |      |
+data_hu      | download |        |        |      |
+dataport_cz  | download | upload | delete |      |
+depositfiles | download |        |        | list |
+divshare     | download |        |        |      |
+dl_free_fr   | download | upload |        |      |
+duckload     | download |        |        |      |
+euroshare_eu | download |        |        |      |
+fileserve    | download | upload |        | list |
+filesonic    | download | upload | delete | list |
+hotfile      | download |        |        | list |
+humyo        | download |        |        |      |
+mediafire    | download | upload |        | list |
+megaupload   | download | upload | delete | list |
+mirrorcreator|          | upload |        |      |
+multiupload  |          | upload |        | list |
+netload_in   | download | upload |        | list |
+rapidshare   | download | upload | delete |      |
+sendspace    | download | upload | delete | list |
+uploading    | download |        |        |      |
+uploaded_to  | download |        |        | list |
+usershare    | download |        |        |      |
+x7_to        | download |        |        |      |
+zshare       | download | upload | delete |      |
+wupload      | download | upload |        | list |

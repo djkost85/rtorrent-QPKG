@@ -1,0 +1,13 @@
+/usr/bin/rtorrent/perl/lib/DBD/Oracle.pm
+/usr/bin/rtorrent/perl/lib/DBD/Oracle/GetInfo.pm
+/usr/bin/rtorrent/perl/lib/DBD/Oracle/Object.pm
+/usr/bin/rtorrent/perl/lib/Oraperl.pm
+/usr/bin/rtorrent/perl/lib/auto/DBD/Oracle/Oracle.bs
+/usr/bin/rtorrent/perl/lib/auto/DBD/Oracle/Oracle.h
+/usr/bin/rtorrent/perl/lib/auto/DBD/Oracle/Oracle.so
+/usr/bin/rtorrent/perl/lib/auto/DBD/Oracle/dbdimp.h
+/usr/bin/rtorrent/perl/lib/auto/DBD/Oracle/mk.pm
+/usr/bin/rtorrent/perl/lib/auto/DBD/Oracle/ocitrace.h
+/usr/bin/rtorrent/perl/lib/oraperl.ph
+/usr/bin/rtorrent/perl/man/man3/DBD::Oracle.3
+/usr/bin/rtorrent/perl/man/man3/DBD::Oraperl.3

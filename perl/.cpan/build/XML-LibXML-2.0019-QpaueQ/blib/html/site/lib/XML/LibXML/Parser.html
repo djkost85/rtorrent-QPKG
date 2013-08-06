@@ -1,0 +1,931 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../../scineplex.css">
+<title>XML::LibXML::Parser - Parsing XML Data with XML::LibXML</title>
+<link rel="stylesheet" href="../../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:support@ActiveState.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',4);</script>
+<h1><a>XML::LibXML::Parser - Parsing XML Data with XML::LibXML</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#parsing">PARSING</a></li>
+	<ul>
+
+		<li><a href="#creating_a_parser_instance">Creating a Parser Instance</a></li>
+		<li><a href="#dom_parser">DOM Parser</a></li>
+		<li><a href="#push_parser">Push Parser</a></li>
+		<li><a href="#pull_parser__reader_">Pull Parser (Reader)</a></li>
+		<li><a href="#direct_sax_parser">Direct SAX Parser</a></li>
+		<li><a href="#dom_based_sax_parser">DOM based SAX Parser</a></li>
+	</ul>
+
+	<li><a href="#serialization">SERIALIZATION</a></li>
+	<li><a href="#parser_options">PARSER OPTIONS</a></li>
+	<li><a href="#xml_catalogs">XML CATALOGS</a></li>
+	<li><a href="#error_reporting">ERROR REPORTING</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>XML::LibXML::Parser - Parsing XML Data with XML::LibXML</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">XML::LibXML</span> <span class="number">1.70</span><span class="operator">;</span>
+</pre>
+<pre>
+  <span class="comment"># Parser constructor</span>
+</pre>
+<pre>
+  <span class="variable">$parser</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">();</span>
+  <span class="variable">$parser</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="string">option</span><span class="operator">=&gt;</span><span class="variable">value</span><span class="operator">,</span> <span class="operator">...);</span>
+  <span class="variable">$parser</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="operator">{</span><span class="string">option</span><span class="operator">=&gt;</span><span class="variable">value</span><span class="operator">,</span> <span class="operator">...</span><span class="operator">}</span><span class="operator">);</span>
+</pre>
+<pre>
+  <span class="comment"># Parsing XML</span>
+</pre>
+<pre>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">load_xml</span><span class="operator">(</span>
+      <span class="string">location</span> <span class="operator">=&gt;</span> <span class="variable">$file_or_url</span>
+      <span class="comment"># parser options ...</span>
+    <span class="operator">);</span>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">load_xml</span><span class="operator">(</span>
+      <span class="string">string</span> <span class="operator">=&gt;</span> <span class="variable">$xml_string</span>
+      <span class="comment"># parser options ...</span>
+    <span class="operator">);</span>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">load_xml</span><span class="operator">(</span>
+      <span class="string">string</span> <span class="operator">=&gt;</span> <span class="operator">(\</span><span class="variable">$xml_string</span><span class="operator">)</span>
+      <span class="comment"># parser options ...</span>
+    <span class="operator">);</span>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">load_xml</span><span class="operator">(</span><span class="operator">{</span>
+      <span class="string">IO</span> <span class="operator">=&gt;</span> <span class="variable">$perl_file_handle</span>
+      <span class="comment"># parser options ...</span>
+    <span class="operator">);</span>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">load_xml</span><span class="operator">(...);</span>
+</pre>
+<pre>
+  <span class="comment"># Parsing HTML</span>
+</pre>
+<pre>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">load_html</span><span class="operator">(...);</span>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">load_html</span><span class="operator">(...);</span>
+</pre>
+<pre>
+  <span class="comment"># Parsing well-balanced XML chunks</span>
+</pre>
+<pre>
+  <span class="variable">$fragment</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_balanced_chunk</span><span class="operator">(</span> <span class="variable">$wbxmlstring</span><span class="operator">,</span> <span class="variable">$encoding</span> <span class="operator">);</span>
+</pre>
+<pre>
+  <span class="comment"># Processing XInclude</span>
+</pre>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">process_xincludes</span><span class="operator">(</span> <span class="variable">$doc</span> <span class="operator">);</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">processXIncludes</span><span class="operator">(</span> <span class="variable">$doc</span> <span class="operator">);</span>
+</pre>
+<pre>
+  <span class="comment"># Old-style parser interfaces</span>
+</pre>
+<pre>
+  <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_file</span><span class="operator">(</span> <span class="variable">$xmlfilename</span> <span class="operator">);</span>
+  <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_fh</span><span class="operator">(</span> <span class="variable">$io_fh</span> <span class="operator">);</span>
+  <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_string</span><span class="operator">(</span> <span class="variable">$xmlstring</span><span class="operator">);</span>
+  <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_html_file</span><span class="operator">(</span> <span class="variable">$htmlfile</span><span class="operator">,</span> <span class="operator">\</span><span class="variable">%opts</span> <span class="operator">);</span>
+  <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_html_fh</span><span class="operator">(</span> <span class="variable">$io_fh</span><span class="operator">,</span> <span class="operator">\</span><span class="variable">%opts</span> <span class="operator">);</span>
+  <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_html_string</span><span class="operator">(</span> <span class="variable">$htmlstring</span><span class="operator">,</span> <span class="operator">\</span><span class="variable">%opts</span> <span class="operator">);</span>
+</pre>
+<pre>
+  <span class="comment"># Push parser</span>
+</pre>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_chunk</span><span class="operator">(</span><span class="variable">$string</span><span class="operator">,</span> <span class="variable">$terminate</span><span class="operator">);</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">init_push</span><span class="operator">();</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">push</span><span class="operator">(</span><span class="variable">@data</span><span class="operator">);</span>
+  <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">finish_push</span><span class="operator">(</span> <span class="variable">$recover</span> <span class="operator">);</span>
+</pre>
+<pre>
+  <span class="comment"># Set/query parser options</span>
+</pre>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">option_exists</span><span class="operator">(</span><span class="variable">$name</span><span class="operator">);</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">get_option</span><span class="operator">(</span><span class="variable">$name</span><span class="operator">);</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">set_option</span><span class="operator">(</span><span class="variable">$name</span><span class="operator">,</span><span class="variable">$value</span><span class="operator">);</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">set_options</span><span class="operator">(</span><span class="operator">{</span><span class="variable">$name</span><span class="operator">=&gt;</span><span class="variable">$value</span><span class="operator">,...</span><span class="operator">}</span><span class="operator">);</span>
+</pre>
+<pre>
+  <span class="comment"># XML catalogs</span>
+</pre>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">load_catalog</span><span class="operator">(</span> <span class="variable">$catalog_file</span> <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="parsing">PARSING</a></h1>
+<p>An XML document is read into a data structure such as a DOM tree by a piece of
+software, called a parser. XML::LibXML currently provides four different parser
+interfaces:</p>
+<ul>
+<li>
+<p>A DOM Pull-Parser</p>
+</li>
+<li>
+<p>A DOM Push-Parser</p>
+</li>
+<li>
+<p>A SAX Parser</p>
+</li>
+<li>
+<p>A DOM based SAX Parser.</p>
+</li>
+</ul>
+<p>
+</p>
+<h2><a name="creating_a_parser_instance">Creating a Parser Instance</a></h2>
+<p>XML::LibXML provides an OO interface to the libxml2 parser functions. Thus you
+have to create a parser instance before you can parse any XML data.</p>
+<dl>
+<dt><strong><a name="new" class="item">new</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$parser</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">();</span>
+  <span class="variable">$parser</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="string">option</span><span class="operator">=&gt;</span><span class="variable">value</span><span class="operator">,</span> <span class="operator">...);</span>
+  <span class="variable">$parser</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="operator">{</span><span class="string">option</span><span class="operator">=&gt;</span><span class="variable">value</span><span class="operator">,</span> <span class="operator">...</span><span class="operator">}</span><span class="operator">);</span>
+</pre>
+<p>Create a new XML and HTML parser instance. Each parser instance holds default
+values for various parser options. Optionally, one can pass a hash reference or
+a list of option =&gt; value pairs to set a different default set of options.
+Unless specified otherwise, the options <a href="#load_ext_dtd"><code>load_ext_dtd</code></a>, and <a href="#expand_entities"><code>expand_entities</code></a> are set to 1. See <a href="#parser_options">Parser Options</a> for a list of libxml2 parser's options.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="dom_parser">DOM Parser</a></h2>
+<p>One of the common parser interfaces of XML::LibXML is the DOM parser. This
+parser reads XML data into a DOM like data structure, so each tag can get
+accessed and transformed.</p>
+<p>XML::LibXML's DOM parser is not only capable to parse XML data, but also
+(strict) HTML files. There are three ways to parse documents - as a string, as
+a Perl filehandle, or as a filename/URL. The return value from each is a <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Document.html">the XML::LibXML::Document manpage</a> object, which is a DOM object.</p>
+<p>All of the functions listed below will throw an exception if the document is
+invalid. To prevent this causing your program exiting, wrap the call in an
+eval{} block</p>
+<dl>
+<dt><strong><a name="load_xml" class="item">load_xml</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">load_xml</span><span class="operator">(</span>
+      <span class="string">location</span> <span class="operator">=&gt;</span> <span class="variable">$file_or_url</span>
+      <span class="comment"># parser options ...</span>
+    <span class="operator">);</span>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">load_xml</span><span class="operator">(</span>
+      <span class="string">string</span> <span class="operator">=&gt;</span> <span class="variable">$xml_string</span>
+      <span class="comment"># parser options ...</span>
+    <span class="operator">);</span>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">load_xml</span><span class="operator">(</span>
+      <span class="string">string</span> <span class="operator">=&gt;</span> <span class="operator">(\</span><span class="variable">$xml_string</span><span class="operator">)</span>
+      <span class="comment"># parser options ...</span>
+    <span class="operator">);</span>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">load_xml</span><span class="operator">(</span><span class="operator">{</span>
+      <span class="string">IO</span> <span class="operator">=&gt;</span> <span class="variable">$perl_file_handle</span>
+      <span class="comment"># parser options ...</span>
+    <span class="operator">);</span>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">load_xml</span><span class="operator">(...);</span>
+</pre>
+<p>This function is available since XML::LibXML 1.70. It provides easy to use
+interface to the XML parser that parses given file (or URL), string, or input
+stream to a DOM tree. The arguments can be passed in a HASH reference or as
+name =&gt; value pairs. The function can be called as a class method or an object
+method. In both cases it internally creates a new parser instance passing the
+specified parser options; if called as an object method, it clones the original
+parser (preserving its settings) and additionally applies the specified options
+to the new parser. See the constructor <a href="#new"><code>new</code></a> and <a href="#parser_options">Parser Options</a> for more information.</p>
+</dd>
+<dt><strong><a name="load_html" class="item">load_html</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">load_html</span><span class="operator">(...);</span>
+  <span class="variable">$dom</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">load_html</span><span class="operator">(...);</span>
+</pre>
+<p>This function is available since XML::LibXML 1.70. It has the same usage as <a href="#load_xml"><code>load_xml</code></a>, providing interface to the HTML parser. See <a href="#load_xml"><code>load_xml</code></a> for more information.</p>
+</dd>
+</dl>
+<p>Parsing HTML may cause problems, especially if the ampersand ('&amp;') is used.
+This is a common problem if HTML code is parsed that contains links to
+CGI-scripts. Such links cause the parser to throw errors. In such cases libxml2
+still parses the entire document as there was no error, but the error causes
+XML::LibXML to stop the parsing process. However, the document is not lost.
+Such HTML documents should be parsed using the <em>recover </em>&gt;&gt;&gt;&gt;&gt; flag. By default recovering is deactivated.</p>
+<p>The functions described above are implemented to parse well formed documents.
+In some cases a program gets well balanced XML instead of well formed documents
+(e.g. an XML fragment from a database). With XML::LibXML it is not required to
+wrap such fragments in the code, because XML::LibXML is capable even to parse
+well balanced XML fragments.</p>
+<dl>
+<dt><strong><a name="parse_balanced_chunk" class="item">parse_balanced_chunk</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$fragment</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_balanced_chunk</span><span class="operator">(</span> <span class="variable">$wbxmlstring</span><span class="operator">,</span> <span class="variable">$encoding</span> <span class="operator">);</span>
+</pre>
+<p>This function parses a well balanced XML string into a <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/DocumentFragment.html">the XML::LibXML::DocumentFragment manpage</a>. The first arguments contains the input string, the optional second argument
+can be used to specify character encoding of the input (UTF-8 is assumed by
+default).</p>
+</dd>
+<dt><strong><a name="parse_xml_chunk" class="item">parse_xml_chunk</a></strong></dt>
+
+<dd>
+<p>This is the old name of <a href="#parse_balanced_chunk"><code>parse_balanced_chunk()</code></a>. Because it may causes confusion
+with the push parser interface, this function should not be used anymore.</p>
+</dd>
+</dl>
+<p>By default XML::LibXML does not process XInclude tags within an XML Document
+(see options section below). XML::LibXML allows to post process a document to
+expand XInclude tags.</p>
+<dl>
+<dt><strong><a name="process_xincludes" class="item">process_xincludes</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">process_xincludes</span><span class="operator">(</span> <span class="variable">$doc</span> <span class="operator">);</span>
+</pre>
+<p>After a document is parsed into a DOM structure, you may want to expand the
+documents XInclude tags. This function processes the given document structure
+and expands all XInclude tags (or throws an error) by using the flags and
+callbacks of the given parser instance.</p>
+<p>Note that the resulting Tree contains some extra nodes (of type
+XML_XINCLUDE_START and XML_XINCLUDE_END) after successfully processing the
+document. These nodes indicate where data was included into the original tree.
+if the document is serialized, these extra nodes will not show up.</p>
+<p>Remember: A Document with processed XIncludes differs from the original
+document after serialization, because the original XInclude tags will not get
+restored!</p>
+<p>If the parser flag &quot;expand_xincludes&quot; is set to 1, you need not to post process
+the parsed document.</p>
+</dd>
+<dt><strong><a name="processxincludes" class="item">processXIncludes</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">processXIncludes</span><span class="operator">(</span> <span class="variable">$doc</span> <span class="operator">);</span>
+</pre>
+<p>This is an alias to process_xincludes, but through a JAVA like function name.</p>
+</dd>
+<dt><strong><a name="parse_file" class="item">parse_file</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_file</span><span class="operator">(</span> <span class="variable">$xmlfilename</span> <span class="operator">);</span>
+</pre>
+<p>This function parses an XML document from a file or network; $xmlfilename can
+be either a filename or an URL. Note that for parsing files, this function is
+the fastest choice, about 6-8 times faster then <a href="#parse_fh"><code>parse_fh()</code></a>.</p>
+</dd>
+<dt><strong><a name="parse_fh" class="item">parse_fh</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_fh</span><span class="operator">(</span> <span class="variable">$io_fh</span> <span class="operator">);</span>
+</pre>
+<p><a href="#parse_fh"><code>parse_fh()</code></a> parses a IOREF or a subclass of IO::Handle.</p>
+<p>Because the data comes from an open handle, libxml2's parser does not know
+about the base URI of the document. To set the base URI one should use
+<a href="#parse_fh"><code>parse_fh()</code></a> as follows:</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_fh</span><span class="operator">(</span> <span class="variable">$io_fh</span><span class="operator">,</span> <span class="variable">$baseuri</span> <span class="operator">);</span>
+</pre>
+</dd>
+<dt><strong><a name="parse_string" class="item">parse_string</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_string</span><span class="operator">(</span> <span class="variable">$xmlstring</span><span class="operator">);</span>
+</pre>
+<p>This function is similar to <a href="#parse_fh"><code>parse_fh()</code></a>, but it parses an XML document that is
+available as a single string in memory, or alternatively as a reference to a
+scalar containing a string. Again, you can pass an optional base URI to the
+function.</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_string</span><span class="operator">(</span> <span class="variable">$xmlstring</span><span class="operator">,</span> <span class="variable">$baseuri</span> <span class="operator">);</span>
+  <span class="keyword">my</span> <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_string</span><span class="operator">(\</span><span class="variable">$xmlstring</span><span class="operator">,</span> <span class="variable">$baseuri</span><span class="operator">);</span>
+</pre>
+</dd>
+<dt><strong><a name="parse_html_file" class="item">parse_html_file</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_html_file</span><span class="operator">(</span> <span class="variable">$htmlfile</span><span class="operator">,</span> <span class="operator">\</span><span class="variable">%opts</span> <span class="operator">);</span>
+</pre>
+<p>Similar to <a href="#parse_file"><code>parse_file()</code></a> but parses HTML (strict) documents; $htmlfile can be
+filename or URL.</p>
+<p>An optional second argument can be used to pass some options to the HTML parser
+as a HASH reference. See options labeled with HTML in <a href="#parser_options">Parser Options</a>.</p>
+</dd>
+<dt><strong><a name="parse_html_fh" class="item">parse_html_fh</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_html_fh</span><span class="operator">(</span> <span class="variable">$io_fh</span><span class="operator">,</span> <span class="operator">\</span><span class="variable">%opts</span> <span class="operator">);</span>
+</pre>
+<p>Similar to <a href="#parse_fh"><code>parse_fh()</code></a> but parses HTML (strict) streams.</p>
+<p>An optional second argument can be used to pass some options to the HTML parser
+as a HASH reference. See options labeled with HTML in <a href="#parser_options">Parser Options</a>.</p>
+<p>Note: encoding option may not work correctly with this function in libxml2 &lt;
+2.6.27 if the HTML file declares charset using a META tag.</p>
+</dd>
+<dt><strong><a name="parse_html_string" class="item">parse_html_string</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_html_string</span><span class="operator">(</span> <span class="variable">$htmlstring</span><span class="operator">,</span> <span class="operator">\</span><span class="variable">%opts</span> <span class="operator">);</span>
+</pre>
+<p>Similar to <a href="#parse_string"><code>parse_string()</code></a> but parses HTML (strict) strings.</p>
+<p>An optional second argument can be used to pass some options to the HTML parser
+as a HASH reference. See options labeled with HTML in <a href="#parser_options">Parser Options</a>.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="push_parser">Push Parser</a></h2>
+<p>XML::LibXML provides a push parser interface. Rather than pulling the data from
+a given source the push parser waits for the data to be pushed into it.</p>
+<p>This allows one to parse large documents without waiting for the parser to
+finish. The interface is especially useful if a program needs to pre-process
+the incoming pieces of XML (e.g. to detect document boundaries).</p>
+<p>While XML::LibXML parse_*() functions force the data to be a well-formed XML,
+the push parser will take any arbitrary string that contains some XML data. The
+only requirement is that all the pushed strings are together a well formed
+document. With the push parser interface a program can interrupt the parsing
+process as required, where the parse_*() functions give not enough flexibility.</p>
+<p>Different to the pull parser implemented in <a href="#parse_fh"><code>parse_fh()</code></a> or <a href="#parse_file"><code>parse_file()</code></a>, the
+push parser is not able to find out about the documents end itself. Thus the
+calling program needs to indicate explicitly when the parsing is done.</p>
+<p>In XML::LibXML this is done by a single function:</p>
+<dl>
+<dt><strong><a name="parse_chunk" class="item">parse_chunk</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_chunk</span><span class="operator">(</span><span class="variable">$string</span><span class="operator">,</span> <span class="variable">$terminate</span><span class="operator">);</span>
+</pre>
+<p><a href="#parse_chunk"><code>parse_chunk()</code></a> tries to parse a given chunk of data, which isn't necessarily
+well balanced data. The function takes two parameters: The chunk of data as a
+string and optional a termination flag. If the termination flag is set to a
+true value (e.g. 1), the parsing will be stopped and the resulting document
+will be returned as the following example describes:</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$parser</span> <span class="operator">=</span> <span class="variable">XML::LibXML</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">;</span>
+  <span class="keyword">for</span> <span class="keyword">my</span> <span class="variable">$string</span> <span class="operator">(</span> <span class="string">"&lt;"</span><span class="operator">,</span> <span class="string">"foo"</span><span class="operator">,</span> <span class="string">' bar="hello world"'</span><span class="operator">,</span> <span class="string">"/&gt;"</span><span class="operator">)</span> <span class="operator">{</span>
+       <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_chunk</span><span class="operator">(</span> <span class="variable">$string</span> <span class="operator">);</span>
+  <span class="operator">}</span>
+  <span class="keyword">my</span> <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">parse_chunk</span><span class="operator">(</span><span class="string">""</span><span class="operator">,</span> <span class="number">1</span><span class="operator">);</span> <span class="comment"># terminate the parsing</span>
+</pre>
+</dd>
+</dl>
+<p>Internally XML::LibXML provides three functions that control the push parser
+process:</p>
+<dl>
+<dt><strong><a name="init_push" class="item">init_push</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">init_push</span><span class="operator">();</span>
+</pre>
+<p>Initializes the push parser.</p>
+</dd>
+<dt><strong><a name="push" class="item">push</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">push</span><span class="operator">(</span><span class="variable">@data</span><span class="operator">);</span>
+</pre>
+<p>This function pushes the data stored inside the array to libxml2's parser. Each
+entry in @data must be a normal scalar! This method can be called repeatedly.</p>
+</dd>
+<dt><strong><a name="finish_push" class="item">finish_push</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">finish_push</span><span class="operator">(</span> <span class="variable">$recover</span> <span class="operator">);</span>
+</pre>
+<p>This function returns the result of the parsing process. If this function is
+called without a parameter it will complain about non well-formed documents. If
+$restore is 1, the push parser can be used to restore broken or non well formed
+(XML) documents as the following example shows:</p>
+<pre>
+  <span class="keyword">eval</span> <span class="operator">{</span>
+      <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">push</span><span class="operator">(</span> <span class="string">"&lt;foo&gt;"</span><span class="operator">,</span> <span class="string">"bar"</span> <span class="operator">);</span>
+      <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">finish_push</span><span class="operator">();</span>    <span class="comment"># will report broken XML</span>
+  <span class="operator">};</span>
+  <span class="keyword">if</span> <span class="operator">(</span> <span class="variable">$@</span> <span class="operator">)</span> <span class="operator">{</span>
+     <span class="comment"># ...</span>
+  <span class="operator">}</span>
+</pre>
+<p>This can be annoying if the closing tag is missed by accident. The following
+code will restore the document:</p>
+<pre>
+  <span class="keyword">eval</span> <span class="operator">{</span>
+      <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">push</span><span class="operator">(</span> <span class="string">"&lt;foo&gt;"</span><span class="operator">,</span> <span class="string">"bar"</span> <span class="operator">);</span>
+      <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">finish_push</span><span class="operator">(</span><span class="number">1</span><span class="operator">);</span>   <span class="comment"># will return the data parsed</span>
+                                        <span class="comment"># unless an error happened</span>
+  <span class="operator">};</span>
+</pre>
+<pre>
+  <span class="keyword">print</span> <span class="variable">$doc</span><span class="operator">-&gt;</span><span class="variable">toString</span><span class="operator">();</span> <span class="comment"># returns "&lt;foo&gt;bar&lt;/foo&gt;"</span>
+</pre>
+<p>Of course <a href="#finish_push"><code>finish_push()</code></a> will return nothing if there was no data pushed to the
+parser before.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="pull_parser__reader_">Pull Parser (Reader)</a></h2>
+<p>XML::LibXML also provides a pull-parser interface similar to the XmlReader
+interface in .NET. This interface is almost streaming, and is usually faster
+and simpler to use than SAX. See <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Reader.html">the XML::LibXML::Reader manpage</a>.</p>
+<p>
+</p>
+<h2><a name="direct_sax_parser">Direct SAX Parser</a></h2>
+<p>XML::LibXML provides a direct SAX parser in the <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/SAX.html">the XML::LibXML::SAX manpage</a> module.</p>
+<p>
+</p>
+<h2><a name="dom_based_sax_parser">DOM based SAX Parser</a></h2>
+<p>XML::LibXML also provides a DOM based SAX parser. The SAX parser is defined in
+the module XML::LibXML::SAX::Parser. As it is not a stream based parser, it
+parses documents into a DOM and traverses the DOM tree instead.</p>
+<p>The API of this parser is exactly the same as any other Perl SAX2 parser. See
+XML::SAX::Intro for details.</p>
+<p>Aside from the regular parsing methods, you can access the DOM tree traverser
+directly, using the <code>generate()</code> method:</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$doc</span> <span class="operator">=</span> <span class="variable">build_yourself_a_document</span><span class="operator">();</span>
+  <span class="keyword">my</span> <span class="variable">$saxparser</span> <span class="operator">=</span> <span class="variable">$XML::LibXML::SAX::Parser</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="operator">...</span> <span class="operator">);</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">generate</span><span class="operator">(</span> <span class="variable">$doc</span> <span class="operator">);</span>
+</pre>
+<p>This is useful for serializing DOM trees, for example that you might have done
+prior processing on, or that you have as a result of XSLT processing.</p>
+<p><em>WARNING </em>&gt;&gt;&gt;&gt;&gt;</p>
+<p>This is NOT a streaming SAX parser. As I said above, this parser reads the
+entire document into a DOM and serialises it. Some people couldn't read that in
+the paragraph above so I've added this warning. If you want a streaming SAX
+parser look at the <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/SAX.html">the XML::LibXML::SAX manpage</a> man page</p>
+<p>
+</p>
+<hr />
+<h1><a name="serialization">SERIALIZATION</a></h1>
+<p>XML::LibXML provides some functions to serialize nodes and documents. The
+serialization functions are described on the <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Node.html">the XML::LibXML::Node manpage</a> manpage or the <a href="../../../../.cpan/build/XML-LibXML-2.0019-QpaueQ/blib/lib/XML/LibXML/Document.html">the XML::LibXML::Document manpage</a> manpage. XML::LibXML checks three global flags that alter the serialization
+process:</p>
+<ul>
+<li>
+<p>skipXMLDeclaration</p>
+</li>
+<li>
+<p>skipDTD</p>
+</li>
+<li>
+<p>setTagCompression</p>
+</li>
+</ul>
+<p>of that three functions only setTagCompression is available for all
+serialization functions.</p>
+<p>Because XML::LibXML does these flags not itself, one has to define them locally
+as the following example shows:</p>
+<pre>
+  <span class="keyword">local</span> <span class="variable">$XML::LibXML::skipXMLDeclaration</span> <span class="operator">=</span> <span class="number">1</span><span class="operator">;</span>
+  <span class="keyword">local</span> <span class="variable">$XML::LibXML::skipDTD</span> <span class="operator">=</span> <span class="number">1</span><span class="operator">;</span>
+  <span class="keyword">local</span> <span class="variable">$XML::LibXML::setTagCompression</span> <span class="operator">=</span> <span class="number">1</span><span class="operator">;</span>
+</pre>
+<p>If skipXMLDeclaration is defined and not '0', the XML declaration is omitted
+during serialization.</p>
+<p>If skipDTD is defined and not '0', an existing DTD would not be serialized with
+the document.</p>
+<p>If setTagCompression is defined and not '0' empty tags are displayed as open
+and closing tags rather than the shortcut. For example the empty tag <em>foo </em>&gt;&gt;&gt;&gt;&gt; will be rendered as <em>&lt;foo</em>&lt;/foo&gt; &gt;&gt;&gt;&gt;&gt;&gt; rather than <em>&lt;foo/</em> &gt;&gt;&gt;&gt;&gt;&gt;.</p>
+<p>
+</p>
+<hr />
+<h1><a name="parser_options">PARSER OPTIONS</a></h1>
+<p>Handling of libxml2 parser options has been unified and improved in XML::LibXML
+1.70. You can now set default options for a particular parser instance by
+passing them to the constructor as <a href="#new"><code>XML::LibXML-&gt;new({name=&gt;value, ...})</code></a> or <a href="#new"><code>XML::LibXML-&gt;new(name=&gt;value,...)</code></a>. The options can be queried and changed using the following methods (pre-1.70
+interfaces such as <a href="#load_ext_dtd"><code>$parser-&gt;load_ext_dtd(0)</code></a> also exist, see below):</p>
+<dl>
+<dt><strong><a name="option_exists" class="item">option_exists</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">option_exists</span><span class="operator">(</span><span class="variable">$name</span><span class="operator">);</span>
+</pre>
+<p>Returns 1 if the current XML::LibXML version supports the option <code>$name</code>, otherwise returns 0 (note that this does not necessarily mean that the option
+is supported by the underlying libxml2 library).</p>
+</dd>
+<dt><strong><a name="get_option" class="item">get_option</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">get_option</span><span class="operator">(</span><span class="variable">$name</span><span class="operator">);</span>
+</pre>
+<p>Returns the current value of the parser option <code>$name</code>.</p>
+</dd>
+<dt><strong><a name="set_option" class="item">set_option</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">set_option</span><span class="operator">(</span><span class="variable">$name</span><span class="operator">,</span><span class="variable">$value</span><span class="operator">);</span>
+</pre>
+<p>Sets option <code>$name</code> to value <code>$value</code>.</p>
+</dd>
+<dt><strong><a name="set_options" class="item">set_options</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">set_options</span><span class="operator">(</span><span class="operator">{</span><span class="variable">$name</span><span class="operator">=&gt;</span><span class="variable">$value</span><span class="operator">,...</span><span class="operator">}</span><span class="operator">);</span>
+</pre>
+<p>Sets multiple parsing options at once.</p>
+</dd>
+</dl>
+<p>IMPORTANT NOTE: This documentation reflects the parser flags available in
+libxml2 2.7.3. Some options have no effect if an older version of libxml2 is
+used.</p>
+<p>Each of the flags listed below is labeled</p>
+<dl>
+<dt><strong><a name="parser" class="item">/parser/</a></strong></dt>
+
+<dd>
+<p>if it can be used with a <code>XML::LibXML</code> parser object (i.e. passed to <a href="#new"><code>XML::LibXML-&gt;new</code></a>, <a href="#set_option"><code>XML::LibXML-&gt;set_option</code></a>, etc.)</p>
+</dd>
+<dt><strong><a name="html" class="item">/html/</a></strong></dt>
+
+<dd>
+<p>if it can be used passed to the <code>parse_html_*</code> methods</p>
+</dd>
+<dt><strong><a name="reader" class="item">/reader/</a></strong></dt>
+
+<dd>
+<p>if it can be used with the <code>XML::LibXML::Reader</code>.</p>
+</dd>
+</dl>
+<p>Unless specified otherwise, the default for boolean valued options is 0
+(false).</p>
+<p>The available options are:</p>
+<dl>
+<dt><strong><a name="uri2" class="item">URI</a></strong></dt>
+
+<dd>
+<p>/parser, html, reader/</p>
+<p>In case of parsing strings or file handles, XML::LibXML doesn't know about the
+base uri of the document. To make relative references such as XIncludes work,
+one has to set a base URI, that is then used for the parsed document.</p>
+</dd>
+<dt><strong><a name="line_numbers" class="item">line_numbers</a></strong></dt>
+
+<dd>
+<p>/parser, html, reader/</p>
+<p>If this option is activated, libxml2 will store the line number of each element
+node in the parsed document. The line number can be obtained using the <code>line_number()</code> method of the <code>XML::LibXML::Node</code> class (for non-element nodes this may report the line number of the containing
+element). The line numbers are also used for reporting positions of validation
+errors.</p>
+<p>IMPORTANT: Due to limitations in the libxml2 library line numbers greater than
+65535 will be returned as 65535. Unfortunately, this is a long and sad story,
+please see <a href="http://bugzilla.gnome.org/show_bug.cgi?id=325533">http://bugzilla.gnome.org/show_bug.cgi</a> for more details.</p>
+</dd>
+<dt><strong><a name="encoding" class="item">encoding</a></strong></dt>
+
+<dd>
+<p>/html/</p>
+<p>character encoding of the input</p>
+</dd>
+<dt><strong><a name="recover" class="item">recover</a></strong></dt>
+
+<dd>
+<p>/parser, html, reader/</p>
+<p>recover from errors; possible values are 0, 1, and 2</p>
+<p>A true value turns on recovery mode which allows one to parse broken XML or
+HTML data. The recovery mode allows the parser to return the successfully
+parsed portion of the input document. This is useful for almost well-formed
+documents, where for example a closing tag is missing somewhere. Still,
+XML::LibXML will only parse until the first fatal (non-recoverable) error
+occurs, reporting recoverable parsing errors as warnings. To suppress even
+these warnings, use recover=&gt;2.</p>
+<p>Note that validation is switched off automatically in recovery mode.</p>
+</dd>
+<dt><strong><a name="expand_entities" class="item">expand_entities</a></strong></dt>
+
+<dd>
+<p>/parser, reader/</p>
+<p>substitute entities; possible values are 0 and 1; default is 1</p>
+<p>Note that although this flag disables entity substitution, it does not prevent
+the parser from loading external entities; when substitution of an external
+entity is disabled, the entity will be represented in the document tree by an
+XML_ENTITY_REF_NODE node whose subtree will be the content obtained by parsing
+the external resource; Although this nesting is visible from the DOM it is
+transparent to XPath data model, so it is possible to match nodes in an
+unexpanded entity by the same XPath expression as if the entity were expanded.
+See also ext_ent_handler.</p>
+</dd>
+<dt><strong><a name="ext_ent_handler" class="item">ext_ent_handler</a></strong></dt>
+
+<dd>
+<p>/parser/</p>
+<p>Provide a custom external entity handler to be used when expand_entities is set
+to 1. Possible value is a subroutine reference.</p>
+<p>This feature does not work properly in libxml2 &lt; 2.6.27!</p>
+<p>The subroutine provided is called whenever the parser needs to retrieve the
+content of an external entity. It is called with two arguments: the system ID
+(URI) and the public ID. The value returned by the subroutine is parsed as the
+content of the entity.</p>
+<p>This method can be used to completely disable entity loading, e.g. to prevent
+exploits of the type described at  (<a href="http://searchsecuritychannel.techtarget.com/generic/0,295582,sid97_gci1304703,00.html">http://searchsecuritychannel.techtarget.com/generic/0,295582,sid97_gci1304703,00.html</a>), where a service is tricked to expose its private data by letting it parse a
+remote file (RSS feed) that contains an entity reference to a local file (e.g. <code>/etc/fstab</code>).</p>
+<p>A more granular solution to this problem, however, is provided by custom URL
+resolvers, as in</p>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$c</span> <span class="operator">=</span> <span class="variable">XML::LibXML::InputCallback</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">();</span>
+  <span class="keyword">sub</span><span class="variable"> match </span><span class="operator">{</span>   <span class="comment"># accept file:/ URIs except for XML catalogs in /etc/xml/</span>
+    <span class="keyword">my</span> <span class="operator">(</span><span class="variable">$uri</span><span class="operator">)</span> <span class="operator">=</span> <span class="variable">@_</span><span class="operator">;</span>
+    <span class="keyword">return</span> <span class="operator">(</span><span class="variable">$uri</span><span class="operator">=~</span><span class="regex">m{^file:/}</span>
+            <span class="keyword">and</span> <span class="variable">$uri</span> <span class="operator">!~</span> <span class="regex">m{^file:///etc/xml/}</span><span class="operator">)</span>
+           <span class="operator">?</span> <span class="number">1</span> <span class="operator">:</span> <span class="number">0</span><span class="operator">;</span>
+  <span class="operator">}</span>
+  <span class="variable">$c</span><span class="operator">-&gt;</span><span class="variable">register_callbacks</span><span class="operator">(</span><span class="operator">[</span> <span class="operator">\&amp;</span><span class="variable">match</span><span class="operator">,</span> <span class="keyword">sub</span><span class="operator">{},</span> <span class="keyword">sub</span><span class="operator">{},</span> <span class="keyword">sub</span><span class="operator">{}</span> <span class="operator">]</span><span class="operator">);</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">input_callbacks</span><span class="operator">(</span><span class="variable">$c</span><span class="operator">);</span>
+</pre>
+</dd>
+<dt><strong><a name="load_ext_dtd" class="item">load_ext_dtd</a></strong></dt>
+
+<dd>
+<p>/parser, reader/</p>
+<p>load the external DTD subset while parsing; possible values are 0 and 1. Unless
+specified, XML::LibXML sets this option to 1.</p>
+<p>This flag is also required for DTD Validation, to provide complete attribute,
+and to expand entities, regardless if the document has an internal subset. Thus
+switching off external DTD loading, will disable entity expansion, validation,
+and complete attributes on internal subsets as well.</p>
+</dd>
+<dt><strong><a name="complete_attributes" class="item">complete_attributes</a></strong></dt>
+
+<dd>
+<p>/parser, reader/</p>
+<p>create default DTD attributes; possible values are 0 and 1</p>
+</dd>
+<dt><strong><a name="validation" class="item">validation</a></strong></dt>
+
+<dd>
+<p>/parser, reader/</p>
+<p>validate with the DTD; possible values are 0 and 1</p>
+</dd>
+<dt><strong><a name="suppress_errors" class="item">suppress_errors</a></strong></dt>
+
+<dd>
+<p>/parser, html, reader/</p>
+<p>suppress error reports; possible values are 0 and 1</p>
+</dd>
+<dt><strong><a name="suppress_warnings" class="item">suppress_warnings</a></strong></dt>
+
+<dd>
+<p>/parser, html, reader/</p>
+<p>suppress warning reports; possible values are 0 and 1</p>
+</dd>
+<dt><strong><a name="pedantic_parser" class="item">pedantic_parser</a></strong></dt>
+
+<dd>
+<p>/parser, html, reader/</p>
+<p>pedantic error reporting; possible values are 0 and 1</p>
+</dd>
+<dt><strong><a name="no_blanks" class="item">no_blanks</a></strong></dt>
+
+<dd>
+<p>/parser, html, reader/</p>
+<p>remove blank nodes; possible values are 0 and 1</p>
+</dd>
+<dt><strong><a name="no_defdtd" class="item">no_defdtd</a></strong></dt>
+
+<dd>
+<p>/html/</p>
+<p>do not add a default DOCTYPE; possible values are 0 and 1</p>
+<p>the default is (0) to add a DTD when the input html lacks one</p>
+</dd>
+<dt><strong><a name="expand_xinclude_or_xinclude" class="item">expand_xinclude or xinclude</a></strong></dt>
+
+<dd>
+<p>/parser, reader/</p>
+<p>Implement XInclude substitution; possible values are 0 and 1</p>
+<p>Expands XInclude tags immediately while parsing the document. Note that the
+parser will use the URI resolvers installed via <code>XML::LibXML::InputCallback</code> to parse the included document (if any).</p>
+</dd>
+<dt><strong><a name="no_xinclude_nodes" class="item">no_xinclude_nodes</a></strong></dt>
+
+<dd>
+<p>/parser, reader/</p>
+<p>do not generate XINCLUDE START/END nodes; possible values are 0 and 1</p>
+</dd>
+<dt><strong><a name="no_network" class="item">no_network</a></strong></dt>
+
+<dd>
+<p>/parser, html, reader/</p>
+<p>Forbid network access; possible values are 0 and 1</p>
+<p>If set to true, all attempts to fetch non-local resources (such as DTD or
+external entities) will fail (unless custom callbacks are defined).</p>
+<p>It may be necessary to use the flag <a href="#recover"><code>recover</code></a> for processing documents requiring such resources while networking is off.</p>
+</dd>
+<dt><strong><a name="clean_namespaces" class="item">clean_namespaces</a></strong></dt>
+
+<dd>
+<p>/parser, reader/</p>
+<p>remove redundant namespaces declarations during parsing; possible values are 0
+and 1.</p>
+</dd>
+<dt><strong><a name="no_cdata" class="item">no_cdata</a></strong></dt>
+
+<dd>
+<p>/parser, html, reader/</p>
+<p>merge CDATA as text nodes; possible values are 0 and 1</p>
+</dd>
+<dt><strong><a name="no_basefix" class="item">no_basefix</a></strong></dt>
+
+<dd>
+<p>/parser, reader/</p>
+<p>not fixup XINCLUDE xml#base URIS; possible values are 0 and 1</p>
+</dd>
+<dt><strong><a name="huge" class="item">huge</a></strong></dt>
+
+<dd>
+<p>/parser, html, reader/</p>
+<p>relax any hardcoded limit from the parser; possible values are 0 and 1. Unless
+specified, XML::LibXML sets this option to 0.</p>
+<p>Note: the default value for this option was changed to protect against denial
+of service through entity expansion attacks. Before enabling the option ensure
+you have taken alternative measures to protect your application against this
+type of attack.</p>
+</dd>
+<dt><strong><a name="gdome" class="item">gdome</a></strong></dt>
+
+<dd>
+<p>/parser/</p>
+<p>THIS OPTION IS EXPERIMENTAL!</p>
+<p>Although quite powerful, XML::LibXML's DOM implementation is incomplete with
+respect to the DOM level 2 or level 3 specifications. XML::GDOME is based on
+libxml2 as well, and provides a rather complete DOM implementation by wrapping
+libgdome. This flag allows you to make use of XML::LibXML's full parser options
+and XML::GDOME's DOM implementation at the same time.</p>
+<p>To make use of this function, one has to install libgdome and configure
+XML::LibXML to use this library. For this you need to rebuild XML::LibXML!</p>
+<p>Note: this feature was not seriously tested in recent XML::LibXML releases.</p>
+</dd>
+</dl>
+<p>For compatibility with XML::LibXML versions prior to 1.70, the following
+methods are also supported for querying and setting the corresponding parser
+options (if called without arguments, the methods return the current value of
+the corresponding parser options; with an argument sets the option to a given
+value):</p>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">validation</span><span class="operator">();</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">recover</span><span class="operator">();</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">pedantic_parser</span><span class="operator">();</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">line_numbers</span><span class="operator">();</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">load_ext_dtd</span><span class="operator">();</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">complete_attributes</span><span class="operator">();</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">expand_xinclude</span><span class="operator">();</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">gdome_dom</span><span class="operator">();</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">clean_namespaces</span><span class="operator">();</span>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">no_network</span><span class="operator">();</span>
+</pre>
+<p>The following obsolete methods trigger parser options in some special way:</p>
+<dl>
+<dt><strong><a name="recover_silently" class="item">recover_silently</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">recover_silently</span><span class="operator">(</span><span class="number">1</span><span class="operator">);</span>
+</pre>
+<p>If called without an argument, returns true if the current value of the <a href="#recover"><code>recover</code></a> parser option is 2 and returns false otherwise. With a true argument sets the <a href="#recover"><code>recover</code></a> parser option to 2; with a false argument sets the <a href="#recover"><code>recover</code></a> parser option to 0.</p>
+</dd>
+<dt><strong>expand_entities</strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">expand_entities</span><span class="operator">(</span><span class="number">0</span><span class="operator">);</span>
+</pre>
+<p>Get/set the <a href="#expand_entities"><code>expand_entities</code></a> option. If called with a true argument, also turns the <a href="#load_ext_dtd"><code>load_ext_dtd</code></a> option to 1.</p>
+</dd>
+<dt><strong><a name="keep_blanks" class="item">keep_blanks</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">keep_blanks</span><span class="operator">(</span><span class="number">0</span><span class="operator">);</span>
+</pre>
+<p>This is actually the opposite of the <a href="#no_blanks"><code>no_blanks</code></a> parser option. If used without an argument retrieves negated value of <a href="#no_blanks"><code>no_blanks</code></a>. If used with an argument sets <a href="#no_blanks"><code>no_blanks</code></a> to the opposite value.</p>
+</dd>
+<dt><strong><a name="base_uri" class="item">base_uri</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">base_uri</span><span class="operator">(</span> <span class="variable">$your_base_uri</span> <span class="operator">);</span>
+</pre>
+<p>Get/set the <a href="#uri"><code>URI</code></a> option.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="xml_catalogs">XML CATALOGS</a></h1>
+<p><code>libxml2</code> supports XML catalogs. Catalogs are used to map remote resources to their local
+copies. Using catalogs can speed up parsing processes if many external
+resources from remote addresses are loaded into the parsed documents (such as
+DTDs or XIncludes).</p>
+<p>Note that libxml2 has a global pool of loaded catalogs, so if you apply the
+method <a href="#load_catalog"><code>load_catalog</code></a> to one parser instance, all parser instances will start using the catalog (in
+addition to other previously loaded catalogs).</p>
+<p>Note also that catalogs are not used when a custom external entity handler is
+specified. At the current state it is not possible to make use of both types of
+resolving systems at the same time.</p>
+<dl>
+<dt><strong><a name="load_catalog" class="item">load_catalog</a></strong></dt>
+
+<dd>
+<pre>
+  <span class="variable">$parser</span><span class="operator">-&gt;</span><span class="variable">load_catalog</span><span class="operator">(</span> <span class="variable">$catalog_file</span> <span class="operator">);</span>
+</pre>
+<p>Loads the XML catalog file $catalog_file.</p>
+<pre>
+  <span class="comment"># Global external entity loader (similar to ext_ent_handler option</span>
+  <span class="comment"># but this works really globally, also in XML::LibXSLT include etc..)</span>
+</pre>
+<pre>
+  <span class="variable">XML::LibXML::externalEntityLoader</span><span class="operator">(\&amp;</span><span class="variable">my_loader</span><span class="operator">);</span>
+</pre>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="error_reporting">ERROR REPORTING</a></h1>
+<p>XML::LibXML throws exceptions during parsing, validation or XPath processing
+(and some other occasions). These errors can be caught by using <em>eval </em>&gt;&gt;&gt;&gt;&gt; blocks. The error is stored in <em>$@ </em>&gt;&gt;&gt;&gt;&gt;. There are two implementations: the old one throws $@ which is just a message
+string, in the new one $@ is an object from the class XML::LibXML::Error; this
+class overrides the operator &quot;&quot; so that when printed, the object flattens to
+the usual error message.</p>
+<p>XML::LibXML throws errors as they occur. This is a very common misunderstanding
+in the use of XML::LibXML. If the eval is omitted, XML::LibXML will always halt
+your script by &quot;croaking&quot; (see Carp man page for details).</p>
+<p>Also note that an increasing number of functions throw errors if bad data is
+passed as arguments. If you cannot assure valid data passed to XML::LibXML you
+should eval these functions.</p>
+<p>Note: since version 1.59, <code>get_last_error()</code> is no longer available in
+XML::LibXML for thread-safety reasons.</p>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Matt Sergeant,
+Christian Glahn,
+Petr Pajas</p>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p>2.0019</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>2001-2007, AxKit.com Ltd.</p>
+<p>2002-2006, Christian Glahn.</p>
+<p>2006-2009, Petr Pajas.</p>
+
+</body>
+
+</html>

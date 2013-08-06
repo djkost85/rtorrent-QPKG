@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/2255/trunk/plugins/rpc
+END
+plugin.info
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2255/trunk/plugins/rpc/plugin.info
+END
+rpc.php
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/2115/trunk/plugins/rpc/rpc.php
+END
+init.js
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/2162/trunk/plugins/rpc/init.js
+END
