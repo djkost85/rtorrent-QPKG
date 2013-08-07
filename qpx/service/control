@@ -11,7 +11,7 @@ include globals
 include ansi
 
 include qlog
-XRES_WIDTH=79 ; include xcmdlog
+XRES_WIDTH=120 ; include xcmdlog
 
 include qfuncs
 
