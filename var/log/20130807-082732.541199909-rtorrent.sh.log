@@ -1,0 +1,54 @@
+[ rtorrent preload ] Version 0.1.6 is loading right now...
+[ rtorrent _loader ] Version 0.1.7 is loading right now...
+[ rtorrent preload ] exec_Service (args)"stop"
+Executing: rm -rf /var/run/rtorrent.lock
+Aug  7 08:27:33 Executing: rm -rf /var/run/rtorrent.lock
+[ rtorrent x: ] cmd: rm -rf /var/run/rtorrent.lock...
+Aug  7 08:27:33 [ rtorrent x: ] cmd: rm -rf /var/run/rtorrent.lock...
+[ OKAY! ]
+Aug  7 08:27:33 Status =  OKAY! 
+[ rtorrent::httpsd ] Stop lighttpd from PID: 11157
+[ rtorrent:control ]   lighttpd   stopped.
+Aug  7 08:27:35 [ rtorrent:control ]   lighttpd   stopped.
+[SUCCESS]
+Aug  7 08:27:35 Status = SUCCESS
+[ rtorrent::engine ] Socket/Lock file: /share/Download/rtorrent/session/rtorrent.lock
+[ rtorrent::engine ] Stop rtorrent from PID: 11097
+[ rtorrent::engine ] -SIGINT: Sending Term Interrupt signal.
+[ rtorrent::engine ] -SIGINT  ... 8 seconds left
+[ rtorrent:control ]   rtorrent   stopped.
+Aug  7 08:27:37 [ rtorrent:control ]   rtorrent   stopped.
+[SUCCESS]
+Aug  7 08:27:37 Status = SUCCESS
+[ rtorrent:control ]   screen-cleanup   stopped.
+Aug  7 08:27:37 [ rtorrent:control ]   screen-cleanup   stopped.
+[SUCCESS]
+Aug  7 08:27:37 Status = SUCCESS
+Executing: umount /share/Download
+Aug  7 08:27:38 Executing: umount /share/Download
+[ rtorrent x: ] cmd: umount /share/Download...
+Aug  7 08:27:38 [ rtorrent x: ] cmd: umount /share/Download...
+[ OKAY! ]
+Aug  7 08:27:38 Status =  OKAY! 
+Executing: rm /etc/lighttpd
+Aug  7 08:27:38 Executing: rm /etc/lighttpd
+[ rtorrent x: ] cmd: rm /etc/lighttpd...
+Aug  7 08:27:38 [ rtorrent x: ] cmd: rm /etc/lighttpd...
+[ OKAY! ]
+Aug  7 08:27:38 Status =  OKAY! 
+Executing: rm /etc/rtorrent.conf
+Aug  7 08:27:38 Executing: rm /etc/rtorrent.conf
+[ rtorrent x: ] cmd: rm /etc/rtorrent.conf...
+Aug  7 08:27:38 [ rtorrent x: ] cmd: rm /etc/rtorrent.conf...
+[ OKAY! ]
+Aug  7 08:27:38 Status =  OKAY! 
+Executing: rm /usr/bin/rtorrent
+Aug  7 08:27:38 Executing: rm /usr/bin/rtorrent
+[ rtorrent x: ] cmd: rm /usr/bin/rtorrent...
+Aug  7 08:27:38 [ rtorrent x: ] cmd: rm /usr/bin/rtorrent...
+[ OKAY! ]
+Aug  7 08:27:38 Status =  OKAY! 
+[ rtorrent:control ] Stop sequence done!
+Aug  7 08:27:38 [ rtorrent:control ] Stop sequence done!
+[ OKAY! ]
+Aug  7 08:27:38 Status =  OKAY! 

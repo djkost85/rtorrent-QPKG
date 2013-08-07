@@ -1026,7 +1026,7 @@ Stop torrents when reaching upload ratio in percent, when also reaching total up
 Enable or Disable Watch Dir</td>
                   </tr>
                   <tr>
-                    <td colspan="3" class="one"><label><input name="watchdir" type="checkbox" <?php
+                    <td colspan="3" class="one"><label><input name="watchdir" type="checkbox" disabled="disabled" <?php
 	
 	if ($watchdir=="yes") {
 		echo'checked="checked" ';

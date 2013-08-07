@@ -35,7 +35,7 @@ cd ../..
 
 echo "  Step 1/3"
 tar -cf rtorrent.rootfs.tar .qpkg_icon.gif .qpkg_icon_80.gif .qpkg_icon_80_gray.gif .qpkg_icon_gray.gif .qpx_motd.asc README.md \
-				_build _build.sh _qpkg qpx bin com emacs etc home lib libexec locale package perl \
+				_build _build.sh _qpkg qpx bin com emacs etc home lib libexec locale package perl python \
 				root sbin share usr var control rtorrent.sh
 
 echo "  Step 2/3 (this may take a while...)"

@@ -187,7 +187,7 @@
 /* #undef HAVE_CRYPT_R */
 
 /* Define if you have the ctermid function.  */
-#define HAVE_CTERMID 1
+/* #undef HAVE_CTERMID */
 
 /* Define if you have the ctime_r function.  */
 #define HAVE_CTIME_R 1
@@ -229,13 +229,13 @@
 #define HAVE_GETCWD 1
 
 /* Define if you have the getgrgid_r function.  */
-#define HAVE_GETGRGID_R 1
+/* #undef HAVE_GETGRGID_R */
 
 /* Define if you have the getgrnam_r function.  */
 #define HAVE_GETGRNAM_R 1
 
 /* Define if you have the getgroups function.  */
-#define HAVE_GETGROUPS 1
+/* #undef HAVE_GETGROUPS */
 
 /* Define if you have the gethostname function.  */
 #define HAVE_GETHOSTNAME 1
@@ -250,7 +250,7 @@
 #define HAVE_GETOPT 1
 
 /* Define if you have the getpgid function.  */
-#define HAVE_GETPGID 1
+/* #undef HAVE_GETPGID */
 
 /* Define if you have the getpid function.  */
 #define HAVE_GETPID 1
@@ -271,7 +271,7 @@
 #define HAVE_GETPWUID_R 1
 
 /* Define if you have the getrlimit function.  */
-#define HAVE_GETRLIMIT 1
+/* #undef HAVE_GETRLIMIT */
 
 /* Define if you have the getrusage function.  */
 #define HAVE_GETRUSAGE 1
@@ -283,7 +283,7 @@
 #define HAVE_GETSERVBYPORT 1
 
 /* Define if you have the getsid function.  */
-#define HAVE_GETSID 1
+/* #undef HAVE_GETSID */
 
 /* Define if you have the gettimeofday function.  */
 #define HAVE_GETTIMEOFDAY 1
@@ -316,7 +316,7 @@
 #define HAVE_INET_PTON 1
 
 /* Define if you have the initgroups function.  */
-#define HAVE_INITGROUPS 1
+/* #undef HAVE_INITGROUPS */
 
 /* Define if you have the isascii function.  */
 #define HAVE_ISASCII 1
@@ -385,10 +385,10 @@
 #define HAVE_MEMPCPY 1
 
 /* Define if you have the mkfifo function.  */
-#define HAVE_MKFIFO 1
+/* #undef HAVE_MKFIFO */
 
 /* Define if you have the mknod function.  */
-#define HAVE_MKNOD 1
+/* #undef HAVE_MKNOD */
 
 /* Define if you have the mkstemp function.  */
 #define HAVE_MKSTEMP 1
@@ -448,13 +448,13 @@
 #define HAVE_SCANDIR 1
 
 /* Define if you have the setegid function.  */
-#define HAVE_SETEGID 1
+/* #undef HAVE_SETEGID */
 
 /* Define if you have the setenv function.  */
 #define HAVE_SETENV 1
 
 /* Define if you have the seteuid function.  */
-#define HAVE_SETEUID 1
+/* #undef HAVE_SETEUID */
 
 /* Define if you have the setitimer function.  */
 #define HAVE_SETITIMER 1
@@ -472,7 +472,7 @@
 /* #undef HAVE_SETPROCTITLE */
 
 /* Define if you have the setsid function.  */
-#define HAVE_SETSID 1
+/* #undef HAVE_SETSID */
 
 /* Define if you have the setsockopt function.  */
 #define HAVE_SETSOCKOPT 1
@@ -790,7 +790,7 @@
 #define HAVE_SYS_TIME_H 1
 
 /* Define if you have the <sys/times.h> header file.  */
-/* #undef HAVE_SYS_TIMES_H */
+#define HAVE_SYS_TIMES_H 1
 
 /* Define if you have the <sys/types.h> header file.  */
 #define HAVE_SYS_TYPES_H 1
@@ -1291,7 +1291,7 @@
 /* #undef COMPILE_DL_LIBXML */
 
 /* Whether to build openssl as dynamic module */
-#define COMPILE_DL_OPENSSL 1
+/* #undef COMPILE_DL_OPENSSL */
 
 /* OpenSSL 0.9.7 or later */
 /* #undef HAVE_DSA_DEFAULT_METHOD */
@@ -1300,7 +1300,7 @@
 #define HAVE_OPENSSL_EXT 1
 
 /*   */
-/* #undef HAVE_PCRE */
+#define HAVE_PCRE 1
 
 /* Whether to build pcre as dynamic module */
 /* #undef COMPILE_DL_PCRE */
@@ -1309,7 +1309,7 @@
 /* #undef COMPILE_DL_PCRE */
 
 /*   */
-#define HAVE_BUNDLED_PCRE 1
+/* #undef HAVE_BUNDLED_PCRE */
 
 /* have commercial sqlite3 with crypto support */
 /* #undef HAVE_SQLITE3_KEY */
@@ -1327,22 +1327,22 @@
 /* #undef COMPILE_DL_ZLIB */
 
 /*   */
-/* #undef HAVE_ZLIB */
+#define HAVE_ZLIB 1
 
 /* Whether to build bcmath as dynamic module */
 /* #undef COMPILE_DL_BCMATH */
 
 /* Whether you have bcmath */
-/* #undef HAVE_BCMATH */
+#define HAVE_BCMATH 1
 
 /*   */
-/* #undef HAVE_BZ2 */
+#define HAVE_BZ2 1
 
 /* Whether to build bz2 as dynamic module */
 /* #undef COMPILE_DL_BZ2 */
 
 /*   */
-/* #undef HAVE_CALENDAR */
+#define HAVE_CALENDAR 1
 
 /* Whether to build calendar as dynamic module */
 /* #undef COMPILE_DL_CALENDAR */
@@ -1441,31 +1441,31 @@
 /* #undef DBA_DBM */
 
 /*   */
-#define DBA_CDB_BUILTIN 1
+/* #undef DBA_CDB_BUILTIN */
 
 /*   */
-#define DBA_CDB_MAKE 1
+/* #undef DBA_CDB_MAKE */
 
 /*   */
-#define DBA_CDB 1
+/* #undef DBA_CDB */
 
 /*   */
 /* #undef CDB_INCLUDE_FILE */
 
 /*   */
-#define DBA_CDB 1
+/* #undef DBA_CDB */
 
 /*   */
-#define DBA_INIFILE 1
+/* #undef DBA_INIFILE */
 
 /*   */
-#define DBA_FLATFILE 1
+/* #undef DBA_FLATFILE */
 
 /*   */
-#define HAVE_DBA 1
+/* #undef HAVE_DBA */
 
 /* Whether to build dba as dynamic module */
-#define COMPILE_DL_DBA 1
+/* #undef COMPILE_DL_DBA */
 
 /*   */
 #define HAVE_LIBXML 1
@@ -1474,7 +1474,7 @@
 #define HAVE_DOM 1
 
 /* Whether to build dom as dynamic module */
-#define COMPILE_DL_DOM 1
+/* #undef COMPILE_DL_DOM */
 
 /* Whether to build enchant as dynamic module */
 /* #undef COMPILE_DL_ENCHANT */
@@ -1492,7 +1492,7 @@
 #define HAVE_EXIF 1
 
 /* Whether to build exif as dynamic module */
-#define COMPILE_DL_EXIF 1
+/* #undef COMPILE_DL_EXIF */
 
 /* Whether to build fileinfo as dynamic module */
 /* #undef COMPILE_DL_FILEINFO */
@@ -1504,7 +1504,7 @@
 #define HAVE_FTP 1
 
 /* Whether to build ftp as dynamic module */
-#define COMPILE_DL_FTP 1
+/* #undef COMPILE_DL_FTP */
 
 /*   */
 /* #undef USE_GD_IMGSTRTTF */
@@ -1699,22 +1699,22 @@
 /* #undef COMPILE_DL_GD */
 
 /*   */
-/* #undef HAVE_LIBINTL */
+#define HAVE_LIBINTL 1
 
 /* Whether to build gettext as dynamic module */
 /* #undef COMPILE_DL_GETTEXT */
 
 /*   */
-/* #undef HAVE_NGETTEXT */
+#define HAVE_NGETTEXT 1
 
 /*   */
-/* #undef HAVE_DNGETTEXT */
+#define HAVE_DNGETTEXT 1
 
 /*   */
-/* #undef HAVE_DCNGETTEXT */
+#define HAVE_DCNGETTEXT 1
 
 /*   */
-/* #undef HAVE_BIND_TEXTDOMAIN_CODESET */
+#define HAVE_BIND_TEXTDOMAIN_CODESET 1
 
 /* Whether to build gmp as dynamic module */
 /* #undef COMPILE_DL_GMP */
@@ -1723,7 +1723,7 @@
 /* #undef HAVE_GMP */
 
 /*   */
-/* #undef PHP_MHASH_BC */
+#define PHP_MHASH_BC 1
 
 /* Have HASH Extension */
 #define HAVE_HASH_EXT 1
@@ -1750,37 +1750,37 @@
 #define HAVE_ICONV 1
 
 /* Which iconv implementation to use */
-/* #undef PHP_ICONV_IMPL */
+#define PHP_ICONV_IMPL "glibc"
 
 /* Konstantin Chuguev's iconv implementation */
 /* #undef HAVE_BSD_ICONV */
 
 /* Which iconv implementation to use */
-/* #undef PHP_ICONV_IMPL */
+#define PHP_ICONV_IMPL "glibc"
 
 /* glibc's iconv implementation */
-/* #undef HAVE_GLIBC_ICONV */
+#define HAVE_GLIBC_ICONV 1
 
 /* Which iconv implementation to use */
-/* #undef PHP_ICONV_IMPL */
+#define PHP_ICONV_IMPL "glibc"
 
 /* IBM iconv implementation */
 /* #undef HAVE_IBM_ICONV */
 
 /* Which iconv implementation to use */
-/* #undef PHP_ICONV_IMPL */
+#define PHP_ICONV_IMPL "glibc"
 
 /* Whether iconv supports error no or not */
-/* #undef ICONV_SUPPORTS_ERRNO */
+#define ICONV_SUPPORTS_ERRNO 1
 
 /* Whether iconv supports error no or not */
-/* #undef ICONV_SUPPORTS_ERRNO */
+#define ICONV_SUPPORTS_ERRNO 1
 
 /* Whether iconv supports error no or not */
-/* #undef ICONV_SUPPORTS_ERRNO */
+#define ICONV_SUPPORTS_ERRNO 1
 
 /* Path to iconv.h */
-/* #undef PHP_ICONV_H_PATH */
+#define PHP_ICONV_H_PATH </usr/include/iconv.h>
 
 /* Whether to build iconv as dynamic module */
 /* #undef COMPILE_DL_ICONV */
@@ -1891,37 +1891,37 @@
 /* #undef HAVE_LDAP_SASL */
 
 /* whether to have multibyte string support */
-/* #undef HAVE_MBSTRING */
+#define HAVE_MBSTRING 1
 
 /* whether to check multibyte regex backtrack */
-/* #undef USE_COMBINATION_EXPLOSION_CHECK */
+#define USE_COMBINATION_EXPLOSION_CHECK 1
 
 /* Define to 1 if you have the <stdarg.h> header file. */
-/* #undef HAVE_STDARG_PROTOTYPES */
+#define HAVE_STDARG_PROTOTYPES 1
 
 /* Define to 1 if the bundled oniguruma is used */
-/* #undef PHP_ONIG_BUNDLED */
+#define PHP_ONIG_BUNDLED 1
 
 /* Define to 1 if the oniguruma library is available */
-/* #undef HAVE_ONIG */
+#define HAVE_ONIG 1
 
 /* Define to 1 if the oniguruma library is available */
-/* #undef HAVE_ONIG */
+#define HAVE_ONIG 1
 
 /* define to 1 if oniguruma has an invalid entry for KOI8 encoding */
 /* #undef PHP_ONIG_BAD_KOI8_ENTRY */
 
 /* whether to have multibyte regex support */
-/* #undef HAVE_MBREGEX */
+#define HAVE_MBREGEX 1
 
 /* Whether to build mbstring as dynamic module */
 /* #undef COMPILE_DL_MBSTRING */
 
 /*   */
-/* #undef HAVE_LIBMCRYPT */
+#define HAVE_LIBMCRYPT 1
 
 /*   */
-/* #undef HAVE_LIBMCRYPT */
+#define HAVE_LIBMCRYPT 1
 
 /* Whether to build mcrypt as dynamic module */
 /* #undef COMPILE_DL_MCRYPT */
@@ -2353,16 +2353,16 @@
 /* #undef PHAR_HAVE_OPENSSL */
 
 /* whether to include POSIX-like functions */
-#define HAVE_POSIX 1
+/* #undef HAVE_POSIX */
 
 /* Whether to build posix as dynamic module */
 /* #undef COMPILE_DL_POSIX */
 
 /* Whether you have a working ttyname_r */
-#define HAVE_TTYNAME_R 1
+/* #undef HAVE_TTYNAME_R */
 
 /* Wether struct utsname has domainname */
-#define HAVE_UTSNAME_DOMAINNAME 1
+/* #undef HAVE_UTSNAME_DOMAINNAME */
 
 /* Whether to build pspell as dynamic module */
 /* #undef COMPILE_DL_PSPELL */
@@ -2422,7 +2422,7 @@
 #define HAVE_SHMOP 1
 
 /* Whether to build shmop as dynamic module */
-#define COMPILE_DL_SHMOP 1
+/* #undef COMPILE_DL_SHMOP */
 
 /*   */
 #define HAVE_LIBXML 1
@@ -2452,7 +2452,7 @@
 #define HAVE_LIBXML 1
 
 /*   */
-/* #undef HAVE_SOAP */
+#define HAVE_SOAP 1
 
 /* Whether to build soap as dynamic module */
 /* #undef COMPILE_DL_SOAP */
@@ -2467,7 +2467,7 @@
 #define HAVE_SOCKETS 1
 
 /* Whether to build sockets as dynamic module */
-#define COMPILE_DL_SOCKETS 1
+/* #undef COMPILE_DL_SOCKETS */
 
 /* Whether struct _zend_object_value is packed */
 #define HAVE_PACKED_OBJECT_VALUE 1
@@ -2686,10 +2686,10 @@
 #define HAVE_SYSVMSG 1
 
 /* Whether to build sysvmsg as dynamic module */
-#define COMPILE_DL_SYSVMSG 1
+/* #undef COMPILE_DL_SYSVMSG */
 
 /* Whether to build sysvsem as dynamic module */
-#define COMPILE_DL_SYSVSEM 1
+/* #undef COMPILE_DL_SYSVSEM */
 
 /*   */
 #define HAVE_SYSVSEM 1
@@ -2704,7 +2704,7 @@
 #define HAVE_SYSVSHM 1
 
 /* Whether to build sysvshm as dynamic module */
-#define COMPILE_DL_SYSVSHM 1
+/* #undef COMPILE_DL_SYSVSHM */
 
 /*   */
 /* #undef HAVE_TIDYOPTGETDOC */
@@ -2725,7 +2725,7 @@
 /* #undef HAVE_LIBEXPAT */
 
 /*   */
-/* #undef HAVE_WDDX */
+#define HAVE_WDDX 1
 
 /* Whether to build wddx as dynamic module */
 /* #undef COMPILE_DL_WDDX */
@@ -2737,7 +2737,7 @@
 /* #undef HAVE_LIBEXPAT */
 
 /* Whether to build xml as dynamic module */
-#define COMPILE_DL_XML 1
+/* #undef COMPILE_DL_XML */
 
 /*   */
 #define HAVE_XML 1
@@ -2749,7 +2749,7 @@
 #define HAVE_XMLREADER 1
 
 /* Whether to build xmlreader as dynamic module */
-#define COMPILE_DL_XMLREADER 1
+/* #undef COMPILE_DL_XMLREADER */
 
 /*   */
 #define HAVE_XMLRPC 1
@@ -2779,10 +2779,10 @@
 #define UNDEF_THREADS_HACK 
 
 /* Whether to build xmlrpc as dynamic module */
-#define COMPILE_DL_XMLRPC 1
+/* #undef COMPILE_DL_XMLRPC */
 
 /* Whether to build xmlrpc as dynamic module */
-#define COMPILE_DL_XMLRPC 1
+/* #undef COMPILE_DL_XMLRPC */
 
 /*   */
 #define HAVE_LIBXML 1
@@ -2803,7 +2803,7 @@
 /* #undef COMPILE_DL_XSL */
 
 /*   */
-/* #undef HAVE_ZIP */
+#define HAVE_ZIP 1
 
 /* Whether to build zip as dynamic module */
 /* #undef COMPILE_DL_ZIP */
@@ -2902,7 +2902,7 @@
 /* #undef PTHREADS */
 
 /* PHP build date */
-#define PHP_BUILD_DATE "2013-08-06"
+#define PHP_BUILD_DATE "2013-08-07"
 
 /* hardcode for each of the cross compiler host */
 #define PHP_OS "Linux"

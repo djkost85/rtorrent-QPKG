@@ -1,7 +1,7 @@
 <?php
 
 	// set interval for schedule command in seconds
-	$autowatch_interval = 300;
+	$autowatch_interval = 10;
 
 	// set "true" to enable debug output
-	$autodebug_enabled = false;
+	$autodebug_enabled = true;

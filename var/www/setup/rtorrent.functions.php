@@ -129,7 +129,7 @@ schedule = throttle_' . $n . ',' . $dschedules[0] . ':' . $dschedules[1] . ':00,
 schedule = throttle_' . $n . ',' . $dschedules[0] . ':' . $dschedules[1] . ':00,24:00:00,' . $dschedules[2] . '_rate=' . $dschedules[3];
 		}
       }
-    
+
 	}
 
 	$Data2 = '
@@ -155,7 +155,7 @@ schedule = low_diskspace,5,60,close_low_diskspace=100M
 
 # When the torrent finishes, it executes "mv -n <base_path> ~/Download/"
 # and then sets the destination directory to "~/Download/". (0.7.7+)
-#on_finished = move_complete,"execute=mv,-u,$d.get_base_path=,/share/Download/rtorrent/complete/ ;d.set_directory=/share/Download/rtorrent/complete/"
+#on_finished = move_complete,"execute=mv,-f,$d.get_base_path=,/share/Download/rtorrent/complete/ ;d.set_directory=/share/Download/rtorrent/complete/"
 #method.set_key = event.download.finished,move_complete,"d.set_directory=/share/Download/rtorrent/complete/; execute=mv,-f,$d.get_base_path=,/share/Download/rtorrent/complete/"
 
 # The ip address reported to the tracker.

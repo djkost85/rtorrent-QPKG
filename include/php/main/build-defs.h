@@ -18,7 +18,7 @@
 
 /* $Id: build-defs.h.in 292156 2009-12-15 11:17:47Z jani $ */
 
-#define CONFIGURE_COMMAND " './configure'  '--prefix=/usr/bin/rtorrent' '--with-libdir=/usr/bin/rtorrent/lib' '--with-layout=GNU' '--disable-static' '--enable-dba=shared' '--enable-dom=shared' '--enable-exif=shared' '--enable-ftp=shared' '--enable-shmop=shared' '--enable-sockets=shared' '--enable-sysvmsg=shared' '--enable-sysvshm=shared' '--enable-sysvsem=shared' '--enable-xml=shared' '--enable-xmlreader=shared' '--with-openssl=shared' '--without-pear' '--without-iconv' '--with-xmlrpc=shared' '--enable-spl' '--disable-cli' '--enable-fastcgi'"
+#define CONFIGURE_COMMAND " './configure'  '--prefix=/usr/bin/rtorrent' '--with-libdir=lib' '--includedir=/usr/bin/rtorrent/include' '--with-config-file-path=/usr/bin/rtorrent/etc/php5' '--with-config-file-scan-dir=/usr/bin/rtorrent/etc/php5/conf.d' '--with-layout=GNU' '--with-pear' '--enable-calendar' '--enable-sysvsem' '--enable-sysvshm' '--enable-sysvmsg' '--enable-bcmath' '--without-gdbm' '--with-iconv' '--enable-exif' '--enable-ftp' '--enable-mbstring' '--with-pcre-regex=/usr/bin/rtorrent' '--enable-shmop' '--enable-sockets' '--with-libxml-dir=/usr/bin/rtorrent' '--with-zlib' '--with-openssl=/usr/bin/rtorrent' '--enable-zip' '--with-mhash' '--without-mm' '--x-libraries=/usr/bin/rtorrent/lib' '--x-includes=/usr/bin/rtorrent/includes' '--with-mcrypt' '--with-xmlrpc' '--with-sqlite' '--enable-soap' '--with-kerberos=/usr/bin/rtorrent' '--enable-wddx' '--with-gettext' '--with-bz2' '--disable-debug' '--with-pic' '--with-regex=php' '--disable-posix' '--enable-ctype' '--enable-cli' '--enable-cgi' '--enable-fastcgi' '--disable-rpath' '--enable-static'"
 #define PHP_ADA_INCLUDE		""
 #define PHP_ADA_LFLAGS		""
 #define PHP_ADA_LIBS		""
@@ -75,8 +75,8 @@
 #define PHP_LDAP_LIBS		""
 #define PHP_BIRDSTEP_INCLUDE     ""
 #define PHP_BIRDSTEP_LIBS        ""
-#define PEAR_INSTALLDIR         ""
-#define PHP_INCLUDE_PATH	".:"
+#define PEAR_INSTALLDIR         "/usr/bin/rtorrent/share/pear"
+#define PHP_INCLUDE_PATH	".:/usr/bin/rtorrent/share/pear"
 #define PHP_EXTENSION_DIR       "/usr/bin/rtorrent/lib/php/20090626"
 #define PHP_PREFIX              "/usr/bin/rtorrent"
 #define PHP_BINDIR              "/usr/bin/rtorrent/bin"
@@ -85,6 +85,6 @@
 #define PHP_DATADIR             "/usr/bin/rtorrent/share/php"
 #define PHP_SYSCONFDIR          "/usr/bin/rtorrent/etc"
 #define PHP_LOCALSTATEDIR       "/usr/bin/rtorrent/var"
-#define PHP_CONFIG_FILE_PATH    "/usr/bin/rtorrent/etc"
-#define PHP_CONFIG_FILE_SCAN_DIR    ""
+#define PHP_CONFIG_FILE_PATH    "/usr/bin/rtorrent/etc/php5"
+#define PHP_CONFIG_FILE_SCAN_DIR    "/usr/bin/rtorrent/etc/php5/conf.d"
 #define PHP_SHLIB_SUFFIX        "so"
