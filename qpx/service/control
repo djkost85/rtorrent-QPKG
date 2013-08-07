@@ -665,7 +665,7 @@ setConfigPaths(){
 	if [ ! -f "$_settings/autotools.dat" ]; then
 		msg_notice "[ ${_ENAME} ] Saving UI Autotools settings."
 		touch $_settings/autotools.dat
-		echo -n "O:10:\"rAutoTools\":9:{s:4:\"hash\";s:13:\"autotools.dat\";s:12:\"enable_label\";s:1:\"0\";s:14:\"label_template\";s:5:\"{DIR}\";s:11:\"enable_move\";s:1:\"1\";s:16:\"path_to_finished\";s:$_l_complete:\"$_d_complete\";s:11:\"fileop_type\";s:4:\"Move\";s:12:\"enable_watch\";s:1:\"0\";s:13:\"path_to_watch\";s:$_l_watch:\"$_d_watch\";s:11:\"watch_start\";s:1:\"1\";}" > "$_settings/autotools.dat"
+		echo -n "O:10:\"rAutoTools\":9:{s:4:\"hash\";s:13:\"autotools.dat\";s:12:\"enable_label\";s:1:\"0\";s:14:\"label_template\";s:5:\"{DIR}\";s:11:\"enable_move\";s:1:\"1\";s:16:\"path_to_finished\";s:$_l_complete:\"$_d_complete\";s:11:\"fileop_type\";s:4:\"Move\";s:12:\"enable_watch\";s:1:\"1\";s:13:\"path_to_watch\";s:$_l_watch:\"$_d_watch\";s:11:\"watch_start\";s:1:\"1\";}" > "$_settings/autotools.dat"
 		chmod 666 $_settings/autotools.dat
 	else
 		[ "$DEBUG" != "0" ] && msg_debug "[ ${_ENAME} ] UI autotools.dat file already exist."
