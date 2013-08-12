@@ -1441,28 +1441,28 @@
 /* #undef DBA_DBM */
 
 /*   */
-/* #undef DBA_CDB_BUILTIN */
+#define DBA_CDB_BUILTIN 1
 
 /*   */
-/* #undef DBA_CDB_MAKE */
+#define DBA_CDB_MAKE 1
 
 /*   */
-/* #undef DBA_CDB */
+#define DBA_CDB 1
 
 /*   */
 /* #undef CDB_INCLUDE_FILE */
 
 /*   */
-/* #undef DBA_CDB */
+#define DBA_CDB 1
 
 /*   */
-/* #undef DBA_INIFILE */
+#define DBA_INIFILE 1
 
 /*   */
-/* #undef DBA_FLATFILE */
+#define DBA_FLATFILE 1
 
 /*   */
-/* #undef HAVE_DBA */
+#define HAVE_DBA 1
 
 /* Whether to build dba as dynamic module */
 /* #undef COMPILE_DL_DBA */
@@ -2902,7 +2902,7 @@
 /* #undef PTHREADS */
 
 /* PHP build date */
-#define PHP_BUILD_DATE "2013-08-07"
+#define PHP_BUILD_DATE "2013-08-12"
 
 /* hardcode for each of the cross compiler host */
 #define PHP_OS "Linux"

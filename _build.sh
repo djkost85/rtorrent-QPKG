@@ -29,9 +29,9 @@ rm -rf  share/man share/info \
 	perl/html \
 	perl/site/man
 
-cd share/GeoIP
-./download.sh
-cd ../..
+#cd share/GeoIP
+#./download.sh
+#cd ../..
 
 echo "  Step 1/3"
 tar -cf rtorrent.rootfs.tar .qpkg_icon.gif .qpkg_icon_80.gif .qpkg_icon_80_gray.gif .qpkg_icon_gray.gif .qpx_motd.asc README.md \

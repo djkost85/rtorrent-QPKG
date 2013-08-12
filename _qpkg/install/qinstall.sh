@@ -87,7 +87,7 @@ QPKG_SOURCE_FILE="rtorrent.rootfs.tar.gz"
 QPKG_NAME="rtorrent"
 QPKG_ALTNAME="rtorrent"
 #Version of the add-on/package
-QPKG_VER="0.9.3-b0807"
+QPKG_VER="0.9.3-b0812"
 #for rcS and rcK 
 QPKG_RC_NUM="101" #(It's usually no need to modify this field.) 
 #Port number of the web interface (leave it blank if there was no web interface included in this add-on/package.)
